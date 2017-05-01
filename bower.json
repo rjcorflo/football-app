@@ -1,0 +1,22 @@
+{
+  "name": "football-app-repository",
+  "homepage": "https://github.com/rjcorflo/football-app-repository",
+  "authors": [
+    "rjcorflo <rj.corchero@gmail.com>"
+  ],
+  "description": "",
+  "main": "public/index.php",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "webix": "^4.3.0",
+    "jquery": "^3.2.1"
+  }
+}

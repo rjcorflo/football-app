@@ -1,0 +1,35 @@
+{
+    "name": "rjcorflo/football-app-repository",
+    "description": "Retrieve data from football API and acts as a \"man in middle\" repository to not overload it. Provides a more simple RESTFul API for Android App.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "rjcorflo",
+            "email": "rj.corchero@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">5.6",
+        "slim/slim": "^3.0",
+        "gabordemooij/redbean": "^4.0",
+        "php-di/slim-bridge": "^1.0"
+    },
+    "require-dev": {
+        "codeception/codeception": "^2.0",
+        "anahkiasen/rocketeer": "^2.2",
+        "rjcorflo/robo-rocketeer": "*",
+        "consolidation/robo": "^1.0",
+        "leafo/scssphp": "*",
+        "henrikbjorn/lurker": "^1.0",
+        "patchwork/jsqueeze": "~1.0",
+        "natxet/CssMin": "~3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "RJ\\FootballApi\\": "src"
+        }
+    },
+    "scripts": {
+        "serve": "@php -S localhost:8080 -t public public/index.php"
+    }
+}

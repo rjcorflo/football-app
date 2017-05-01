@@ -1,0 +1,7 @@
+.idea/
+
+.rocketeer/
+bower_components/
+vendor/
+
+tests/_output/*
