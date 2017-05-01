@@ -32,9 +32,14 @@ class RoboFile extends \Robo\Tasks
      */
     public function developStart()
     {
-        $this->taskGitStack()->checkout('development')->pull();
+        $this->taskGitStack()
+            ->checkout('development')
+            ->pull()
+            ->run();
 
-        $this->taskServer()->dir('public')->background()->run();
+        $this->taskServer()->dir('public')
+            ->background()
+            ->run();
 
         $this->taskWatch()
             ->monitor('composer.json', function () {
@@ -51,6 +56,9 @@ class RoboFile extends \Robo\Tasks
 
     /**
      * Run test and push code to develop branch.
+     *
+     * @param string $commitMesage Commit message.
+     * @option $add Options for add command.
      */
     public function developPublish(
         $commitMesage,
