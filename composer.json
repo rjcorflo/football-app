@@ -32,6 +32,7 @@
     "scripts": {
         "dev:start": "robo develop:start",
         "dev:push": "robo develop:publish",
+        "test": "robo test",
         "publish:major": "robo production:publish --release major",
         "publish:minor": "robo production:publish --release minor",
         "publish:patch": "robo production:publish --release patch",

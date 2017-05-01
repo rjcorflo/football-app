@@ -61,12 +61,12 @@ class RoboFile extends \Robo\Tasks
      * @option $add Options for add command.
      */
     public function developPublish(
-        $commitMesage,
+        $commitMesage = 'Auto commit',
         $options = ['add|a' => InputOption::VALUE_REQUIRED]
     ) {
         $this->stopOnFail();
 
-        $this->taskCodecept()->coverageHtml()->run();
+        $this->taskCodecept()->run();
 
         $task = $this->taskGitStack();
 
@@ -77,6 +77,14 @@ class RoboFile extends \Robo\Tasks
 
         $task->push()
             ->run();
+    }
+
+    /**
+     * Test application.
+     */
+    public function test()
+    {
+        $this->taskCodecept()->coverageHtml()->run();
     }
 
     /**
