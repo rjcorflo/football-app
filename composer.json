@@ -30,6 +30,10 @@
         }
     },
     "scripts": {
-        "serve": "@php -S localhost:8080 -t public public/index.php"
+        "dev:start": "robo develop:start",
+        "publish:major": "robo production:publish --release major",
+        "publish:minor": "robo production:publish --release minor",
+        "publish:patch": "robo production:publish --release patch",
+        "deploy": "robo production:deploy"
     }
 }

@@ -183,6 +183,11 @@ class RoboFile extends \Robo\Tasks
         $this->assetsCompileScss($options);
     }
 
+    /**
+     * Publish on master on Github.
+     *
+     * @option $release Pass major, minor or patch to submit a tag.
+     */
     public function productionPublish(
         $options = ['release' => InputOption::VALUE_REQUIRED]
     ) {
@@ -210,7 +215,8 @@ class RoboFile extends \Robo\Tasks
         $collection
             ->addTask($this->taskGitStack()
                 ->checkout('master')
-                ->merge('development'))
+                // Merge with dev using theirs on conflicts
+                ->merge('--X theirs development'))
             ->addCode(function () {
                 $this->assetsCompileAll(['minify' => true]);
             })
@@ -242,11 +248,27 @@ class RoboFile extends \Robo\Tasks
         }
     }
 
+    /**
+     * Deploy application.
+     *
+     * @option $on Connections
+     * @option $stage Stages
+     */
     public function productionDeploy(
-        $options = ['on' => 'production', 'stage' => 'live']
+        $options = ['release' => null, 'on' => 'production', 'stage' => 'test']
     ) {
         if (!is_string($options['on']) || !is_string($options['stage'])) {
             $this->say('Options on and stage must be strings.');
+        }
+
+        if ($options['release']) {
+            $releaseType = $options['release'];
+            if ($releaseType !== 'major' && $releaseType !== 'minor' && $releaseType !== 'patch') {
+                $this->say('Version must be major, minor or patch');
+                return;
+            }
+
+            $this->productionPublish(['release' => $releaseType]);
         }
 
         $this->taskRocketeerDeploy()
