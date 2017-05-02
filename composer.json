@@ -22,11 +22,13 @@
         "leafo/scssphp": "*",
         "henrikbjorn/lurker": "^1.0",
         "patchwork/jsqueeze": "~1.0",
-        "natxet/CssMin": "~3.0"
+        "natxet/CssMin": "~3.0",
+        "squizlabs/php_codesniffer": "2.*",
+        "phpmd/phpmd" : "@stable"
     },
     "autoload": {
         "psr-4": {
-            "RJ\\FootballApi\\": "src"
+            "RJ\\FootballApp\\": "src"
         }
     },
     "scripts": {
