@@ -2,6 +2,12 @@
 
 .rocketeer/
 bower_components/
+configuration/*
+!configuration/.gitkeep
+logs/*
+!logs/.gitkeep
+storage/*
+!storage/.gitkeep
 vendor/
 
 tests/_output/*
