@@ -2,8 +2,11 @@
 
 .rocketeer/
 bower_components/
+cache/*
+!cache/.gitkeep
 configuration/*
 !configuration/.gitkeep
+!configuration/configuration.default.php
 logs/*
 !logs/.gitkeep
 storage/*
