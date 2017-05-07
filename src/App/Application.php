@@ -4,10 +4,19 @@ namespace RJ\FootballApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
-use RJ\FootballApp\Controller\UserController;
-
-use function DI\object;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
+use RedBeanPHP\R;
+use RJ\FootballApp\Aspect\ApplicationAspect;
+use RJ\FootballApp\Aspect\LoggerAspect;
+use RJ\FootballApp\Controller\PlayerController;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
+use function DI\object;
+use function DI\string;
 
 class Application extends App
 {
@@ -15,16 +24,30 @@ class Application extends App
     {
         parent::__construct();
 
-        $this->initialize();
+        $this->bootstrap();
     }
 
-    private function initialize()
+    protected function bootstrap()
     {
-        $this->routes();
+        $this->configurePersistence();
+        $this->configureRoutes();
+
+        /**
+         * @var \Go\Core\AspectKernel $aspectApp
+         */
+        $aspectApp = $this->getContainer()->get('aop.app');
+        $aspectApp->init([
+            'debug' => true,
+            'cacheDir' => __DIR__ . '/../../cache',
+            'includePaths' => [
+                __DIR__ . '/../../src'
+            ]
+        ]);
     }
 
     protected function configureContainer(ContainerBuilder $builder)
     {
+        $builder->addDefinitions(__DIR__ . '/../../configuration/configuration.php');
         $builder->addDefinitions($this->configuration());
     }
 
@@ -32,13 +55,38 @@ class Application extends App
     {
         return [
             'settings.displayErrorDetails' => true,
-            //'foundHandler' => \DI\object(RequestResponse::class)
+            EventDispatcherInterface::class => object(EventDispatcher::class),
+            StreamHandler::class => object()->constructor(string('{app.logsDir}/logs.log')),
+            'logger.handlers' => [
+                get(StreamHandler::class)
+            ],
+            LoggerInterface::class => function (ContainerInterface $container) {
+                $logger = new Logger('logger');
+                foreach ($container->get('logger.handlers') as $handlers) {
+                    $logger->pushHandler($handlers);
+                }
+                return $logger;
+            },
+            'aop.aspects' => [
+                get(LoggerAspect::class)
+            ],
+            'aop.app' => function (ContainerInterface $containerInterface) {
+                $appAop = ApplicationAspect::getInstance();
+                $appAop->setContainer($containerInterface);
+                return $appAop;
+            }
         ];
     }
 
-    private function routes()
+    protected function configureRoutes()
     {
-        $this->get('/login', [UserController::class, 'login']);
-        $this->get('/logout', [UserController::class, 'logout']);
+        $this->get('/player/register', [PlayerController::class, 'register']);
+        $this->get('/player/login', [PlayerController::class, 'login']);
+        $this->get('/player/logout', [PlayerController::class, 'logout']);
+    }
+
+    protected function configurePersistence()
+    {
+        R::setup();
     }
 }
