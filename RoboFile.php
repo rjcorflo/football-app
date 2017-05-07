@@ -32,10 +32,10 @@ class RoboFile extends \Robo\Tasks
      */
     public function developStart()
     {
-        $this->taskGitStack()
+        /*$this->taskGitStack()
             ->checkout('development')
             ->pull()
-            ->run();
+            ->run();*/
 
         $this->taskServer()->dir('public')
             ->background()
@@ -258,7 +258,6 @@ class RoboFile extends \Robo\Tasks
                 ->run();
 
             $this->say("Completed publication of release $release.");
-
         } else {
             $this->say('Publish completed.');
         }
