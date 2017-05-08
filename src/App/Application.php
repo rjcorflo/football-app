@@ -2,17 +2,21 @@
 
 namespace RJ\FootballApp\App;
 
+use Doctrine\Common\Annotations\AnnotationReader;
+use RJ\FootballApp\App\Middleware\PersistenceMiddleware;
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Persistence\RedBeanPersistence\RedBeanPersistenceLayer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use RJ\FootballApp\Aspect\ApplicationAspect;
 use RJ\FootballApp\Aspect\LoggerAspect;
 use RJ\FootballApp\Controller\PlayerController;
+use RJ\FootballApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\FootballApp\Persistence\AbstractPersistenceLayer;
+use RJ\FootballApp\Persistence\RedBeanPersistence\Model\Repository\PlayerRepository;
+use RJ\FootballApp\Persistence\RedBeanPersistence\RedBeanPersistenceLayer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
@@ -30,6 +34,7 @@ class Application extends App
 
     protected function bootstrap()
     {
+        AnnotationReader::addGlobalIgnoredName('note');
         $this->configureRoutes();
 
         /**
@@ -67,6 +72,8 @@ class Application extends App
             'app.srcDir' => string('{app.baseDir}/src'),
             'app.storageDir' => string('{app.baseDir}/storage'),
 
+            PlayerRepositoryInterface::class => object(PlayerRepository::class),
+
             /* Event configuration */
             EventDispatcherInterface::class => object(EventDispatcher::class),
 
@@ -97,10 +104,11 @@ class Application extends App
 
     protected function configureRoutes()
     {
-        $this->get('/player/register', [PlayerController::class, 'register'])
-            ->add($this->getContainer()->get(AbstractPersistenceLayer::class));
+        $this->add($this->getContainer()->get(PersistenceMiddleware::class));
 
+        $this->post('/player/register', [PlayerController::class, 'register']);
         $this->get('/player/login', [PlayerController::class, 'login']);
         $this->get('/player/logout', [PlayerController::class, 'logout']);
+        $this->get('/player/all', [PlayerController::class, 'getAll']);
     }
 }

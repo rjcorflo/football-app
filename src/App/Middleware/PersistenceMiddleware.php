@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Middleware;
+namespace RJ\FootballApp\App\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -21,11 +21,13 @@ class PersistenceMiddleware
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param callable $next
+     * @return ResponseInterface
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable  $next)
     {
         $this->persistenceLayer->initialize();
-        $next($request, $response);
+        $response = $next($request, $response);
         $this->persistenceLayer->finalize();
+        return $response;
     }
 }
