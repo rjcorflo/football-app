@@ -6,12 +6,13 @@ use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Persistence\RedBeanPersistence\RedBeanPersistenceLayer;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RedBeanPHP\R;
 use RJ\FootballApp\Aspect\ApplicationAspect;
 use RJ\FootballApp\Aspect\LoggerAspect;
 use RJ\FootballApp\Controller\PlayerController;
+use RJ\FootballApp\Persistence\AbstractPersistenceLayer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
@@ -29,7 +30,6 @@ class Application extends App
 
     protected function bootstrap()
     {
-        $this->configurePersistence();
         $this->configureRoutes();
 
         /**
@@ -38,9 +38,9 @@ class Application extends App
         $aspectApp = $this->getContainer()->get('aop.app');
         $aspectApp->init([
             'debug' => true,
-            'cacheDir' => __DIR__ . '/../../cache',
+            'cacheDir' => $this->getContainer()->get('app.cacheDir') . '/aop',
             'includePaths' => [
-                __DIR__ . '/../../src'
+                $this->getContainer()->get('app.srcDir')
             ]
         ]);
     }
@@ -54,8 +54,23 @@ class Application extends App
     private function configuration()
     {
         return [
+            /* Slim configuration */
             'settings.displayErrorDetails' => true,
+
+            /* Middleware */
+            AbstractPersistenceLayer::class => object(RedBeanPersistenceLayer::class),
+
+            /* App base configuration */
+            'app.baseDir' => __DIR__ . '/../..',
+            'app.cacheDir' => string('{app.baseDir}/cache'),
+            'app.logsDir' => string('{app.baseDir}/logs'),
+            'app.srcDir' => string('{app.baseDir}/src'),
+            'app.storageDir' => string('{app.baseDir}/storage'),
+
+            /* Event configuration */
             EventDispatcherInterface::class => object(EventDispatcher::class),
+
+            /* Logger configuration */
             StreamHandler::class => object()->constructor(string('{app.logsDir}/logs.log')),
             'logger.handlers' => [
                 get(StreamHandler::class)
@@ -67,6 +82,8 @@ class Application extends App
                 }
                 return $logger;
             },
+
+            /* Aspects configuration */
             'aop.aspects' => [
                 get(LoggerAspect::class)
             ],
@@ -80,13 +97,10 @@ class Application extends App
 
     protected function configureRoutes()
     {
-        $this->get('/player/register', [PlayerController::class, 'register']);
+        $this->get('/player/register', [PlayerController::class, 'register'])
+            ->add($this->getContainer()->get(AbstractPersistenceLayer::class));
+
         $this->get('/player/login', [PlayerController::class, 'login']);
         $this->get('/player/logout', [PlayerController::class, 'logout']);
-    }
-
-    protected function configurePersistence()
-    {
-        R::setup();
     }
 }
