@@ -6,7 +6,6 @@
  */
 
 return [
-    'app.baseDir' => '',
     'database.dsn' => '',
     'database.user' => '',
     'database.pass' => ''
