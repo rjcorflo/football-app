@@ -16,7 +16,8 @@
         "symfony/event-dispatcher": "*",
         "monolog/monolog": "^1.0",
         "goaop/framework": "^2.0",
-        "league/fractal": "*"
+        "league/fractal": "*",
+        "respect/validation": "^1.0"
     },
     "require-dev": {
         "codeception/codeception": "^2.0",
