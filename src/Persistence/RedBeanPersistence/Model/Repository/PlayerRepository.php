@@ -2,6 +2,8 @@
 
 namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository;
 
+use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity\Token;
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
@@ -128,14 +130,41 @@ class PlayerRepository implements PlayerRepositoryInterface
      */
     public function findPlayerByNicknameOrEmail(string $player) : array
     {
-        return R::find(self::BEAN_NAME, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
+        $players = R::find(self::BEAN_NAME, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
+        return $this->boxArray($players);
     }
 
-    public function generateTokenForPlayer(PlayerInterface $player)
+    public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface
     {
+        /**
+         * @var Token $token
+         */
+        $token = R::dispense('token');
+        $token->token = bin2hex(random_bytes(20));
+
+        $player->addToken($token->box());
+
+        $this->store($player);
+
+        return $token->box();
     }
 
-    public function findUserByToken()
+    /**
+     * @inheritdoc
+     */
+    public function findPlayerByToken(string $token) : PlayerInterface
     {
+        /**
+         * @var TokenInterface $token
+         */
+        $tokens = R::find('token', ['token LIKE ?'], [$token]);
+
+        if (count($tokens) !== 1) {
+            throw new \Exception("Error recuperando el usuario por el token");
+        }
+
+        $token = array_shift($tokens);
+
+        return $token->player->box();
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Persistence\RedBeanPersistence\Model\Entity;
+namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity;
 
-use Model\Entity\TokenInterface;
+use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 

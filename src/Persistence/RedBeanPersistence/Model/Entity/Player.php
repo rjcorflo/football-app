@@ -2,6 +2,7 @@
 
 namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity;
 
+use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
@@ -71,7 +72,7 @@ class Player extends SimpleModel implements PlayerInterface
 
     public function getCreationDate() : \DateTime
     {
-        return $this->bean->creation_date;
+        return \DateTime::createFromFormat('Y-m-d H:i:s' , $this->bean->creation_date);
     }
 
     /**
@@ -82,25 +83,23 @@ class Player extends SimpleModel implements PlayerInterface
         return $this->bean->sharedCommunityList;
     }
 
-    public function generateToken() : void
+    public function addToken(TokenInterface $token) : TokenInterface
     {
-        $token = R::dispense('token');
-        $token->token = bin2hex(random_bytes(20));
-
         $this->bean->xownTokenList[] = $token;
 
         return $token;
     }
 
-    public function removeToken(int $id) : void
+    public function removeToken(TokenInterface $token) : void
     {
-        unset($this->bean->xownTokenList[$id]);
+        unset($this->bean->xownTokenList[$token->getId()]);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getTokens() :array
     {
         return $this->bean->xownTokenList;
     }
-
-
 }

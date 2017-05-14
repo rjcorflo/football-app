@@ -1,6 +1,8 @@
 <?php
 namespace RJ\PronosticApp\Model\Entity;
 
+use RJ\PronosticApp\Model\Entity\TokenInterface;
+
 /**
  * Interface PlayerInterface.
  *
@@ -44,9 +46,12 @@ interface PlayerInterface
      */
     public function getPlayerCommunities() : array;
 
-    public function generateToken() : ;
+    public function addToken(TokenInterface $token) : TokenInterface;
 
-    public function removeToken(int $idToken) : void;
+    public function removeToken(TokenInterface $idToken) : void;
 
+    /**
+     * @return TokenInterface[]
+     */
     public function getTokens() :array;
 }

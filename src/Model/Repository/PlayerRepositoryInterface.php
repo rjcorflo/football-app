@@ -2,6 +2,7 @@
 
 namespace RJ\PronosticApp\Model\Repository;
 
+use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 interface PlayerRepositoryInterface
@@ -65,9 +66,22 @@ interface PlayerRepositoryInterface
     public function checkEmailExists(string $email) : bool;
 
     /**
+     * Generate one token for player.
+     * @param PlayerInterface $player
+     * @return TokenInterface
+     */
+    public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface;
+
+    /**
      * Find player by nickname or email.
      * @param string $name
      * @return PlayerInterface[] List of players.
      */
     public function findPlayerByNicknameOrEmail(string $name) : array;
+
+    /**
+     * @param string $token
+     * @return PlayerInterface Player.
+     */
+    public function findPlayerByToken(string $token) : PlayerInterface;
 }

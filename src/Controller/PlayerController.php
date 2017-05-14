@@ -43,6 +43,7 @@ class PlayerController
         $player->setNickname($bodyData['nickname']);
         $player->setEmail($bodyData['email']);
         $player->setPassword($bodyData['password']);
+        $player->setCreationDate(new \DateTime());
 
         $message = new MessageResult();
 
@@ -85,17 +86,29 @@ class PlayerController
         try {
             if (count($players) !== 1) {
                 $message->isError();
+                $message->addMessage("Nombre, email o password incorrectos");
                 throw new \Exception("Login incorrecto");
             }
 
-            $player = $players[0];
-            if (password_verify($bodyData['password'], $player->getPassword())) {
+            $player = array_shift($players);
+
+            if (!password_verify($bodyData['password'], $player->getPassword())) {
                 $message->isError();
+                $message->addMessage("Nombre, mail o password incorrectos");
                 throw new \Exception("Login incorrecto");
             }
 
-            $token = $player->generateToken();
+            $token = $this->playerRepository->generateTokenForPlayer($player);
 
+            $newResponse = $response->withHeader("Content-Type", "application/json");
+            $return = [
+                'nickname' => $player->getNickname(),
+                'email' => $player->getEmail(),
+                'creation_date' => $player->getCreationDate(),
+                'token' => $token->getToken()
+            ];
+            $newResponse->getBody()->write(json_encode($return));
+            return $newResponse;
         } catch (\Exception $e) {
             $message->setDescription($e->getMessage());
         }

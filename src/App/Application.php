@@ -110,7 +110,7 @@ class Application extends App
         $this->add($this->getContainer()->get(PersistenceMiddleware::class));
 
         $this->post('/player/register', [PlayerController::class, 'register']);
-        $this->get('/player/login', [PlayerController::class, 'login']);
+        $this->post('/player/login', [PlayerController::class, 'login']);
         $this->get('/player/logout', [PlayerController::class, 'logout']);
         $this->get('/player/all', [PlayerController::class, 'getAll']);
     }

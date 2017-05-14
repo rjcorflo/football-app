@@ -1,6 +1,6 @@
 <?php
 
-namespace Model\Entity;
+namespace RJ\PronosticApp\Model\Entity;
 
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
