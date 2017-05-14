@@ -73,6 +73,12 @@ interface PlayerRepositoryInterface
     public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface;
 
     /**
+     * @param PlayerInterface $player
+     * @param string $token
+     */
+    public function removePlayerToken(PlayerInterface $player, string $token) : void;
+
+    /**
      * Find player by nickname or email.
      * @param string $name
      * @return PlayerInterface[] List of players.

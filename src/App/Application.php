@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\App;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
@@ -14,8 +15,10 @@ use RJ\PronosticApp\Aspect\ApplicationAspect;
 use RJ\PronosticApp\Aspect\LoggerAspect;
 use RJ\PronosticApp\Controller\PlayerController;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
 use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository\PlayerRepository;
+use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository\TokenRepository;
 use RJ\PronosticApp\Persistence\RedBeanPersistence\RedBeanPersistenceLayer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -75,6 +78,7 @@ class Application extends App
             'app.storageDir' => string('{app.baseDir}/storage'),
 
             PlayerRepositoryInterface::class => object(PlayerRepository::class),
+            TokenRepositoryInterface::class => object(TokenRepository::class),
             WebResourceGeneratorInterface::class => object(FractalGenerator::class),
 
             /* Event configuration */
@@ -111,7 +115,10 @@ class Application extends App
 
         $this->post('/player/register', [PlayerController::class, 'register']);
         $this->post('/player/login', [PlayerController::class, 'login']);
-        $this->get('/player/logout', [PlayerController::class, 'logout']);
-        $this->get('/player/all', [PlayerController::class, 'getAll']);
+
+        $this->group('/player', function() {
+            $this->post('/logout', [PlayerController::class, 'logout']);
+            $this->get('/all', [PlayerController::class, 'getAll']);
+        })->add(AuthenticationMiddleware::class);
     }
 }

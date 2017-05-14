@@ -23,7 +23,7 @@ class PersistenceMiddleware
      * @param callable $next
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable  $next)
+    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
         $this->persistenceLayer->initialize();
         $response = $next($request, $response);

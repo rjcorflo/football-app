@@ -3,6 +3,7 @@ namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence;
 use RJ\PronosticApp\Util\MessageResult;
@@ -120,25 +121,44 @@ class PlayerController
 
     public function logout(
         ServerRequestInterface $request,
-        ResponseInterface $response,
-        $ide
+        ResponseInterface $response
     ) {
-        $aaa = $request->getServerParams();
-        print_r($aaa);
-        $response->getBody()->write("Hola $ide");
+        /**
+         * @var PlayerInterface $player
+         */
+        $player = $request->getAttribute('player');
+
+        $tokenString = $request->getHeader('X-Auth-Token');
+
+        $message = new MessageResult();
+
+        try {
+            $this->playerRepository->removePlayerToken($player, $tokenString[0]);
+            $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
+        } catch (\Exception $e) {
+            $message->isError();
+            $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
+        }
+
+        $newResponse = $response->withHeader("Content-Type", "application/json");
+        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        return $newResponse;
     }
 
     public function getAll(
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        $players = $this->playerRepository->findAll();
+        //$players = $this->playerRepository->findAll();
+        /**
+         * @var PlayerInterface $player
+         */
+        $player = $request->getAttribute('player');
+        $string = [
+            'nickname' => $player->getNickname(),
+            'email' => $player->getEmail()
+        ];
 
-        $salida = "";
-        foreach ($players as $player) {
-            $salida .= $player->getNickname() . ", " . $player->getEmail() . "; ";
-        }
-
-        $response->getBody()->write($salida);
+        $response->getBody()->write(json_encode($string));
     }
 }

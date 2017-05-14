@@ -152,10 +152,31 @@ class PlayerRepository implements PlayerRepositoryInterface
     /**
      * @inheritdoc
      */
+    public function removePlayerToken(PlayerInterface $player, string $token) : void
+    {
+        /**
+         * @var SimpleModel[] $tokens
+         */
+        $tokens = R::find('token', ['token LIKE ?'], [$token]);
+
+        if (count($tokens) !== 1) {
+            throw new \Exception("Error recuperando el usuario por el token");
+        }
+
+        $token = array_shift($tokens);
+
+        $player->removeToken($token->box());
+
+        $this->store($player);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function findPlayerByToken(string $token) : PlayerInterface
     {
         /**
-         * @var TokenInterface $token
+         * @var SimpleModel[] $tokens
          */
         $tokens = R::find('token', ['token LIKE ?'], [$token]);
 
