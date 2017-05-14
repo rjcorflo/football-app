@@ -29,13 +29,13 @@ class PlayerRepository implements PlayerRepositoryInterface
     /**
      * @inheritdoc
      */
-    public function store(PlayerInterface $entity) : int
+    public function store(PlayerInterface $player) : int
     {
-        if (!$entity instanceof Player) {
+        if (!$player instanceof Player) {
             throw new \Exception("Object must be an instance of Player");
         }
 
-        return R::store($entity);
+        return R::store($player);
     }
 
     /**
@@ -111,5 +111,31 @@ class PlayerRepository implements PlayerRepositoryInterface
         }
 
         return $models;
+    }
+
+    public function checkNickameExists(string $nickname) : bool
+    {
+        return R::count(self::BEAN_NAME, 'nickname LIKE ?', [$nickname]) > 0;
+    }
+
+    public function checkEmailExists(string $email) : bool
+    {
+        return R::count(self::BEAN_NAME, 'email LIKE ?', [$email]) > 0;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findPlayerByNicknameOrEmail(string $player) : array
+    {
+        return R::find(self::BEAN_NAME, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
+    }
+
+    public function generateTokenForPlayer(PlayerInterface $player)
+    {
+    }
+
+    public function findUserByToken()
+    {
     }
 }

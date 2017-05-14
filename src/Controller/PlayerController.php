@@ -31,6 +31,7 @@ class PlayerController
      * @Logger
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     public function register(
         ServerRequestInterface $request,
@@ -45,26 +46,63 @@ class PlayerController
 
         $message = new MessageResult();
 
-        try {
-            $this->playerRepository->store($player);
-        } catch (\Exception $e) {
+        if ($this->playerRepository->checkNickameExists($player->getNickname())) {
             $message->isError();
-            $message->setDescription("Error al almacenar el jugador");
-            $message->addMessage($e->getMessage());
+            $message->addMessage("Ya existe un usuario con ese nickname.");
         }
 
-        $message->setDescription("Registro correcto");
+        if ($this->playerRepository->checkEmailExists($player->getEmail())) {
+            $message->isError();
+            $message->addMessage("Ya existe un usuario con ese email.");
+        }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        if (!$message->hasError()) {
+            try {
+                $this->playerRepository->store($player);
+                $message->setDescription("Registro correcto");
+            } catch (\Exception $e) {
+                $message->isError();
+                $message->setDescription("Error al almacenar el jugador");
+                $message->addMessage($e->getMessage());
+            }
+        }
+
+        $newResponse = $response->withHeader("Content-Type", "application/json");
+        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        return $newResponse;
     }
 
     public function login(
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        $aaa = $request->getServerParams();
-        print_r($aaa);
-        $response->getBody()->write('Hola');
+        $bodyData = $request->getParsedBody();
+
+        $players = $this->playerRepository->findPlayerByNicknameOrEmail($bodyData['player']);
+
+        $message = new MessageResult();
+
+        try {
+            if (count($players) !== 1) {
+                $message->isError();
+                throw new \Exception("Login incorrecto");
+            }
+
+            $player = $players[0];
+            if (password_verify($bodyData['password'], $player->getPassword())) {
+                $message->isError();
+                throw new \Exception("Login incorrecto");
+            }
+
+            $token = $player->generateToken();
+
+        } catch (\Exception $e) {
+            $message->setDescription($e->getMessage());
+        }
+
+        $newResponse = $response->withHeader("Content-Type", "application/json");
+        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        return $newResponse;
     }
 
     public function logout(

@@ -4,9 +4,9 @@ namespace RJ\PronosticApp\Util;
 
 class MessageResult
 {
-    protected $error;
+    protected $error = false;
 
-    protected $description;
+    protected $description = "";
 
     /**
      * @var string[]

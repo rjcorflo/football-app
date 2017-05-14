@@ -59,4 +59,15 @@ interface PlayerRepositoryInterface
      * @return PlayerInterface[] List of all players.
      */
     public function findAll() : array;
+
+    public function checkNickameExists(string $nickname) : bool;
+
+    public function checkEmailExists(string $email) : bool;
+
+    /**
+     * Find player by nickname or email.
+     * @param string $name
+     * @return PlayerInterface[] List of players.
+     */
+    public function findPlayerByNicknameOrEmail(string $name) : array;
 }

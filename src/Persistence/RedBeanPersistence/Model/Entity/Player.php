@@ -2,6 +2,7 @@
 
 namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity;
 
+use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
@@ -35,7 +36,7 @@ class Player extends SimpleModel implements PlayerInterface
 
     public function setPassword(string $password) : void
     {
-        $this->password = $password;
+        $this->password =  password_hash($password, PASSWORD_BCRYPT);
     }
 
     public function getPassword() : string
@@ -80,4 +81,26 @@ class Player extends SimpleModel implements PlayerInterface
     {
         return $this->bean->sharedCommunityList;
     }
+
+    public function generateToken() : void
+    {
+        $token = R::dispense('token');
+        $token->token = bin2hex(random_bytes(20));
+
+        $this->bean->xownTokenList[] = $token;
+
+        return $token;
+    }
+
+    public function removeToken(int $id) : void
+    {
+        unset($this->bean->xownTokenList[$id]);
+    }
+
+    public function getTokens() :array
+    {
+        return $this->bean->xownTokenList;
+    }
+
+
 }

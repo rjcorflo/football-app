@@ -1,29 +1,29 @@
 <?php
 
-namespace RJ\App;
+namespace RJ\PronosticApp\App;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use RJ\FootballApp\App\Middleware\PersistenceMiddleware;
+use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RJ\FootballApp\Aspect\ApplicationAspect;
-use RJ\FootballApp\Aspect\LoggerAspect;
-use RJ\FootballApp\Controller\PlayerController;
-use RJ\FootballApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\FootballApp\Persistence\AbstractPersistenceLayer;
-use RJ\FootballApp\Persistence\RedBeanPersistence\Model\Repository\PlayerRepository;
-use RJ\FootballApp\Persistence\RedBeanPersistence\RedBeanPersistenceLayer;
+use RJ\PronosticApp\Aspect\ApplicationAspect;
+use RJ\PronosticApp\Aspect\LoggerAspect;
+use RJ\PronosticApp\Controller\PlayerController;
+use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
+use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository\PlayerRepository;
+use RJ\PronosticApp\Persistence\RedBeanPersistence\RedBeanPersistenceLayer;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
 use function DI\object;
 use function DI\string;
-use WebResource\Fractal\FractalGenerator;
-use WebResource\WebResourceGeneratorInterface;
+use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
+use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 class Application extends App
 {

@@ -1,9 +1,10 @@
 <?php
 
-namespace WebResource\Fractal;
+namespace RJ\PronosticApp\WebResource\Fractal;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\ArraySerializer;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Util\MessageResult;
@@ -17,6 +18,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     public function __construct()
     {
         $this->manager = new Manager();
+        $this->manager->setSerializer(new ArraySerializer());
     }
 
     public function createMessageResource(MessageResult $message)

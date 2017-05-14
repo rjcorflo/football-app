@@ -43,4 +43,10 @@ interface PlayerInterface
      * @return CommunityInterface[] List of communities to which the player belongs.
      */
     public function getPlayerCommunities() : array;
+
+    public function generateToken() : ;
+
+    public function removeToken(int $idToken) : void;
+
+    public function getTokens() :array;
 }
