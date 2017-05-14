@@ -33,16 +33,18 @@
     },
     "autoload": {
         "psr-4": {
-            "RJ\\FootballApp\\": "src"
+            "RJ\\PronosticApp\\": "src"
         }
     },
     "scripts": {
         "dev:start": "robo develop:start",
         "dev:push": "robo develop:publish",
         "test": "robo test",
+        "publish": "robo production:publish",
         "publish:major": "robo production:publish --release major",
         "publish:minor": "robo production:publish --release minor",
         "publish:patch": "robo production:publish --release patch",
-        "deploy": "robo production:deploy"
+        "deploy": "robo production:deploy",
+        "deploy:test": "robo production:deploy --stage test"
     }
 }

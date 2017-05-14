@@ -1,12 +1,12 @@
 <?php
 
-namespace RJ\FootballApp\Persistence\RedBeanPersistence\Model\Repository;
+namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository;
 
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
-use RJ\FootballApp\Model\Entity\PlayerInterface;
-use RJ\FootballApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\FootballApp\Persistence\RedBeanPersistence\Model\Entity\Player;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity\Player;
 
 class PlayerRepository implements PlayerRepositoryInterface
 {

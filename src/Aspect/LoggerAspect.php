@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\FootballApp\Aspect;
+namespace RJ\PronosticApp\Aspect;
 
 use Go\Aop\Aspect;
 use Go\Aop\Intercept\MethodInvocation;

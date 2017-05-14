@@ -1,16 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: RJ Corchero
- * Date: 13/05/2017
- * Time: 13:36
- */
 
-namespace WebResource\Fractal\Transformer;
-
+namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
-use RJ\FootballApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 class CommunityTransformer extends TransformerAbstract
 {

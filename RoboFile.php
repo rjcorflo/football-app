@@ -32,11 +32,6 @@ class RoboFile extends \Robo\Tasks
      */
     public function developStart()
     {
-        /*$this->taskGitStack()
-            ->checkout('development')
-            ->pull()
-            ->run();*/
-
         $this->taskServer()->dir('public')
             ->background()
             ->run();
@@ -274,6 +269,7 @@ class RoboFile extends \Robo\Tasks
     ) {
         if (!is_string($options['on']) || !is_string($options['stage'])) {
             $this->say('Options on and stage must be strings.');
+            return;
         }
 
         if ($options['release']) {

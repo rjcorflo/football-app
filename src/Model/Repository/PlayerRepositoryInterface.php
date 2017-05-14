@@ -1,8 +1,8 @@
 <?php
 
-namespace RJ\FootballApp\Model\Repository;
+namespace RJ\PronosticApp\Model\Repository;
 
-use RJ\FootballApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 interface PlayerRepositoryInterface
 {

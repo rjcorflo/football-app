@@ -1,13 +1,20 @@
 <?php
 
-namespace Persistence\RedBeanPersistence\Model\Entity;
+namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity;
 
+use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RedBeanPHP\SimpleModel;
-use RJ\FootballApp\Model\Entity\CommunityInterface;
-use RJ\FootballApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
-class Community extends  SimpleModel implements CommunityInterface
+class Community extends SimpleModel implements CommunityInterface
 {
+    private $participantRepository;
+
+    public function __construct(ParticipantRepositoryInterface $participantRepository)
+    {
+        $this->participantRepository = $participantRepository;
+    }
 
     public function getId() : int
     {
@@ -54,13 +61,21 @@ class Community extends  SimpleModel implements CommunityInterface
         return $this->bean->creation_date;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function getPlayers() : array
+    {
+        return $this->participantRepository->listPlayersFromCommunity($this);
+    }
+
     public function addPlayer(PlayerInterface $player) : void
     {
-        $this->bean->sharedPlayerList[] = $player;
+        $this->participantRepository->addPlayerToCommunity($player, $this);
     }
 
     public function removePlayer(PlayerInterface $player) : void
     {
-        $this->bean->sharedPlayerList[$player->getId()];
+        $this->participantRepository->removePlayerFromCommunity($player, $this);
     }
 }

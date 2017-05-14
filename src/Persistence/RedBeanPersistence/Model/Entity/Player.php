@@ -1,9 +1,9 @@
 <?php
 
-namespace RJ\FootballApp\Persistence\RedBeanPersistence\Model\Entity;
+namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity;
 
 use RedBeanPHP\SimpleModel;
-use RJ\FootballApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 class Player extends SimpleModel implements PlayerInterface
 {

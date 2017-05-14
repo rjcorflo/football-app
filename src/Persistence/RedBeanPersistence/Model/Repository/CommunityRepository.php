@@ -1,8 +1,10 @@
 <?php
 
-namespace Persistence\RedBeanPersistence\Model\Repository;
+namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository;
 
-class CommunityRepository
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
+
+class CommunityRepository implements CommunityInterface
 {
     const BEAN_NAME = 'community';
 

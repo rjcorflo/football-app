@@ -1,10 +1,10 @@
 <?php
 
-namespace WebResource;
+namespace RJ\PronosticApp\WebResource;
 
-use RJ\FootballApp\Model\Entity\CommunityInterface;
-use RJ\FootballApp\Model\Entity\PlayerInterface;
-use Util\MessageResult;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Util\MessageResult;
 
 interface WebResourceGeneratorInterface
 {

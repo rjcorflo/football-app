@@ -1,11 +1,13 @@
 <?php
-namespace RJ\FootballApp\Controller;
+namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RJ\FootballApp\Aspect\Annotation\Logger;
-use RJ\FootballApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\FootballApp\Persistence;
+use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Persistence;
+use RJ\PronosticApp\Util\MessageResult;
+use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
+use RJ\PronosticApp\Aspect\Annotation\Logger;
 
 class PlayerController
 {
@@ -14,9 +16,15 @@ class PlayerController
      */
     private $playerRepository;
 
-    public function __construct(PlayerRepositoryInterface $playerRepository)
+    /**
+     * @var WebResourceGeneratorInterface
+     */
+    private $resourceGenerator;
+
+    public function __construct(PlayerRepositoryInterface $playerRepository, WebResourceGeneratorInterface $resourceGenerator)
     {
         $this->playerRepository = $playerRepository;
+        $this->resourceGenerator = $resourceGenerator;
     }
 
     /**
@@ -33,11 +41,21 @@ class PlayerController
         $player = $this->playerRepository->create();
         $player->setNickname($bodyData['nickname']);
         $player->setEmail($bodyData['email']);
-        $player->setPassword($bodyData['pass']);
+        $player->setPassword($bodyData['password']);
 
-        $this->playerRepository->store($player);
+        $message = new MessageResult();
 
-        $response->getBody()->write(print_r($bodyData, true));
+        try {
+            $this->playerRepository->store($player);
+        } catch (\Exception $e) {
+            $message->isError();
+            $message->setDescription("Error al almacenar el jugador");
+            $message->addMessage($e->getMessage());
+        }
+
+        $message->setDescription("Registro correcto");
+
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($message));
     }
 
     public function login(

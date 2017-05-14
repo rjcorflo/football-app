@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\FootballApp\Persistence;
+namespace RJ\PronosticApp\Persistence;
 
 use Psr\Container\ContainerInterface;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace RJ\FootballApp\Model\Repository;
+namespace RJ\PronosticApp\Model\Repository;
 
-use RJ\FootballApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 interface CommunityRepositoryInterface
 {

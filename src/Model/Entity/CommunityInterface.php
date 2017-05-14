@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\FootballApp\Model\Entity;
+namespace RJ\PronosticApp\Model\Entity;
 
 interface CommunityInterface
 {

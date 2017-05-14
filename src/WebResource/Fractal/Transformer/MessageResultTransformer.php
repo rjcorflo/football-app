@@ -1,8 +1,8 @@
 <?php
 
-namespace WebResource\Fractal\Transformer;
+namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
-use Util\MessageResult;
+use RJ\PronosticApp\Util\MessageResult;
 
 class MessageResultTransformer
 {

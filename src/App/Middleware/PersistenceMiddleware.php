@@ -1,10 +1,10 @@
 <?php
 
-namespace RJ\FootballApp\App\Middleware;
+namespace RJ\PronosticApp\App\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RJ\FootballApp\Persistence\AbstractPersistenceLayer;
+use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
 
 class PersistenceMiddleware
 {

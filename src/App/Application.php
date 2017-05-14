@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\FootballApp\App;
+namespace RJ\App;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use RJ\FootballApp\App\Middleware\PersistenceMiddleware;
@@ -22,6 +22,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
 use function DI\object;
 use function DI\string;
+use WebResource\Fractal\FractalGenerator;
+use WebResource\WebResourceGeneratorInterface;
 
 class Application extends App
 {
@@ -73,6 +75,7 @@ class Application extends App
             'app.storageDir' => string('{app.baseDir}/storage'),
 
             PlayerRepositoryInterface::class => object(PlayerRepository::class),
+            WebResourceGeneratorInterface::class => object(FractalGenerator::class),
 
             /* Event configuration */
             EventDispatcherInterface::class => object(EventDispatcher::class),

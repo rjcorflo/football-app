@@ -1,20 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: RJ Corchero
- * Date: 13/05/2017
- * Time: 13:02
- */
 
 namespace WebResource\Fractal;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
-use RJ\FootballApp\Model\Entity\CommunityInterface;
-use RJ\FootballApp\Model\Entity\PlayerInterface;
-use Util\MessageResult;
-use WebResource\Fractal\Transformer\MessageResultTransformer;
-use WebResource\WebResourceGeneratorInterface;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Util\MessageResult;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
+use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 class FractalGenerator implements WebResourceGeneratorInterface
 {

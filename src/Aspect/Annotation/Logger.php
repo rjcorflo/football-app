@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\FootballApp\Aspect\Annotation;
+namespace RJ\PronosticApp\Aspect\Annotation;
 
 use Doctrine\Common\Annotations\Annotation;
 
