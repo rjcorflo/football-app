@@ -12,6 +12,9 @@ class PlayerRepository implements PlayerRepositoryInterface
 {
     const BEAN_NAME = 'player';
 
+    /**
+     * @inheritdoc
+     */
     public function create() : PlayerInterface
     {
         /**
@@ -23,6 +26,9 @@ class PlayerRepository implements PlayerRepositoryInterface
         return $bean->box();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function store(PlayerInterface $entity) : int
     {
         if (!$entity instanceof Player) {
@@ -32,11 +38,17 @@ class PlayerRepository implements PlayerRepositoryInterface
         return R::store($entity);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function storeMultiple(array $entities) : array
     {
         return R::storeAll($entities);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function trash(PlayerInterface $entity) : void
     {
         if (!$entity instanceof Player) {
@@ -46,11 +58,17 @@ class PlayerRepository implements PlayerRepositoryInterface
         R::trash($entity);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function trashMultiple(array $entities) : void
     {
         R::trashAll($entities);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getById(int $idEntity) : PlayerInterface
     {
         /**
@@ -62,6 +80,9 @@ class PlayerRepository implements PlayerRepositoryInterface
         return $bean->box();
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getMultipleById(array $playersIds) : array
     {
         $beans = R::loadAll(self::BEAN_NAME, $playersIds);

@@ -8,6 +8,9 @@ namespace RJ\FootballApp\Model\Entity;
  */
 interface PlayerInterface
 {
+    /**
+     * @return int Player ID.
+     */
     public function getId() : int;
 
     public function setNickname(string $nickname) : void;

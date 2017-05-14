@@ -6,23 +6,57 @@ use RJ\FootballApp\Model\Entity\CommunityInterface;
 
 interface CommunityRepositoryInterface
 {
+    /**
+     * Return fresh created community model. Is it not persisted.
+     * @return CommunityInterface
+     */
     public function create() : CommunityInterface;
 
-    public function store(CommunityInterface $entity);
+    /**
+     * Persist community.
+     * @param CommunityInterface $community
+     * @return int ID of created community.
+     */
+    public function store(CommunityInterface $community) : int;
 
     /**
+     * Persists multiple communities at once.
      * @param CommunityInterface[] $entities
      * @return mixed
      */
-    public function storeMultiple(array $entities);
-
-    public function trash(CommunityInterface $entity);
+    public function storeMultiple(array $entities) : array;
 
     /**
-     * @param CommunityInterface[] $entities
+     * Delete community.
+     * @param CommunityInterface $community
      * @return mixed
      */
-    public function trashMultiple(array $entities);
+    public function trash(CommunityInterface $community) : void;
 
-    public function getById(int $idEntity) : CommunityInterface;
+    /**
+     * Delete multiples communities.
+     * @param CommunityInterface[] $entities
+     * @return void
+     */
+    public function trashMultiple(array $entities) : void;
+
+    /**
+     * Get communities by id.
+     * @param int $communityId
+     * @return CommunityInterface
+     */
+    public function getById(int $communityId) : CommunityInterface;
+
+    /**
+     * Get various players by id.
+     * @param int[] $playersIds
+     * @return CommunityInterface[] List of players.
+     */
+    public function getMultipleById(array $playersIds) : array;
+
+    /**
+     * Returns all players.
+     * @return CommunityInterface[] List of all players.
+     */
+    public function findAll() : array;
 }

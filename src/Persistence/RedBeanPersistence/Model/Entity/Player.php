@@ -35,12 +35,12 @@ class Player extends SimpleModel implements PlayerInterface
 
     public function setPassword(string $password) : void
     {
-        $this->pass = $password;
+        $this->password = $password;
     }
 
     public function getPassword() : string
     {
-        return $this->bean->pass;
+        return $this->bean->password;
     }
 
     public function setFirstName(string $firstName) : void
@@ -73,7 +73,11 @@ class Player extends SimpleModel implements PlayerInterface
         return $this->bean->creation_date;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function getPlayerCommunities() : array
     {
+        return $this->bean->sharedCommunityList;
     }
 }

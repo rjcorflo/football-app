@@ -29,14 +29,14 @@ interface PlayerRepositoryInterface
     /**
      * Delete player.
      * @param PlayerInterface $player
-     * @return mixed
+     * @return void
      */
     public function trash(PlayerInterface $player) : void;
 
     /**
      * Delete multiples players.
      * @param PlayerInterface[] $players
-     * @return mixed
+     * @return void
      */
     public function trashMultiple(array $players) : void;
 
