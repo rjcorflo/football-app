@@ -43,7 +43,7 @@
         "publish:major": "robo production:publish --release major",
         "publish:minor": "robo production:publish --release minor",
         "publish:patch": "robo production:publish --release patch",
-        "deploy": "robo production:deploy",
+        "deploy:live": "robo production:deploy",
         "deploy:test": "robo production:deploy --stage test"
     }
 }

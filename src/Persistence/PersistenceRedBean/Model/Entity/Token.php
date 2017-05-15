@@ -11,7 +11,7 @@ class Token extends SimpleModel implements TokenInterface
     /**
      * @inheritdoc
      */
-    public function getId()
+    public function getId() : int
     {
         return $this->bean->id;
     }
@@ -19,7 +19,7 @@ class Token extends SimpleModel implements TokenInterface
     /**
      * @inheritdoc
      */
-    public function setPlayer(PlayerInterface $player)
+    public function setPlayer(PlayerInterface $player) : void
     {
         $this->bean->player;
     }
@@ -35,7 +35,7 @@ class Token extends SimpleModel implements TokenInterface
     /**
      * @inheritdoc
      */
-    public function setToken(string $token)
+    public function setToken(string $token) : void
     {
         $this->bean->token = $token;
     }
