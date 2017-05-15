@@ -1,18 +1,21 @@
 <?php
 
-namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository;
+namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity\Community;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Community;
 use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity\Player;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
 
 class ParticipantRepository implements ParticipantRepositoryInterface
 {
     const BEAN_NAME = 'participant';
 
+    /**
+     * @inheritdoc
+     */
     public function addPlayerToCommunity(PlayerInterface $player, CommunityInterface $community) : void
     {
         if (!$player instanceof Player) {
@@ -29,6 +32,9 @@ class ParticipantRepository implements ParticipantRepositoryInterface
         R::store($participant);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function removePlayerFromCommunity(PlayerInterface $player, CommunityInterface $community) : void
     {
         if (!$player instanceof Player) {

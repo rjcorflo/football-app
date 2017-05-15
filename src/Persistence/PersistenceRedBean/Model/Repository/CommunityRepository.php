@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository;
+namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 

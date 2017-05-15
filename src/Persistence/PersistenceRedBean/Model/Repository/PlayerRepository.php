@@ -1,14 +1,14 @@
 <?php
 
-namespace RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Repository;
+namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\TokenInterface;
-use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity\Token;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Token;
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\PronosticApp\Persistence\RedBeanPersistence\Model\Entity\Player;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
 
 class PlayerRepository implements PlayerRepositoryInterface
 {
@@ -115,11 +115,17 @@ class PlayerRepository implements PlayerRepositoryInterface
         return $models;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function checkNickameExists(string $nickname) : bool
     {
         return R::count(self::BEAN_NAME, 'nickname LIKE ?', [$nickname]) > 0;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function checkEmailExists(string $email) : bool
     {
         return R::count(self::BEAN_NAME, 'email LIKE ?', [$email]) > 0;
@@ -134,6 +140,9 @@ class PlayerRepository implements PlayerRepositoryInterface
         return $this->boxArray($players);
     }
 
+    /**
+     * @inheritdoc
+     */
     public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface
     {
         /**
