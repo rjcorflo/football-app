@@ -91,7 +91,7 @@ class Player extends SimpleModel implements PlayerInterface
     /**
      * @inheritdoc
      */
-    public function getLasName() : string
+    public function getLastName() : string
     {
         return $this->bean->lastName;
     }

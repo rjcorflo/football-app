@@ -195,19 +195,27 @@ class PlayerController
         return $newResponse;
     }
 
-    public function getAll(
+    public function info(
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
+        // Prepare response
+        $newResponse = $response->withHeader("Content-Type", "application/json");
+
         /**
          * @var PlayerInterface $player
          */
         $player = $request->getAttribute('player');
+
         $string = [
             'nickname' => $player->getNickname(),
-            'email' => $player->getEmail()
+            'email' => $player->getEmail(),
+            'nombre' => $player->getFirstName(),
+            'apellidos' => $player->getLastName(),
+            'comunidades' => $player->getPlayerCommunities()
         ];
 
-        $response->getBody()->write(json_encode($string));
+        $newResponse->getBody()->write(json_encode($string));
+        return $newResponse;
     }
 }

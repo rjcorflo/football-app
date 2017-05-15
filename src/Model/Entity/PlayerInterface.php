@@ -61,7 +61,7 @@ interface PlayerInterface
     /**
      * @return string
      */
-    public function getLasName() : string;
+    public function getLastName() : string;
 
     /**
      * @param \DateTime $date
