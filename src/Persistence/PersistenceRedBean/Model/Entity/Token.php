@@ -2,9 +2,9 @@
 
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
-use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 class Token extends SimpleModel implements TokenInterface
 {
@@ -21,7 +21,7 @@ class Token extends SimpleModel implements TokenInterface
      */
     public function setPlayer(PlayerInterface $player)
     {
-       $this->bean->player;
+        $this->bean->player;
     }
 
     /**

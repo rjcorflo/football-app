@@ -2,29 +2,28 @@
 
 namespace RJ\PronosticApp\App;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
-use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RJ\PronosticApp\Aspect\ApplicationAspect;
-use RJ\PronosticApp\Aspect\LoggerAspect;
+use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
+use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
+use RJ\PronosticApp\Controller\CommunityController;
 use RJ\PronosticApp\Controller\PlayerController;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\CommunityRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\PlayerRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanPersistenceLayer;
+use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
+use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
 use function DI\object;
 use function DI\string;
-use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 class Application extends App
 {
@@ -37,20 +36,7 @@ class Application extends App
 
     protected function bootstrap()
     {
-        AnnotationReader::addGlobalIgnoredName('note');
         $this->configureRoutes();
-
-        /**
-         * @var \Go\Core\AspectKernel $aspectApp
-         */
-        $aspectApp = $this->getContainer()->get('aop.app');
-        $aspectApp->init([
-            'debug' => true,
-            'cacheDir' => $this->getContainer()->get('app.cacheDir') . '/aop',
-            'includePaths' => [
-                $this->getContainer()->get('app.srcDir')
-            ]
-        ]);
     }
 
     protected function configureContainer(ContainerBuilder $builder)
@@ -93,16 +79,6 @@ class Application extends App
                 }
                 return $logger;
             },
-
-            /* Aspects configuration */
-            'aop.aspects' => [
-                get(LoggerAspect::class)
-            ],
-            'aop.app' => function (ContainerInterface $containerInterface) {
-                $appAop = ApplicationAspect::getInstance();
-                $appAop->setContainer($containerInterface);
-                return $appAop;
-            }
         ];
     }
 
@@ -113,9 +89,13 @@ class Application extends App
         $this->post('/player/register', [PlayerController::class, 'register']);
         $this->post('/player/login', [PlayerController::class, 'login']);
 
-        $this->group('/player', function() {
+        $this->group('/player', function () {
             $this->post('/logout', [PlayerController::class, 'logout']);
             $this->get('/all', [PlayerController::class, 'getAll']);
+        })->add(AuthenticationMiddleware::class);
+
+        $this->group('/community', function () {
+            $this->post('/create', [CommunityController::class, 'create']);
         })->add(AuthenticationMiddleware::class);
     }
 }

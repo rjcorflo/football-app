@@ -15,7 +15,6 @@
         "php-di/slim-bridge": "^1.0",
         "symfony/event-dispatcher": "*",
         "monolog/monolog": "^1.0",
-        "goaop/framework": "^2.0",
         "league/fractal": "*",
         "respect/validation": "^1.0"
     },

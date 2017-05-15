@@ -1,14 +1,15 @@
 <?php
 namespace RJ\PronosticApp\Controller;
 
+use Illuminate\Support\Facades\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Model\Validator\PlayerValidator;
 use RJ\PronosticApp\Persistence;
 use RJ\PronosticApp\Util\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
-use RJ\PronosticApp\Aspect\Annotation\Logger;
 
 class PlayerController
 {
@@ -29,7 +30,6 @@ class PlayerController
     }
 
     /**
-     * @Logger
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
@@ -40,37 +40,69 @@ class PlayerController
     ) {
         $bodyData = $request->getParsedBody();
 
-        $player = $this->playerRepository->create();
-        $player->setNickname($bodyData['nickname']);
-        $player->setEmail($bodyData['email']);
-        $player->setPassword($bodyData['password']);
-        $player->setCreationDate(new \DateTime());
+        // Prepare new response
+        $newResponse = $response->withHeader("Content-Type", "application/json");
 
-        $message = new MessageResult();
+        // Prepare result
+        $result = new MessageResult();
 
-        if ($this->playerRepository->checkNickameExists($player->getNickname())) {
-            $message->isError();
-            $message->addMessage("Ya existe un usuario con ese nickname.");
-        }
+        try {
+            // Retrieve data
+            $nickname = $bodyData['nickname'] ?? '';
+            $email = $bodyData['email'] ?? '';
+            $password = $bodyData['password'] ?? '';
+            $firstName = $bodyData['nombre'] ?? '';
+            $lastName = $bodyData['apellidos'] ?? '';
 
-        if ($this->playerRepository->checkEmailExists($player->getEmail())) {
-            $message->isError();
-            $message->addMessage("Ya existe un usuario con ese email.");
-        }
+            if (!$nickname || !$email || !$password) {
+                throw new \Exception("Los campos nickname, email y password son necesarios para poder registrarse");
+            }
 
-        if (!$message->hasError()) {
+            // Initialize Player data
+            $player = $this->playerRepository->create();
+            $player->setNickname($nickname);
+            $player->setEmail($email);
+            $player->setPassword($password);
+            $player->setFirstName($firstName);
+            $player->setLastName($lastName);
+            $player->setCreationDate(new \DateTime());
+
+            // Data validation
+            $result = (new PlayerValidator($player))->validate();
+
+            if ($result->hasError()) {
+                throw new \Exception("Error validando los datos del jugador.");
+            }
+
+            // Controller action
+            $existsNickname = $this->playerRepository->checkNickameExists($player->getNickname());
+            $existsEmail = $this->playerRepository->checkEmailExists($player->getEmail());
+
+            if ($existsNickname || $existsEmail) {
+                if ($existsNickname) {
+                    $result->addMessage("Ya existe un usuario con ese nickname.");
+                }
+
+                if ($existsEmail) {
+                    $result->addMessage("Ya existe un usuario con ese email.");
+                }
+
+                throw new \Exception("Ya existe un usuario con ese nickname o email.");
+            }
+
             try {
                 $this->playerRepository->store($player);
-                $message->setDescription("Registro correcto");
+                $result->setDescription("Registro correcto");
             } catch (\Exception $e) {
-                $message->isError();
-                $message->setDescription("Error al almacenar el jugador");
-                $message->addMessage($e->getMessage());
+                $result->addMessage($e->getMessage());
+                throw new \Exception("Error al almacenar el jugador");
             }
+        } catch (\Exception $e) {
+            $result->isError();
+            $result->setDescription($e->getMessage());
         }
 
-        $newResponse = $response->withHeader("Content-Type", "application/json");
-        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $newResponse;
     }
 
@@ -80,42 +112,58 @@ class PlayerController
     ) {
         $bodyData = $request->getParsedBody();
 
-        $players = $this->playerRepository->findPlayerByNicknameOrEmail($bodyData['player']);
+        // Prepare new response
+        $newResponse = $response->withHeader("Content-Type", "application/json");
 
-        $message = new MessageResult();
+        // Prepare result
+        $result = new MessageResult();
 
         try {
+            // Retrieve data
+            $player = $bodyData['player'] ?? '';
+            $password = $bodyData['password'] ?? '';
+
+            if (!$player || !$password) {
+                throw new \Exception('Los campos player y password son necesarios para poder hacer login.');
+            }
+
+            // Retrieve player
+            $players = $this->playerRepository->findPlayerByNicknameOrEmail($player);
+
             if (count($players) !== 1) {
-                $message->isError();
-                $message->addMessage("Nombre, email o password incorrectos");
+                $result->addMessage("Nombre, email o password incorrectos");
                 throw new \Exception("Login incorrecto");
             }
 
+            /**
+             * @var PlayerInterface $player
+             */
             $player = array_shift($players);
 
             if (!password_verify($bodyData['password'], $player->getPassword())) {
-                $message->isError();
-                $message->addMessage("Nombre, mail o password incorrectos");
+                $result->addMessage("Nombre, mail o password incorrectos");
                 throw new \Exception("Login incorrecto");
             }
 
+            // Correct login
+            // Generate token
             $token = $this->playerRepository->generateTokenForPlayer($player);
 
-            $newResponse = $response->withHeader("Content-Type", "application/json");
+            // Response
             $return = [
                 'nickname' => $player->getNickname(),
                 'email' => $player->getEmail(),
-                'creation_date' => $player->getCreationDate(),
+                'creation_date' => $player->getCreationDate()->format('d-m-Y H:i:s'),
                 'token' => $token->getToken()
             ];
             $newResponse->getBody()->write(json_encode($return));
             return $newResponse;
         } catch (\Exception $e) {
-            $message->setDescription($e->getMessage());
+            $result->isError();
+            $result->setDescription($e->getMessage());
         }
 
-        $newResponse = $response->withHeader("Content-Type", "application/json");
-        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $newResponse;
     }
 
@@ -123,16 +171,19 @@ class PlayerController
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
+        // Prepare response
+        $newResponse = $response->withHeader("Content-Type", "application/json");
+
         /**
          * @var PlayerInterface $player
          */
         $player = $request->getAttribute('player');
 
-        $tokenString = $request->getHeader('X-Auth-Token');
-
+        // Prepare result
         $message = new MessageResult();
 
         try {
+            $tokenString = $request->getHeader('X-Auth-Token');
             $this->playerRepository->removePlayerToken($player, $tokenString[0]);
             $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
         } catch (\Exception $e) {
@@ -140,7 +191,6 @@ class PlayerController
             $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
         }
 
-        $newResponse = $response->withHeader("Content-Type", "application/json");
         $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
         return $newResponse;
     }
@@ -149,7 +199,6 @@ class PlayerController
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        //$players = $this->playerRepository->findAll();
         /**
          * @var PlayerInterface $player
          */

@@ -2,17 +2,30 @@
 
 namespace RJ\PronosticApp\Model\Entity;
 
-use RJ\PronosticApp\Model\Entity\PlayerInterface;
-
 interface TokenInterface
 {
-    public function getId();
+    /**
+     * @return int
+     */
+    public function getId() : int;
 
-    public function setPlayer(PlayerInterface $player);
+    /**
+     * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
+     */
+    public function setPlayer(PlayerInterface $player) : void;
 
+    /**
+     * @return \RJ\PronosticApp\Model\Entity\PlayerInterface
+     */
     public function getPlayer() : PlayerInterface;
 
-    public function setToken(string $token);
+    /**
+     * @param string $token
+     */
+    public function setToken(string $token) : void;
 
+    /**
+     * @return string
+     */
     public function getToken() : string;
 }

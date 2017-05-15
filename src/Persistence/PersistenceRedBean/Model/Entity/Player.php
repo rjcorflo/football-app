@@ -53,7 +53,7 @@ class Player extends SimpleModel implements PlayerInterface
      */
     public function setPassword(string $password) : void
     {
-        $this->password =  password_hash($password, PASSWORD_BCRYPT);
+        $this->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     /**
