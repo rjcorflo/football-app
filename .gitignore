@@ -6,7 +6,6 @@ cache/*
 !cache/.gitkeep
 configuration/*
 !configuration/.gitkeep
-!configuration/configuration.php
 !configuration/configuration.default.php
 logs/*
 !logs/.gitkeep
