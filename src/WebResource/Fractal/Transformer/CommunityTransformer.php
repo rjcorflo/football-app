@@ -7,6 +7,15 @@ use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 class CommunityTransformer extends TransformerAbstract
 {
+    /**
+     * List of resources to automatically include
+     *
+     * @var array
+     */
+    protected $defaultIncludes = [
+        'jugadores'
+    ];
+
     public function transform(CommunityInterface $community)
     {
         return [
@@ -14,5 +23,18 @@ class CommunityTransformer extends TransformerAbstract
             'nombre' => $community->getCommunityName(),
             'privada' => $community->isPrivate() ? '1' : '0'
         ];
+    }
+
+    /**
+     * Include Player
+     *
+     * @param CommunityInterface $community
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includeJugadores(CommunityInterface $community)
+    {
+        $players = $community->getPlayers();
+
+        return $this->collection($players, new PlayerTransformer());
     }
 }

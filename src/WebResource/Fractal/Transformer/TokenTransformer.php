@@ -13,7 +13,7 @@ class TokenTransformer extends TransformerAbstract
      * @var array
      */
     protected $defaultIncludes = [
-        'player'
+        'jugador'
     ];
 
     public function transform(TokenInterface $token)
@@ -29,7 +29,7 @@ class TokenTransformer extends TransformerAbstract
      * @param TokenInterface $token
      * @return \League\Fractal\Resource\Item
      */
-    public function includePlayer(TokenInterface $token)
+    public function includeJugador(TokenInterface $token)
     {
         $player = $token->getPlayer();
 

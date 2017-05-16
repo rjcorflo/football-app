@@ -207,7 +207,8 @@ class PlayerController
          */
         $player = $request->getAttribute('player');
 
-        $newResponse->getBody()->write($this->resourceGenerator->createPlayerResource($player));
+        $newResponse->getBody()->write($this->resourceGenerator
+            ->exclude('comunidades.jugadores')->createPlayerResource($player));
         return $newResponse;
     }
 }

@@ -34,6 +34,24 @@ class FractalGenerator implements WebResourceGeneratorInterface
     /**
      * @inheritdoc
      */
+    public function include(string $includes)
+    {
+        $this->manager->parseIncludes($includes);
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function exclude(string $excludes)
+    {
+        $this->manager->parseExcludes($excludes);
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function createMessageResource(
         MessageResult $message,
         $resultType = self::JSON

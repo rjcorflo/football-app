@@ -95,4 +95,31 @@ class CommunityController
             ->write($this->resourceGenerator->createMessageResource($result));
         return $newResponse;
     }
+
+    public function communityPlayers(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $idCommunity
+    ) {
+        $bodyData = $request->getParsedBody();
+
+        // Prepare new response
+        $newResponse = $response->withHeader(
+            "Content-Type",
+            "application/json"
+        );
+
+        /**
+         * @var PlayerInterface $player
+         */
+        $player = $request->getAttribute('player');
+
+        $community =$this->communityRepository->getById($idCommunity);
+
+        $players = $this->participantRepository->listPlayersFromCommunity($community);
+
+        $newResponse->getBody()
+            ->write($this->resourceGenerator->exclude('comunidades.jugadores')->createPlayerResource($players));
+        return $newResponse;
+    }
 }

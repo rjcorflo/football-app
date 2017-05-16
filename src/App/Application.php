@@ -107,6 +107,7 @@ class Application extends App
 
         $this->group('/community', function () {
             $this->post('/create', [CommunityController::class, 'create']);
+            $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
         })->add(AuthenticationMiddleware::class);
     }
 }

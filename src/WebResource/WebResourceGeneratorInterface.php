@@ -14,6 +14,18 @@ interface WebResourceGeneratorInterface
     const ARRAY = 'array';
 
     /**
+     * @param string $includes
+     * @return $this
+     */
+    public function include(string $includes);
+
+    /**
+     * @param string $excludes
+     * @return $this
+     */
+    public function exclude(string $excludes);
+
+    /**
      * @param MessageResult $messages
      * @param string $resultType
      * @return array|string
