@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
-use RJ\PronosticApp\Util\MessageResult;
+use RJ\PronosticApp\Util\General\MessageResult;
 
 class MessageResultTransformer extends TransformerAbstract
 {

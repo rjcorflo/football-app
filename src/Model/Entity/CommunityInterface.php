@@ -4,23 +4,65 @@ namespace RJ\PronosticApp\Model\Entity;
 
 interface CommunityInterface
 {
+    /**
+     * @return int
+     */
     public function getId() : int;
 
+    /**
+     * @param string $communityName
+     */
     public function setCommunityName(string $communityName) : void;
 
+    /**
+     * @return string
+     */
     public function getCommunityName() : string;
 
+    /**
+     * @param string $password
+     */
     public function setPassword(string $password) : void;
 
+    /**
+     * @return string
+     */
     public function getPassword() : string;
 
+    /**
+     * @param bool $isPrivate
+     */
     public function setPrivate(bool $isPrivate) : void;
 
+    /**
+     * @return bool
+     */
     public function isPrivate() : bool;
 
+    /**
+     * @param \DateTime $date
+     */
     public function setCreationDate(\DateTime $date) : void;
 
+    /**
+     * @return \DateTime
+     */
     public function getCreationDate() : \DateTime;
+
+    /**
+     * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
+     */
+    public function addAdmin(PlayerInterface $player) : void;
+
+    /**
+     * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
+     */
+    public function removeAdmin(PlayerInterface $player) : void;
+
+    /**
+     * @return PlayerInterface[] List of administrators.
+     */
+    public function getAdmins() : array;
 
     /**
      * Get the list of players from the community.

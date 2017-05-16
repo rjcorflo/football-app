@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Util\Validation;
 
 use RJ\PronosticApp\Util\Validation\Validator\AbstractValidator;
+use RJ\PronosticApp\Util\Validation\Validator\CommunityValidator;
 use RJ\PronosticApp\Util\Validation\Validator\ExistenceValidator;
 use RJ\PronosticApp\Util\Validation\Validator\PlayerValidator;
 
@@ -10,13 +11,17 @@ class GeneralValidator implements ValidatorInterface
 {
     private $playerValidator;
 
+    private $communityValidator;
+
     private $existenceValidator;
 
     public function __construct(
         PlayerValidator $playerValidator,
+        CommunityValidator $communityValidator,
         ExistenceValidator $existenceValidator
     ) {
         $this->playerValidator = $playerValidator;
+        $this->communityValidator = $communityValidator;
         $this->existenceValidator = $existenceValidator;
     }
 
@@ -25,13 +30,13 @@ class GeneralValidator implements ValidatorInterface
         return $this->playerValidator;
     }
 
-    public function communityValidator() : AbstractValidator
+    public function communityValidator() : CommunityValidator
     {
-        // TODO: Implement communityValidator() method.
+        return $this->communityValidator;
     }
 
     public function existenceValidator() : ExistenceValidator
     {
-        return $this->existenceValidator();
+        return $this->existenceValidator;
     }
 }

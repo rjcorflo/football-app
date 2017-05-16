@@ -5,9 +5,17 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
 
 class Player extends SimpleModel implements PlayerInterface
 {
+    private $participantRepository;
+
+    public function __construct()
+    {
+        $this->participantRepository = new ParticipantRepository();
+    }
+
     /**
      * @inheritdoc
      */
@@ -117,7 +125,7 @@ class Player extends SimpleModel implements PlayerInterface
      */
     public function getPlayerCommunities() : array
     {
-        return $this->bean->sharedCommunityList;
+        return $this->participantRepository->listCommunitiesFromPlayer($this);
     }
 
     /**

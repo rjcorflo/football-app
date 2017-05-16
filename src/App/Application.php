@@ -12,9 +12,12 @@ use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use RJ\PronosticApp\Controller\CommunityController;
 use RJ\PronosticApp\Controller\PlayerController;
+use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\CommunityRepository;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\PlayerRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanPersistenceLayer;
 use RJ\PronosticApp\Util\Validation\GeneralValidator;
@@ -63,7 +66,10 @@ class Application extends App
             'app.srcDir' => string('{app.baseDir}/src'),
             'app.storageDir' => string('{app.baseDir}/storage'),
 
+            /* Data repository */
             PlayerRepositoryInterface::class => object(PlayerRepository::class),
+            ParticipantRepositoryInterface::class => object(ParticipantRepository::class),
+            CommunityRepositoryInterface::class => object(CommunityRepository::class),
 
             /* Services */
             WebResourceGeneratorInterface::class => object(FractalGenerator::class),

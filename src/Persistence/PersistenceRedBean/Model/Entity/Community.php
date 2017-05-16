@@ -2,18 +2,20 @@
 
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
+use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
 
 class Community extends SimpleModel implements CommunityInterface
 {
     private $participantRepository;
 
-    public function __construct(ParticipantRepositoryInterface $participantRepository)
+    public function __construct()
     {
-        $this->participantRepository = $participantRepository;
+        $this->participantRepository = new ParticipantRepository();
     }
 
     /**
@@ -27,9 +29,9 @@ class Community extends SimpleModel implements CommunityInterface
     /**
      * @inheritdoc
      */
-    public function setCommunityName(string $communityName)
+    public function setCommunityName(string $communityName) : void
     {
-        $this->bean->name;
+        $this->bean->name = $communityName;
     }
 
     /**
@@ -43,7 +45,7 @@ class Community extends SimpleModel implements CommunityInterface
     /**
      * @inheritdoc
      */
-    public function setPassword(string $password)
+    public function setPassword(string $password) : void
     {
         $this->bean->password = $password;
     }
@@ -59,7 +61,7 @@ class Community extends SimpleModel implements CommunityInterface
     /**
      * @inheritdoc
      */
-    public function setPrivate(bool $isPrivate)
+    public function setPrivate(bool $isPrivate) : void
     {
         $this->bean->private = $isPrivate;
     }
@@ -69,13 +71,13 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function isPrivate() : bool
     {
-        return $this->bean->private;
+        return (bool) $this->bean->private;
     }
 
     /**
      * @inheritdoc
      */
-    public function setCreationDate(\DateTime $date)
+    public function setCreationDate(\DateTime $date) : void
     {
         $this->bean->creation_date = $date;
     }
@@ -85,8 +87,36 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function getCreationDate() : \DateTime
     {
-        return \DateTime::createFromFormat('Y-m-d H:i:s' , $this->bean->creation_date);
+        return \DateTime::createFromFormat('Y-m-d H:i:s', $this->bean->creation_date);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function addAdmin(PlayerInterface $player) : void
+    {
+        $administrator = R::dispense('administrator');
+        $administrator->player = $player;
+
+        $this->bean->xownAdministratorList[] = $administrator;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function removeAdmin(PlayerInterface $player) : void
+    {
+        unset($this->bean->xownAdministratorList[$player->getId()]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAdmins() : array
+    {
+        return $this->xownAdministratorList;
+    }
+
 
     /**
      * @inheritDoc

@@ -9,6 +9,10 @@ class CommunityTransformer extends TransformerAbstract
 {
     public function transform(CommunityInterface $community)
     {
-
+        return [
+            'id' => $community->getId(),
+            'nombre' => $community->getCommunityName(),
+            'privada' => $community->isPrivate() ? '1' : '0'
+        ];
     }
 }
