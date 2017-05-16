@@ -8,6 +8,7 @@ use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 class ParticipantRepository implements ParticipantRepositoryInterface
 {
@@ -57,7 +58,9 @@ class ParticipantRepository implements ParticipantRepositoryInterface
             throw new \Exception("Object must be an instance of Community");
         }
 
-        return $community->unbox()->via(self::BEAN_NAME)->sharedPlayerList;
+        $players = $community->unbox()->via(self::BEAN_NAME)->sharedPlayerList;
+
+        return RedBeanUtils::boxArray($players);
     }
 
     /**
@@ -69,6 +72,8 @@ class ParticipantRepository implements ParticipantRepositoryInterface
             throw new \Exception("Object must be an instance of Player");
         }
 
-        return $player->unbox()->via(self::BEAN_NAME)->sharedCommunityList;
+        $communities = $player->unbox()->via(self::BEAN_NAME)->sharedCommunityList;
+
+        return RedBeanUtils::boxArray($communities);
     }
 }

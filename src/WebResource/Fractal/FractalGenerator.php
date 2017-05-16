@@ -6,11 +6,11 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
-use League\Fractal\Serializer\ArraySerializer;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\PlayerTransformer;
@@ -28,7 +28,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     public function __construct(Manager $manager)
     {
         $this->manager = $manager;
-        $this->manager->setSerializer(new ArraySerializer());
+        $this->manager->setSerializer(new NoDataArraySerializer());
     }
 
     /**

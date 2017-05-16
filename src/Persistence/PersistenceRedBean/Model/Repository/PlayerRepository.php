@@ -9,6 +9,7 @@ use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 class PlayerRepository implements PlayerRepositoryInterface
 {
@@ -89,7 +90,7 @@ class PlayerRepository implements PlayerRepositoryInterface
     {
         $beans = R::loadAll(self::BEAN_NAME, $playersIds);
 
-        return $this->boxArray($beans);
+        return RedBeanUtils::boxArray($beans);
     }
 
     /**
@@ -98,21 +99,6 @@ class PlayerRepository implements PlayerRepositoryInterface
     public function findAll() : array
     {
         return R::findAll(self::BEAN_NAME);
-    }
-
-    /**
-     * @param SimpleModel[] $beans Beans from database.
-     * @return Player[] Models associated to beans retrieved.
-     */
-    private function boxArray(array $beans) : array
-    {
-        $models = [];
-
-        foreach ($beans as $bean) {
-            $models[] = $bean->box();
-        }
-
-        return $models;
     }
 
     /**
@@ -137,7 +123,7 @@ class PlayerRepository implements PlayerRepositoryInterface
     public function findPlayerByNicknameOrEmail(string $player) : array
     {
         $players = R::find(self::BEAN_NAME, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
-        return $this->boxArray($players);
+        return RedBeanUtils::boxArray($players);
     }
 
     /**
