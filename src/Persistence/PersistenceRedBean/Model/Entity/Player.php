@@ -77,7 +77,7 @@ class Player extends SimpleModel implements PlayerInterface
      */
     public function getFirstName() : string
     {
-        return $this->bean->firstName;
+        return $this->bean->firstName ?? '';
     }
 
     /**
@@ -93,7 +93,7 @@ class Player extends SimpleModel implements PlayerInterface
      */
     public function getLastName() : string
     {
-        return $this->bean->lastName;
+        return $this->bean->lastName ?? '';
     }
 
     /**

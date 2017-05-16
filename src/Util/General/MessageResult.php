@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\PronosticApp\Util;
+namespace RJ\PronosticApp\Util\General;
 
 class MessageResult
 {

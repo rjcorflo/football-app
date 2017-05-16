@@ -80,8 +80,7 @@ interface PlayerRepositoryInterface
      * @param PlayerInterface $player
      * @return TokenInterface
      */
-    public function generateTokenForPlayer(PlayerInterface $player
-    ) : TokenInterface;
+    public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface;
 
     /**
      * @param PlayerInterface $player

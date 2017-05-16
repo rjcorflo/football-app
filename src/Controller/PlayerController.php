@@ -1,14 +1,13 @@
 <?php
 namespace RJ\PronosticApp\Controller;
 
-use Illuminate\Support\Facades\Validator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\PronosticApp\Model\Validator\PlayerValidator;
 use RJ\PronosticApp\Persistence;
-use RJ\PronosticApp\Util\MessageResult;
+use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 class PlayerController
@@ -23,10 +22,19 @@ class PlayerController
      */
     private $resourceGenerator;
 
-    public function __construct(PlayerRepositoryInterface $playerRepository, WebResourceGeneratorInterface $resourceGenerator)
-    {
+    /**
+     * @var ValidatorInterface
+     */
+    private $validator;
+
+    public function __construct(
+        PlayerRepositoryInterface $playerRepository,
+        WebResourceGeneratorInterface $resourceGenerator,
+        ValidatorInterface $validator
+    ) {
         $this->playerRepository = $playerRepository;
         $this->resourceGenerator = $resourceGenerator;
+        $this->validator = $validator;
     }
 
     /**
@@ -68,26 +76,24 @@ class PlayerController
             $player->setCreationDate(new \DateTime());
 
             // Data validation
-            $result = (new PlayerValidator($player))->validate();
+            $result = $this->validator
+                ->playerValidator()
+                ->validatePlayerData($player)
+                ->validate();
 
             if ($result->hasError()) {
                 throw new \Exception("Error validando los datos del jugador.");
             }
 
-            // Controller action
-            $existsNickname = $this->playerRepository->checkNickameExists($player->getNickname());
-            $existsEmail = $this->playerRepository->checkEmailExists($player->getEmail());
 
-            if ($existsNickname || $existsEmail) {
-                if ($existsNickname) {
-                    $result->addMessage("Ya existe un usuario con ese nickname.");
-                }
+            $result = $this->validator
+                ->existenceValidator()
+                ->checkIfEmailExists($player)
+                ->checkIfNicknameExists($player)
+                ->validate();
 
-                if ($existsEmail) {
-                    $result->addMessage("Ya existe un usuario con ese email.");
-                }
-
-                throw new \Exception("Ya existe un usuario con ese nickname o email.");
+            if ($result->hasError()) {
+                throw new \Exception($result->getDescription());
             }
 
             try {
@@ -148,15 +154,9 @@ class PlayerController
             // Correct login
             // Generate token
             $token = $this->playerRepository->generateTokenForPlayer($player);
+            error_log(print_r($token->getPlayer(), true));
 
-            // Response
-            $return = [
-                'nickname' => $player->getNickname(),
-                'email' => $player->getEmail(),
-                'creation_date' => $player->getCreationDate()->format('d-m-Y H:i:s'),
-                'token' => $token->getToken()
-            ];
-            $newResponse->getBody()->write(json_encode($return));
+            $newResponse->getBody()->write($this->resourceGenerator->createTokenResource($token));
             return $newResponse;
         } catch (\Exception $e) {
             $result->isError();
@@ -207,15 +207,7 @@ class PlayerController
          */
         $player = $request->getAttribute('player');
 
-        $string = [
-            'nickname' => $player->getNickname(),
-            'email' => $player->getEmail(),
-            'nombre' => $player->getFirstName(),
-            'apellidos' => $player->getLastName(),
-            'comunidades' => $player->getPlayerCommunities()
-        ];
-
-        $newResponse->getBody()->write(json_encode($string));
+        $newResponse->getBody()->write($this->resourceGenerator->createPlayerResource($player));
         return $newResponse;
     }
 }

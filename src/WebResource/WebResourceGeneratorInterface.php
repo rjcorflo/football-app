@@ -4,17 +4,40 @@ namespace RJ\PronosticApp\WebResource;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Util\MessageResult;
+use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Util\General\MessageResult;
 
 interface WebResourceGeneratorInterface
 {
-    public function createMessageResource(MessageResult $message);
+    const JSON = 'json';
 
-    public function createPlayerItemResource(PlayerInterface $player);
+    const ARRAY = 'array';
 
-    public function createPlayersCollectionResource(array $player);
+    /**
+     * @param MessageResult $messages
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createMessageResource(MessageResult $messages, $resultType = self::JSON);
 
-    public function createCommunityItemResource(CommunityInterface $community);
+    /**
+     * @param PlayerInterface|PlayerInterface[] $players
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createPlayerResource($players, $resultType = self::JSON);
 
-    public function createCommunitiesCollectionResource(CommunityInterface $community);
+    /**
+     * @param CommunityInterface|CommunityInterface[] $communities
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createCommunityResource($communities, $resultType = self::JSON);
+
+    /**
+     * @param TokenInterface|TokenInterface[] $tokens
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createTokenResource($tokens, $resultType = self::JSON);
 }

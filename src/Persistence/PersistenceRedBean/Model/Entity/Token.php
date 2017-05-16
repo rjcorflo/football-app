@@ -21,7 +21,7 @@ class Token extends SimpleModel implements TokenInterface
      */
     public function setPlayer(PlayerInterface $player) : void
     {
-        $this->bean->player;
+        $this->bean->player = $player;
     }
 
     /**
@@ -29,7 +29,7 @@ class Token extends SimpleModel implements TokenInterface
      */
     public function getPlayer() : PlayerInterface
     {
-        return $this->bean->player;
+        return $this->bean->player->box();
     }
 
     /**
