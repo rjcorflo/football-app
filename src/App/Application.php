@@ -17,6 +17,8 @@ use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\CommunityRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\PlayerRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanPersistenceLayer;
+use RJ\PronosticApp\Util\Validation\GeneralValidator;
+use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -62,7 +64,10 @@ class Application extends App
             'app.storageDir' => string('{app.baseDir}/storage'),
 
             PlayerRepositoryInterface::class => object(PlayerRepository::class),
+
+            /* Services */
             WebResourceGeneratorInterface::class => object(FractalGenerator::class),
+            ValidatorInterface::class => object(GeneralValidator::class),
 
             /* Event configuration */
             EventDispatcherInterface::class => object(EventDispatcher::class),
