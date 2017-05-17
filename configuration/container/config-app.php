@@ -29,14 +29,6 @@ return [
     /* Middleware */
     AbstractPersistenceLayer::class => object(RedBeanPersistenceLayer::class),
 
-    /* App base configuration */
-    'app.baseDir' => __DIR__ . '/../..',
-    'app.cacheDir' => string('{app.baseDir}/cache'),
-    'app.docsDir' => string('{app.baseDir}/docs'),
-    'app.logsDir' => string('{app.baseDir}/logs'),
-    'app.srcDir' => string('{app.baseDir}/src'),
-    'app.storageDir' => string('{app.baseDir}/storage'),
-
     /* Data repository */
     PlayerRepositoryInterface::class => object(PlayerRepository::class),
     ParticipantRepositoryInterface::class => object(ParticipantRepository::class),

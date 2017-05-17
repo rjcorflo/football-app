@@ -4,14 +4,11 @@ namespace RJ\PronosticApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
-use Psr\Http\Message\ResponseInterface;
 use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use RJ\PronosticApp\Controller\CommunityController;
 use RJ\PronosticApp\Controller\DocumentationController;
 use RJ\PronosticApp\Controller\PlayerController;
-use function DI\get;
-use function DI\object;
 use function DI\string;
 
 class Application extends App
@@ -30,7 +27,20 @@ class Application extends App
 
     protected function configureContainer(ContainerBuilder $builder)
     {
+        /* App paths configuration */
+        $builder->addDefinitions([
+            'app.baseDir' => __DIR__ . '/../..',
+            'app.cacheDir' => string('{app.baseDir}/cache'),
+            'app.docsDir' => string('{app.baseDir}/docs'),
+            'app.logsDir' => string('{app.baseDir}/logs'),
+            'app.srcDir' => string('{app.baseDir}/src'),
+            'app.storageDir' => string('{app.baseDir}/storage'),
+        ]);
+
+        /* Security definitions */
         $builder->addDefinitions(__DIR__ . '/../../configuration/container/config-security.php');
+
+        /* App definitions */
         $builder->addDefinitions(__DIR__ . '/../../configuration/container/config-app.php');
     }
 
