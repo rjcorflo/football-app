@@ -3,7 +3,7 @@ info:
   title: PronosticApp API
   description: Es la hora de los pronósticos.
   version: 1.0.0
-host: {{server}}
+host: localhost
 schemes:
   - http
 basePath: /api/v1
@@ -11,76 +11,104 @@ consumes:
   - application/json
 produces:
   - application/json
+tags:
+  - name: "jugador"
+    description: "Everything about your Pets"
+  - name: "comunidad"
+    description: "Access to Petstore orders"
+  - name: "user"
+    description: "Operations about user"
 paths:
-  /player/create:
+  /player/register:
     post:
       summary: Crear un nuevo jugador
       description: |
         Crear un jugador.
       parameters:
-        - name: player
+        - name: body
           in: body
           description: Datos del jugador.
           required: true
           schema:
-            type: object
-            required:
-              - nickname
-              - email
-              - password
-            properties:
-              nickname:
-                type: string
-              email:
-                type: string
-              password:
-                type: string
-              nombre:
-                type: string
-              apellidos:
-                type: string
+            $ref: "#/definitions/Jugador"
       tags:
-        - Products
+        - jugador
       responses:
         '200':
           description: An array of products
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/Product'
+            $ref: '#/definitions/MessageResult'
         default:
           description: Unexpected error
           schema:
-            $ref: '#/definitions/Error'
+            $ref: '#/definitions/MessageResult'
+  /player/login:
+    post:
+      summary: Login de un jugador
+      description: |
+        Login de un jugador.
+      parameters:
+        - name: body
+          in: body
+          description: Datos del jugador.
+          required: true
+          schema:
+            $ref: "#/definitions/Jugador"
+      tags:
+        - jugador
+      responses:
+        '200':
+          description: Datos del jugador
+          schema:
+            $ref: '#/definitions/Jugador'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+securityDefinitions:
+  token:
+    type: "apiKey"
+    name: "X-Auth-Token"
+    in: "header"
 definitions:
-  Product:
+  Jugador:
     type: object
+    required:
+      - nickname
+      - email
+      - password
     properties:
-      product_id:
+      id:
         type: string
         description: >-
           Unique identifier representing a specific product for a given latitude
           & longitude. For example, uberX in San Francisco will have a different
           product_id than uberX in Los Angeles.
-      description:
+      nickname:
         type: string
         description: Description of product.
-      display_name:
+      email:
         type: string
         description: Display name of product.
-      capacity:
+      password:
+        type: string
+        description: Display name of product.
+      nombre:
         type: string
         description: 'Capacity of product. For example, 4 people.'
-      image:
+      apellidos:
         type: string
         description: Image URL representing the product.
-  Error:
+  MessageResult:
     type: object
     properties:
-      code:
-        type: integer
-        format: int32
-      message:
+      error:
+        type: boolean
+      descripcion:
         type: string
-      fields:
-        type: string
+      mensajes:
+        type: array
+        items:
+          type: string
