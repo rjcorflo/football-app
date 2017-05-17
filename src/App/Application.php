@@ -46,51 +46,8 @@ class Application extends App
 
     protected function configureContainer(ContainerBuilder $builder)
     {
-        $builder->addDefinitions(__DIR__ . '/../../configuration/configuration.php');
-        $builder->addDefinitions($this->configuration());
-    }
-
-    private function configuration()
-    {
-        return [
-            /* Slim configuration */
-            'settings.displayErrorDetails' => true,
-
-            /* Middleware */
-            AbstractPersistenceLayer::class => object(RedBeanPersistenceLayer::class),
-
-            /* App base configuration */
-            'app.baseDir' => __DIR__ . '/../..',
-            'app.cacheDir' => string('{app.baseDir}/cache'),
-            'app.logsDir' => string('{app.baseDir}/logs'),
-            'app.srcDir' => string('{app.baseDir}/src'),
-            'app.storageDir' => string('{app.baseDir}/storage'),
-
-            /* Data repository */
-            PlayerRepositoryInterface::class => object(PlayerRepository::class),
-            ParticipantRepositoryInterface::class => object(ParticipantRepository::class),
-            CommunityRepositoryInterface::class => object(CommunityRepository::class),
-
-            /* Services */
-            WebResourceGeneratorInterface::class => object(FractalGenerator::class),
-            ValidatorInterface::class => object(GeneralValidator::class),
-
-            /* Event configuration */
-            EventDispatcherInterface::class => object(EventDispatcher::class),
-
-            /* Logger configuration */
-            StreamHandler::class => object()->constructor(string('{app.logsDir}/logs.log')),
-            'logger.handlers' => [
-                get(StreamHandler::class)
-            ],
-            LoggerInterface::class => function (ContainerInterface $container) {
-                $logger = new Logger('logger');
-                foreach ($container->get('logger.handlers') as $handlers) {
-                    $logger->pushHandler($handlers);
-                }
-                return $logger;
-            },
-        ];
+        $builder->addDefinitions(__DIR__ . '/../../configuration/config-security.php');
+        $builder->addDefinitions(__DIR__ . '/../../configuration/config-app.php');
     }
 
     protected function configureRoutes()
