@@ -3,10 +3,10 @@ info:
   title: PronosticApp API
   description: Es la hora de los pronósticos.
   version: 1.0.0
-host: pronosticapp-test.solus.hol.es
+host: {{{server}}}
 schemes:
   - http
-basePath: /v1
+basePath: /api/v1
 consumes:
   - application/json
 produces:
