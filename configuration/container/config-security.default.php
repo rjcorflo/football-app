@@ -5,6 +5,8 @@
  * This should be renamed as configuration.php and filled with correct parameters.
  */
 
+use function DI\string;
+
 return [
     'database.dsn' => string('sqlite:{app.storageDir}/test.db'),
     'database.user' => '',

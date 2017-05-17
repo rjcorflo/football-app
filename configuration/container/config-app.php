@@ -1,14 +1,9 @@
 <?php
 
-use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
-use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
-use RJ\PronosticApp\Controller\CommunityController;
-use RJ\PronosticApp\Controller\PlayerController;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
@@ -37,6 +32,7 @@ return [
     /* App base configuration */
     'app.baseDir' => __DIR__ . '/../..',
     'app.cacheDir' => string('{app.baseDir}/cache'),
+    'app.docsDir' => string('{app.baseDir}/docs'),
     'app.logsDir' => string('{app.baseDir}/logs'),
     'app.srcDir' => string('{app.baseDir}/src'),
     'app.storageDir' => string('{app.baseDir}/storage'),
