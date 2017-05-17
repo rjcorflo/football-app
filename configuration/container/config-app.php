@@ -26,6 +26,13 @@ return [
     /* Slim configuration */
     'settings.displayErrorDetails' => true,
 
+    'errorHandler' => DI\object(\RJ\PronosticApp\App\Handlers\ErrorHandler::class)
+        ->constructor(DI\get('settings.displayErrorDetails'), get(WebResourceGeneratorInterface::class)),
+    'phpErrorHandler' => DI\object(\RJ\PronosticApp\App\Handlers\PhpErrorHandler::class)
+        ->constructor(DI\get('settings.displayErrorDetails'), get(WebResourceGeneratorInterface::class)),
+    'notFoundHandler' => DI\object(\RJ\PronosticApp\App\Handlers\NotFoundHandler::class),
+    'notAllowedHandler' => DI\object(\RJ\PronosticApp\App\Handlers\NotAllowedHandler::class),
+
     /* Middleware */
     AbstractPersistenceLayer::class => object(RedBeanPersistenceLayer::class),
 

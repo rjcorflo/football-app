@@ -27,8 +27,19 @@ class DocumentationController
     ) {
         $content = file_get_contents($this->container->get('app.docsDir') . "/swagger-api-v1.yaml");
 
-        $newContent = str_replace('{{{server}}}', $request->getServerParams()['HTTP_HOST'], $content);
+        $replaces = [
+            'server' => $request->getServerParams()['HTTP_HOST']
+        ];
 
-        return $response->getBody()->write($newContent);
+        return $response->getBody()->write($this->stringReplace($content, $replaces));
+    }
+
+    private function stringReplace($string, array $replaces) : string
+    {
+        foreach ($replaces as $key => $value) {
+            $string = str_replace('{{'.strtolower($key).'}}', $value, $string);
+        }
+
+        return $string;
     }
 }

@@ -12,12 +12,24 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 class CommunityController
 {
+    /**
+     * @var \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface
+     */
     private $communityRepository;
 
+    /**
+     * @var \RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface
+     */
     private $participantRepository;
 
+    /**
+     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     */
     private $resourceGenerator;
 
+    /**
+     * @var \RJ\PronosticApp\Util\Validation\ValidatorInterface
+     */
     private $validator;
 
     public function __construct(
@@ -84,7 +96,7 @@ class CommunityController
             $this->participantRepository->addPlayerToCommunity($player, $community);
 
             $newResponse->getBody()
-                ->write($this->resourceGenerator->createCommunityResource($community));
+                ->write($this->resourceGenerator->exclude('jugadores')->createCommunityResource($community));
             return $newResponse;
         } catch (\Exception $e) {
             $result->isError();

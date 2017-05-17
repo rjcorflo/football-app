@@ -3,7 +3,7 @@ info:
   title: PronosticApp API
   description: Es la hora de los pronósticos.
   version: 1.0.0
-host: {{{server}}}
+host: {{server}}
 schemes:
   - http
 basePath: /api/v1
