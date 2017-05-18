@@ -8,7 +8,7 @@
 use function DI\string;
 
 return [
-    'database.dsn' => string('sqlite:{app.storageDir}/test.db'),
+    'database.dsn' => string('sqlite:{app.storageDir}/database/test.db'),
     'database.user' => '',
     'database.pass' => ''
 ];
