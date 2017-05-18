@@ -4,7 +4,9 @@
 bower_components/
 cache/*
 !cache/.gitkeep
-configuration/container/config-security.php
+configuration/*
+!configuration/.gitkeep
+!configuration/configuration.default.php
 logs/*
 !logs/.gitkeep
 storage/*

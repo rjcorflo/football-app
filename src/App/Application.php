@@ -31,6 +31,7 @@ class Application extends App
         $builder->addDefinitions([
             'app.baseDir' => __DIR__ . '/../..',
             'app.cacheDir' => string('{app.baseDir}/cache'),
+            'app.configDir' => string('{app.baseDir}/configuration'),
             'app.docsDir' => string('{app.baseDir}/docs'),
             'app.logsDir' => string('{app.baseDir}/logs'),
             'app.srcDir' => string('{app.baseDir}/src'),
@@ -38,10 +39,10 @@ class Application extends App
         ]);
 
         /* Security definitions */
-        $builder->addDefinitions(__DIR__ . '/../../configuration/container/config-security.php');
+        $builder->addDefinitions(__DIR__ . '/../../configuration/configuration.php');
 
         /* App definitions */
-        $builder->addDefinitions(__DIR__ . '/../../configuration/container/config-app.php');
+        $builder->addDefinitions(__DIR__ . '/DependencyInjection/definitions/di.app.php');
     }
 
     protected function configureRoutes()
