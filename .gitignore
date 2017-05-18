@@ -1,16 +1,36 @@
 .idea/
 
+# Rocketeer deployment
 .rocketeer/
+
+# Bower
 bower_components/
+
+# Cache
 cache/*
 !cache/.gitkeep
+
+# Connfig
 configuration/*
 !configuration/.gitkeep
 !configuration/configuration.default.php
+
+# Logs
 logs/*
 !logs/.gitkeep
+
+# Storage folders
 storage/*
-!storage/**/.gitkeep
+!storage/.gitkeep
+!storage/database
+storage/database/*
+!storage/database/.gitkeep
+!storage/database/backups
+storage/database/backups/*
+!storage/database/backups/.gitkeep
+
+# Composer Vendor
 vendor/
 
+# Tests
 tests/_output/*
