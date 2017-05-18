@@ -89,6 +89,15 @@ class CommunityController
                 throw new \Exception("Error validando los datos de la comunidad.");
             }
 
+            $result = $this->validator
+                ->existenceValidator()
+                ->checkIfNameExists($community)
+                ->validate();
+
+            if ($result->hasError()) {
+                throw new \Exception("Ya existe una comunidad con ese nombre.");
+            }
+
             $community->addAdmin($player);
 
             $this->communityRepository->store($community);
@@ -113,8 +122,6 @@ class CommunityController
         ResponseInterface $response,
         $idCommunity
     ) {
-        $bodyData = $request->getParsedBody();
-
         // Prepare new response
         $newResponse = $response->withHeader(
             "Content-Type",
@@ -124,7 +131,7 @@ class CommunityController
         /**
          * @var PlayerInterface $player
          */
-        $player = $request->getAttribute('player');
+        //$player = $request->getAttribute('player');
 
         $community =$this->communityRepository->getById($idCommunity);
 

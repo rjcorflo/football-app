@@ -5,6 +5,8 @@ namespace RJ\PronosticApp\App\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 class AuthenticationMiddleware
 {
@@ -13,9 +15,17 @@ class AuthenticationMiddleware
      */
     private $playerRepository;
 
-    public function __construct(PlayerRepositoryInterface $playerRepository)
-    {
+    /**
+     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     */
+    private $webResourceGenerator;
+
+    public function __construct(
+        PlayerRepositoryInterface $playerRepository,
+        WebResourceGeneratorInterface $webResourceGenerator
+    ) {
         $this->playerRepository = $playerRepository;
+        $this->webResourceGenerator = $webResourceGenerator;
     }
 
     /**
@@ -26,8 +36,11 @@ class AuthenticationMiddleware
      * @param callable $next
      * @return ResponseInterface
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
-    {
+    public function __invoke(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        callable $next
+    ) {
         try {
             if (!$request->hasHeader('X-Auth-Token')) {
                 throw new \Exception("No se ha pasado el token");
@@ -44,8 +57,12 @@ class AuthenticationMiddleware
             // Add player to request
             $request = $request->withAttribute('player', $player);
         } catch (\Exception $e) {
+            $result = new MessageResult();
+            $result->isError();
+            $result->setDescription("No puede acceder a este recurso sin estar logueado");
+
             $response = $response->withStatus(401, "Error autenticacion");
-            return $response;
+            return $response->getBody()->write($this->webResourceGenerator->createMessageResource($result));
         }
 
         $response = $next($request, $response);

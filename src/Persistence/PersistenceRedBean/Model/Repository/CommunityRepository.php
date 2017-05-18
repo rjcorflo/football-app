@@ -97,4 +97,12 @@ class CommunityRepository implements CommunityRepositoryInterface
     {
         return R::findAll(self::BEAN_NAME);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkIfNameExists(string $name) : bool
+    {
+        return R::count(self::BEAN_NAME, 'name LIKE LOWER(?)', [$name]) > 0;
+    }
 }

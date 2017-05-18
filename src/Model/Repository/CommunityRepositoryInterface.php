@@ -59,4 +59,11 @@ interface CommunityRepositoryInterface
      * @return CommunityInterface[] List of all players.
      */
     public function findAll() : array;
+
+    /**
+     * Check if a community name exists.
+     * @param string $name
+     * @return bool
+     */
+    public function checkIfNameExists(string $name) : bool;
 }

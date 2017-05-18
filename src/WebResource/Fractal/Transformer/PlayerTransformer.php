@@ -12,7 +12,7 @@ class PlayerTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
+    protected $availableIncludes = [
         'comunidades'
     ];
 
@@ -22,7 +22,6 @@ class PlayerTransformer extends TransformerAbstract
             'id' => $player->getId(),
             'nickname' => $player->getNickname(),
             'email' => $player->getEmail(),
-            'fechaCreacion' => $player->getCreationDate()->format(\DateTime::ATOM),
             'nombre' => $player->getFirstName(),
             'apellidos' => $player->getLastName()
         ];
@@ -31,7 +30,7 @@ class PlayerTransformer extends TransformerAbstract
     }
 
     /**
-     * Include Player
+     * Include Comunidades
      *
      * @param PlayerInterface $player
      * @return \League\Fractal\Resource\Collection

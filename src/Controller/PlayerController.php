@@ -85,7 +85,6 @@ class PlayerController
                 throw new \Exception("Error validando los datos del jugador.");
             }
 
-
             $result = $this->validator
                 ->existenceValidator()
                 ->checkIfEmailExists($player)
@@ -154,7 +153,6 @@ class PlayerController
             // Correct login
             // Generate token
             $token = $this->playerRepository->generateTokenForPlayer($player);
-            error_log(print_r($token->getPlayer(), true));
 
             $newResponse->getBody()->write($this->resourceGenerator->createTokenResource($token));
             return $newResponse;

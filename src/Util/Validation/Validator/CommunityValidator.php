@@ -20,7 +20,7 @@ class CommunityValidator extends AbstractValidator
             V::alnum()->length(3, 20)->assert($community->getCommunityName());
         } catch (NestedValidationException $e) {
             $this->result->isError();
-            $this->result->addMessage($e->getFullMessage());
+            $this->result->addMessage(sprintf("Error validando el campo 'nombre': %s", $e->getFullMessage()));
         }
 
         if ($community->isPrivate()) {
@@ -28,7 +28,7 @@ class CommunityValidator extends AbstractValidator
                 V::notBlank()->notOptional()->notEmpty()->assert($community->getPassword());
             } catch (NestedValidationException $e) {
                 $this->result->isError();
-                $this->result->addMessage($e->getFullMessage());
+                $this->result->addMessage(sprintf("Error validando el campo 'password': %s", $e->getFullMessage()));
             }
         }
         

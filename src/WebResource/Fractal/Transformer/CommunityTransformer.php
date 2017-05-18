@@ -21,7 +21,7 @@ class CommunityTransformer extends TransformerAbstract
         return [
             'id' => $community->getId(),
             'nombre' => $community->getCommunityName(),
-            'privada' => $community->isPrivate() ? '1' : '0'
+            'privada' => $community->isPrivate()
         ];
     }
 
