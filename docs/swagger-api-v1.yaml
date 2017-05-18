@@ -1,9 +1,11 @@
 swagger: '2.0'
 info:
   title: PronosticApp API
-  description: Es la hora de los pronósticos.
+  description: >
+    API para gestionar los jugadores, comunidades, pronósticos o
+    históricos para un juego de porra.
   version: 1.0.0
-host: localhost
+host: {{server}}
 schemes:
   - http
 basePath: /api/v1
@@ -12,67 +14,240 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: "Jugadores"
-    description: "Everything about your Pets"
-  - name: "Comunidades"
-    description: "Access to Petstore orders"
-  - name: "Históricos"
+  - name: Jugadores
+    description: Todo sobre los jugadores
+  - name: Comunidades
+    description: Comunidades actuales en funcionamiento
+  - name: Pronósticos
+    description: Prnósticos de los jugadores
+  - name: Históricos
+    descritpion: Posicionamiento a lo largo de la competición
 paths:
   /player/register:
     post:
-      summary: Crear un nuevo jugador
-      description: |
-        Crear un jugador.
+      summary: Registrar un nuevo jugador
+      description: Permite crear un nuevo jugador en la aplicación.
       parameters:
         - name: body
           in: body
-          description: Datos del jugador.
+          description: Datos del jugador a registrar.
           required: true
           schema:
-            $ref: "#/definitions/Jugador"
+            type: object
+            required:
+             - nickname
+             - email
+             - password
+            properties:
+             nickname:
+               type: string
+               description: Nickname del jugador
+             email:
+               type: string
+               description: Email del jugador
+             password:
+               type: string
+               description: Password del jugador
+             nombre:
+               type: string
+               description: Nombre del juagdor
+             apellidos:
+               type: string
+               description: Apellidos del jugador
       tags:
-        - jugador
+        - Jugadores
       responses:
-        '200':
-          description: An array of products
+        200:
+          description: Registro correcto
           schema:
             $ref: '#/definitions/MessageResult'
         default:
-          description: Unexpected error
+          description: Error durante el registro
           schema:
             $ref: '#/definitions/MessageResult'
   /player/login:
     post:
       summary: Login de un jugador
       description: |
-        Login de un jugador.
+        Permite a un jugador loguearse en la aplicación.
       parameters:
         - name: body
           in: body
-          description: Datos del jugador.
+          description: Datos del jugador para hacer login
           required: true
           schema:
-            $ref: "#/definitions/Jugador"
+            type: object
+            required:
+              - nickname
+              - email
+              - password
+            properties:
+              player:
+                type: string
+                description: Nickname o email del jugador
+              password:
+                type: string
+                description: Password del jugador
       tags:
-        - jugador
+        - Jugadores
       responses:
-        '200':
+        200:
           description: Datos del jugador
           schema:
-            $ref: '#/definitions/Jugador'
+            type: object
+            properties:
+              token:
+                type: string
+                description: |
+                  Token para identiificar al jugador.
+                  Es necesario mandarlo en la cabecera en cada petición que requiera
+                  autenticación.
+              jugador:
+                $ref: '#/definitions/Player'
         default:
-          description: Unexpected error
+          description: Error al intentar hacer login
+          schema:
+            $ref: '#/definitions/MessageResult'
+  /player/logout:
+    post:
+      summary: Logout de un jugador
+      description: |
+        Permite a un jugador hacer logout en la aplicación.
+      tags:
+        - Jugadores
+      responses:
+        200:
+          description: Logout correcto
+          schema:
+            $ref: '#/definitions/MessageResult'
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error al intentar hacer logout
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /player/info:
+    get:
+      summary: Información del jugador
+      description: |
+        Permite a un jugador recuperar la información actualmente almacenada en la aplicación.
+      tags:
+        - Jugadores
+      responses:
+        200:
+          description: Datos del jugador
+          schema:
+            $ref: '#/definitions/Player'
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error al intentar recuperar la información del jugador
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /community/create:
+    post:
+      summary: Crea una nueva comunidad
+      description: Permite crear una nueva comunidad de jugadores en la aplicación.
+      parameters:
+        - name: body
+          in: body
+          description: Datos de la communidad a crear.
+          required: true
+          schema:
+            type: object
+            required:
+             - nombre
+            properties:
+             nombre:
+               type: string
+               description: Nombre de la comunidad
+             privada:
+               type: boolean
+               description: Si la comunidad es privada
+             password:
+               type: string
+               description: Password de la comunidad si es privada
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: Comunidad creada correctamente
+          schema:
+            $ref: '#/definitions/Community'
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error durante el registro
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /community/{idCommunity}/players:
+    get:
+      summary: Lista los jugadores de una comunidad
+      description: Devuelve un listado con los jugadores pertenecientes a la comunidad.
+      parameters:
+        - in: path
+          name: idCommunity
+          type: integer
+          required: true
+          description : ID de la comunidad
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: Comunidad creada correctamente
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Player'
+            example:
+              - id: 3,
+                nickname: Perro
+                email: perro@guau.com
+                nombre: Dog
+                apellidos: Doggy
+              - id: 5,
+                nickname: Gato
+                email: gato@miau.com
+                nombre: Kitty
+                apellidos: Soft
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error durante el registro
           schema:
             $ref: '#/definitions/MessageResult'
       security:
         - token: []
 securityDefinitions:
   token:
-    type: "apiKey"
-    name: "X-Auth-Token"
-    in: "header"
+    type: apiKey
+    name: X-Auth-Token
+    in: header
+responses:
+  Unauthorized:
+    description: No autorizado para acceder al recurso
+    schema:
+      $ref: "#/definitions/MessageResult"
 definitions:
-  Jugador:
+  Community:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Identificador único de la comunidad
+      nombre:
+        type: string
+        description: Nombre de la comunidad
+      privada:
+        type: boolean
+        description: Si la comunidad es privada o no
+  Player:
     type: object
     required:
       - nickname
@@ -80,26 +255,20 @@ definitions:
       - password
     properties:
       id:
-        type: string
-        description: >-
-          Unique identifier representing a specific product for a given latitude
-          & longitude. For example, uberX in San Francisco will have a different
-          product_id than uberX in Los Angeles.
+        type: integer
+        description: Identificador único del jugador
       nickname:
         type: string
-        description: Description of product.
+        description: Nickname del jugador
       email:
         type: string
-        description: Display name of product.
-      password:
-        type: string
-        description: Display name of product.
+        description: Email del jugador
       nombre:
         type: string
-        description: 'Capacity of product. For example, 4 people.'
+        description: Nombre del jugador
       apellidos:
         type: string
-        description: Image URL representing the product.
+        description: Apellidos del jugador
   MessageResult:
     type: object
     properties:
@@ -111,3 +280,9 @@ definitions:
         type: array
         items:
           type: string
+    example:
+      error: true
+      description: Validación incorreca del campo 'nombre'
+      mensajes:
+        - Error A
+        - Error B
