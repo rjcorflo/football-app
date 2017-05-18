@@ -12,12 +12,11 @@ consumes:
 produces:
   - application/json
 tags:
-  - name: "jugador"
+  - name: "Jugadores"
     description: "Everything about your Pets"
-  - name: "comunidad"
+  - name: "Comunidades"
     description: "Access to Petstore orders"
-  - name: "user"
-    description: "Operations about user"
+  - name: "Históricos"
 paths:
   /player/register:
     post:
