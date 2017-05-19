@@ -61,8 +61,10 @@ class AuthenticationMiddleware
             $result->isError();
             $result->setDescription("No puede acceder a este recurso sin estar logueado");
 
+            $response = $response->withHeader('Content-type', 'application/json');
             $response = $response->withStatus(401, "Error autenticacion");
-            return $response->getBody()->write($this->webResourceGenerator->createMessageResource($result));
+            $response->getBody()->write($this->webResourceGenerator->createMessageResource($result));
+            return $response;
         }
 
         $response = $next($request, $response);
