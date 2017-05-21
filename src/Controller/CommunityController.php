@@ -5,7 +5,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -16,11 +15,6 @@ class CommunityController
      * @var \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface
      */
     private $communityRepository;
-
-    /**
-     * @var \RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface
-     */
-    private $participantRepository;
 
     /**
      * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
@@ -34,12 +28,10 @@ class CommunityController
 
     public function __construct(
         CommunityRepositoryInterface $communityRepository,
-        ParticipantRepositoryInterface $participantRepository,
         WebResourceGeneratorInterface $resourceGenerator,
         ValidatorInterface $validator
     ) {
         $this->communityRepository = $communityRepository;
-        $this->participantRepository = $participantRepository;
         $this->resourceGenerator = $resourceGenerator;
         $this->validator = $validator;
     }
@@ -49,12 +41,6 @@ class CommunityController
         ResponseInterface $response
     ) {
         $bodyData = $request->getParsedBody();
-
-        // Prepare new response
-        $newResponse = $response->withHeader(
-            "Content-Type",
-            "application/json"
-        );
 
         /**
          * @var PlayerInterface $player
@@ -100,21 +86,19 @@ class CommunityController
 
             $community->addAdmin($player);
 
-            $community->addPlayer($player);
-
             $this->communityRepository->store($community);
 
-            $newResponse->getBody()
+            $response->getBody()
                 ->write($this->resourceGenerator->exclude('jugadores')->createCommunityResource($community));
-            return $newResponse;
+            return $response;
         } catch (\Exception $e) {
             $result->isError();
             $result->setDescription($e->getMessage());
         }
 
-        $newResponse->getBody()
+        $response->getBody()
             ->write($this->resourceGenerator->createMessageResource($result));
-        return $newResponse;
+        return $response;
     }
 
     public function communityPlayers(
@@ -122,12 +106,6 @@ class CommunityController
         ResponseInterface $response,
         $idCommunity
     ) {
-        // Prepare new response
-        $newResponse = $response->withHeader(
-            "Content-Type",
-            "application/json"
-        );
-
         /**
          * @var PlayerInterface $player
          */
@@ -137,8 +115,44 @@ class CommunityController
 
         $players = $community->getPlayers();
 
-        $newResponse->getBody()
+        $response->getBody()
             ->write($this->resourceGenerator->exclude('comunidades.jugadores')->createPlayerResource($players));
-        return $newResponse;
+        return $response;
+    }
+
+    public function search(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
+        $parameters = $request->getQueryParams();
+
+    }
+
+    public function exist(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
+        $parameters = $request->getQueryParams();
+
+        $result = new MessageResult();
+
+        if (!isset($parameters['nombre'])) {
+            $result->isError();
+            $result->setDescription('El parametro nombre es necesario');
+            $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+            $response = $response->withStatus(400, 'Parameter needed');
+            return $response;
+        }
+
+        $nameExists = $this->communityRepository->checkIfNameExists($parameters['nombre']);
+
+        if ($nameExists) {
+            $result->isError();
+            $result->setDescription('Ya existe una comunidad con ese nombre');
+        } else {
+            $result->setDescription('Ese nombre de comunidad está disponible');
+        }
+
+        return $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
     }
 }

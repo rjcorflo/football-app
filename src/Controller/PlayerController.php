@@ -48,9 +48,6 @@ class PlayerController
     ) {
         $bodyData = $request->getParsedBody();
 
-        // Prepare new response
-        $newResponse = $response->withHeader("Content-Type", "application/json");
-
         // Prepare result
         $result = new MessageResult();
 
@@ -107,8 +104,8 @@ class PlayerController
             $result->setDescription($e->getMessage());
         }
 
-        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($result));
-        return $newResponse;
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+        return $response;
     }
 
     public function login(
@@ -116,9 +113,6 @@ class PlayerController
         ResponseInterface $response
     ) {
         $bodyData = $request->getParsedBody();
-
-        // Prepare new response
-        $newResponse = $response->withHeader("Content-Type", "application/json");
 
         // Prepare result
         $result = new MessageResult();
@@ -154,24 +148,21 @@ class PlayerController
             // Generate token
             $token = $this->playerRepository->generateTokenForPlayer($player);
 
-            $newResponse->getBody()->write($this->resourceGenerator->createTokenResource($token));
-            return $newResponse;
+            $response->getBody()->write($this->resourceGenerator->createTokenResource($token));
+            return $response;
         } catch (\Exception $e) {
             $result->isError();
             $result->setDescription($e->getMessage());
         }
 
-        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($result));
-        return $newResponse;
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+        return $response;
     }
 
     public function logout(
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        // Prepare response
-        $newResponse = $response->withHeader("Content-Type", "application/json");
-
         /**
          * @var PlayerInterface $player
          */
@@ -189,24 +180,21 @@ class PlayerController
             $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
         }
 
-        $newResponse->getBody()->write($this->resourceGenerator->createMessageResource($message));
-        return $newResponse;
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($message));
+        return $response;
     }
 
     public function info(
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        // Prepare response
-        $newResponse = $response->withHeader("Content-Type", "application/json");
-
         /**
          * @var PlayerInterface $player
          */
         $player = $request->getAttribute('player');
 
-        $newResponse->getBody()->write($this->resourceGenerator
+        $response->getBody()->write($this->resourceGenerator
             ->exclude('comunidades.jugadores')->createPlayerResource($player));
-        return $newResponse;
+        return $response;
     }
 }

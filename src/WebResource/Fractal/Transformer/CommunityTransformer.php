@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
+use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 class CommunityTransformer extends TransformerAbstract
@@ -15,6 +16,16 @@ class CommunityTransformer extends TransformerAbstract
     protected $defaultIncludes = [
         'jugadores'
     ];
+
+    /**
+     * @var \League\Container\ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     public function transform(CommunityInterface $community)
     {
@@ -35,6 +46,6 @@ class CommunityTransformer extends TransformerAbstract
     {
         $players = $community->getPlayers();
 
-        return $this->collection($players, new PlayerTransformer());
+        return $this->collection($players, $this->container->get(PlayerTransformer::class));
     }
 }

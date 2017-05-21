@@ -2,8 +2,8 @@
 
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
-use League\Container\ContainerInterface;
 use League\Fractal\TransformerAbstract;
+use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 class PlayerTransformer extends TransformerAbstract

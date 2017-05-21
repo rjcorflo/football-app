@@ -1,13 +1,13 @@
 <?php
-namespace RJ\WebResource\Fractal\Resource;
+namespace RJ\PronosticApp\WebResource\Fractal\Resource;
 
+use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use Prophecy\Argument\Token\TokenInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\PlayerTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\TokenTransformer;
-use Robo\Collection\Collection;
 
 trait PlayerResource
 {

@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
+use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 class TokenTransformer extends TransformerAbstract
@@ -15,6 +16,16 @@ class TokenTransformer extends TransformerAbstract
     protected $defaultIncludes = [
         'jugador'
     ];
+
+    /**
+     * @var \League\Container\ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
 
     public function transform(TokenInterface $token)
     {
@@ -33,6 +44,6 @@ class TokenTransformer extends TransformerAbstract
     {
         $player = $token->getPlayer();
 
-        return $this->item($player, new PlayerTransformer);
+        return $this->item($player, $this->container->get(PlayerTransformer::class));
     }
 }

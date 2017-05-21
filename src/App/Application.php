@@ -5,6 +5,7 @@ namespace RJ\PronosticApp\App;
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
 use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
+use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use RJ\PronosticApp\Controller\CommunityController;
 use RJ\PronosticApp\Controller\DocumentationController;
@@ -61,7 +62,10 @@ class Application extends App
             $this->group('/community', function () {
                 $this->post('/create', [CommunityController::class, 'create']);
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
+                $this->get('/search', [CommunityController::class, 'search']);
+                $this->get('/exist', [CommunityController::class, 'exist']);
             })->add(AuthenticationMiddleware::class);
-        })->add(PersistenceMiddleware::class);
+        })->add(PersistenceMiddleware::class)
+          ->add(InitializationMiddleware::class);
     }
 }

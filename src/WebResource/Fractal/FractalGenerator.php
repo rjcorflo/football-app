@@ -13,7 +13,7 @@ use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
-use RJ\WebResource\Fractal\Resource\PlayerResource;
+use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
 
 class FractalGenerator implements WebResourceGeneratorInterface
 {
