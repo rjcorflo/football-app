@@ -34,12 +34,4 @@ class CommunityValidator extends AbstractValidator
         
         return $this;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function validate() : ValidationResult
-    {
-        return $this->result;
-    }
 }

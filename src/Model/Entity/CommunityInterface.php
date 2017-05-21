@@ -65,6 +65,16 @@ interface CommunityInterface
     public function getAdmins() : array;
 
     /**
+     * @param ImageInterface $image
+     */
+    public function setImage(ImageInterface $image) : void;
+
+    /**
+     * @return \RJ\PronosticApp\Model\Entity\ImageInterface
+     */
+    public function getImage() : ImageInterface;
+
+    /**
      * Get the list of players from the community.
      * @return PlayerInterface[] List of player from this community.
      */

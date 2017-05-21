@@ -4,6 +4,7 @@ namespace RJ\PronosticApp\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence;
 use RJ\PronosticApp\Util\General\MessageResult;
@@ -18,6 +19,11 @@ class PlayerController
     private $playerRepository;
 
     /**
+     * @var ImageRepositoryInterface
+     */
+    private $imageRepository;
+
+    /**
      * @var WebResourceGeneratorInterface
      */
     private $resourceGenerator;
@@ -29,10 +35,12 @@ class PlayerController
 
     public function __construct(
         PlayerRepositoryInterface $playerRepository,
+        ImageRepositoryInterface $imageRepository,
         WebResourceGeneratorInterface $resourceGenerator,
         ValidatorInterface $validator
     ) {
         $this->playerRepository = $playerRepository;
+        $this->imageRepository = $imageRepository;
         $this->resourceGenerator = $resourceGenerator;
         $this->validator = $validator;
     }
@@ -58,6 +66,7 @@ class PlayerController
             $password = $bodyData['password'] ?? '';
             $firstName = $bodyData['nombre'] ?? '';
             $lastName = $bodyData['apellidos'] ?? '';
+            $idAvatar = $bodyData['id_avatar'] ?? 1;
 
             if (!$nickname || !$email || !$password) {
                 throw new \Exception("Los campos nickname, email y password son necesarios para poder registrarse");
@@ -91,6 +100,22 @@ class PlayerController
             if ($result->hasError()) {
                 throw new \Exception($result->getDescription());
             }
+
+            $result = $this->validator
+                ->basicValidator()
+                ->validateId($idAvatar)
+                ->validate();
+
+            if ($result->hasError()) {
+                throw new \Exception("Error validando los datos de la imagen.");
+            }
+
+            $image = $this->imageRepository->getByIdOrCreate($idAvatar);
+            if ($idAvatar == 1) {
+                $image->setUrl('/images/1.jpg');
+            }
+
+            $player->setImage($image);
 
             try {
                 $this->playerRepository->store($player);

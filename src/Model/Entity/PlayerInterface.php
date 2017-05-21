@@ -74,6 +74,16 @@ interface PlayerInterface
     public function getCreationDate() : \DateTime;
 
     /**
+     * @param ImageInterface $image
+     */
+    public function setImage(ImageInterface $image) : void;
+
+    /**
+     * @return \RJ\PronosticApp\Model\Entity\ImageInterface
+     */
+    public function getImage() : ImageInterface;
+
+    /**
      * Return user's communities.
      *
      * @return CommunityInterface[] List of communities to which the player belongs.

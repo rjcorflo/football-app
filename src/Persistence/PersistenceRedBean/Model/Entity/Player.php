@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
 use RedBeanPHP\SimpleModel;
+use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
@@ -123,6 +124,23 @@ class Player extends SimpleModel implements PlayerInterface
 
         return RedBeanUtils::boxArray($communities);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setImage(ImageInterface $image) : void
+    {
+        $this->bean->image = $image;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getImage() : ImageInterface
+    {
+        return $this->bean->image->box();
+    }
+
 
     /**
      * @inheritdoc

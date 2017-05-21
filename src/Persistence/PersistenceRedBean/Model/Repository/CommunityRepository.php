@@ -83,9 +83,9 @@ class CommunityRepository implements CommunityRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getMultipleById(array $playersIds) : array
+    public function getMultipleById(array $communitiesIds) : array
     {
-        $beans = R::loadAll(self::BEAN_NAME, $playersIds);
+        $beans = R::loadAll(self::BEAN_NAME, $communitiesIds);
 
         return RedBeanUtils::boxArray($beans);
     }
@@ -95,7 +95,9 @@ class CommunityRepository implements CommunityRepositoryInterface
      */
     public function findAll() : array
     {
-        return R::findAll(self::BEAN_NAME);
+        $communities = R::findAll(self::BEAN_NAME);
+
+        return RedBeanUtils::boxArray($communities);
     }
 
     /**

@@ -23,5 +23,8 @@ abstract class AbstractValidator
      * Return validations of all data.
      * @return ValidationResult
      */
-    abstract public function validate() : ValidationResult;
+    public function validate() : ValidationResult
+    {
+        return $this->result;
+    }
 }

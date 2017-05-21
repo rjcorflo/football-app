@@ -34,7 +34,8 @@ class PlayerTransformer extends TransformerAbstract
             'nickname' => $player->getNickname(),
             'email' => $player->getEmail(),
             'nombre' => $player->getFirstName(),
-            'apellidos' => $player->getLastName()
+            'apellidos' => $player->getLastName(),
+            'url' => $player->getImage()->getUrl()
         ];
 
         return $item;

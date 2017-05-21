@@ -23,6 +23,7 @@ class ExistenceValidator extends AbstractValidator
     /**
      * ExistenceValidator constructor.
      * @param \RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface $playerRepository
+     * @param \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface $communityRepository
      */
     public function __construct(
         PlayerRepositoryInterface $playerRepository,

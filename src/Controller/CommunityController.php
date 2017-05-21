@@ -5,6 +5,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -15,6 +16,11 @@ class CommunityController
      * @var \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface
      */
     private $communityRepository;
+
+    /**
+     * @var ImageRepositoryInterface
+     */
+    private $imageRepository;
 
     /**
      * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
@@ -28,10 +34,12 @@ class CommunityController
 
     public function __construct(
         CommunityRepositoryInterface $communityRepository,
+        ImageRepositoryInterface $imageRepository,
         WebResourceGeneratorInterface $resourceGenerator,
         ValidatorInterface $validator
     ) {
         $this->communityRepository = $communityRepository;
+        $this->imageRepository = $imageRepository;
         $this->resourceGenerator = $resourceGenerator;
         $this->validator = $validator;
     }
@@ -55,7 +63,7 @@ class CommunityController
             $name = $bodyData['nombre'] ?? '';
             $private = $bodyData['privada'] ?? 0;
             $password = $bodyData['password'] ?? '';
-
+            $idImage = $bodyData['id_imagen'] ?? 1;
 
             if (!$name) {
                 throw new \Exception("El campo nombre es obligatorio para crear una comunidad");
@@ -74,6 +82,22 @@ class CommunityController
             if ($result->hasError()) {
                 throw new \Exception("Error validando los datos de la comunidad.");
             }
+
+            $result = $this->validator
+                ->basicValidator()
+                ->validateId($idImage)
+                ->validate();
+
+            if ($result->hasError()) {
+                throw new \Exception("Error validando los datos de la imagen.");
+            }
+
+            $image = $this->imageRepository->getByIdOrCreate($idImage);
+            if ($idImage == 1) {
+                $image->setUrl('/images/1.jpg');
+            }
+
+            $community->setImage($image);
 
             $result = $this->validator
                 ->existenceValidator()

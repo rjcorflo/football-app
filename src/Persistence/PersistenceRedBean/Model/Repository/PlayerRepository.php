@@ -98,7 +98,8 @@ class PlayerRepository implements PlayerRepositoryInterface
      */
     public function findAll() : array
     {
-        return R::findAll(self::BEAN_NAME);
+        $beans = R::findAll(self::BEAN_NAME);
+        return RedBeanUtils::boxArray($beans);
     }
 
     /**

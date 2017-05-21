@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
 use RedBeanPHP\R;
+use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
@@ -118,6 +119,21 @@ class Community extends SimpleModel implements CommunityInterface
         return $this->xownAdministratorList;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setImage(ImageInterface $image) : void
+    {
+        $this->bean->image = $image;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getImage() : ImageInterface
+    {
+        return $this->bean->image->box();
+    }
 
     /**
      * @inheritDoc
