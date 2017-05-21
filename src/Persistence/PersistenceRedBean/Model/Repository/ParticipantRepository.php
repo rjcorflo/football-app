@@ -15,44 +15,9 @@ class ParticipantRepository implements ParticipantRepositoryInterface
     const BEAN_NAME = 'participant';
 
     /**
-     * @inheritdoc
-     */
-    public function addPlayerToCommunity(PlayerInterface $player, CommunityInterface $community) : void
-    {
-        if (!$player instanceof Player) {
-            throw new \Exception("Object must be an instance of Player");
-        } elseif (!$community instanceof Community) {
-            throw new \Exception("Object must be an instance of Community");
-        }
-
-        $participant = R::dispense(self::BEAN_NAME);
-        $participant->community = $community;
-        $participant->player = $player;
-        $participant->creationDate = new \DateTime();
-
-        R::store($participant);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function removePlayerFromCommunity(PlayerInterface $player, CommunityInterface $community) : void
-    {
-        if (!$player instanceof Player) {
-            throw new \Exception("Object must be an instance of Player");
-        } elseif (!$community instanceof Community) {
-            throw new \Exception("Object must be an instance of Community");
-        }
-
-        unset($community->unbox()->via(self::BEAN_NAME)->sharedPlayerList[$player->getId()]);
-
-        R::store($community);
-    }
-
-    /**
      * @inheritDoc
      */
-    public function listPlayersFromCommunity(CommunityInterface $community) : array
+    public function findPlayersFromCommunity(CommunityInterface $community) : array
     {
         if (!$community instanceof Community) {
             throw new \Exception("Object must be an instance of Community");
@@ -66,7 +31,7 @@ class ParticipantRepository implements ParticipantRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function listCommunitiesFromPlayer(PlayerInterface $player) : array
+    public function findCommunitiesFromPlayer(PlayerInterface $player) : array
     {
         if (!$player instanceof Player) {
             throw new \Exception("Object must be an instance of Player");

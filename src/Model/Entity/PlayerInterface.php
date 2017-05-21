@@ -74,6 +74,13 @@ interface PlayerInterface
     public function getCreationDate() : \DateTime;
 
     /**
+     * Return user's communities.
+     *
+     * @return CommunityInterface[] List of communities to which the player belongs.
+     */
+    public function getPlayerCommunities() : array;
+
+    /**
      * @param \RJ\PronosticApp\Model\Entity\TokenInterface $token
      * @return \RJ\PronosticApp\Model\Entity\TokenInterface
      */

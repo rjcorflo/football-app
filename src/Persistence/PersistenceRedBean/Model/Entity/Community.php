@@ -8,6 +8,7 @@ use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 class Community extends SimpleModel implements CommunityInterface
 {
@@ -123,7 +124,9 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function getPlayers() : array
     {
-        return $this->participantRepository->listPlayersFromCommunity($this);
+        $players = $this->bean->via(ParticipantRepository::BEAN_NAME)->sharedPlayerList;
+
+        return RedBeanUtils::boxArray($players);
     }
 
     /**
@@ -131,7 +134,12 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function addPlayer(PlayerInterface $player) : void
     {
-        $this->participantRepository->addPlayerToCommunity($player, $this);
+        $participant = R::dispense(ParticipantRepository::BEAN_NAME);
+        $participant->community = $this;
+        $participant->player = $player;
+        $participant->creationDate = new \DateTime();
+
+        R::store($participant);
     }
 
     /**
@@ -139,6 +147,6 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function removePlayer(PlayerInterface $player) : void
     {
-        $this->participantRepository->removePlayerFromCommunity($player, $this);
+        unset($this->bean->via(ParticipantRepository::BEAN_NAME)->sharedPlayerList[$player->getId()]);
     }
 }

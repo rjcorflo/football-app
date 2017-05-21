@@ -100,9 +100,9 @@ class CommunityController
 
             $community->addAdmin($player);
 
-            $this->communityRepository->store($community);
+            $community->addPlayer($player);
 
-            $this->participantRepository->addPlayerToCommunity($player, $community);
+            $this->communityRepository->store($community);
 
             $newResponse->getBody()
                 ->write($this->resourceGenerator->exclude('jugadores')->createCommunityResource($community));
@@ -135,7 +135,7 @@ class CommunityController
 
         $community =$this->communityRepository->getById($idCommunity);
 
-        $players = $this->participantRepository->listPlayersFromCommunity($community);
+        $players = $community->getPlayers();
 
         $newResponse->getBody()
             ->write($this->resourceGenerator->exclude('comunidades.jugadores')->createPlayerResource($players));

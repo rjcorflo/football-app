@@ -2,11 +2,9 @@
 
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
+use League\Container\ContainerInterface;
 use League\Fractal\TransformerAbstract;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
 
 class PlayerTransformer extends TransformerAbstract
 {
@@ -20,13 +18,13 @@ class PlayerTransformer extends TransformerAbstract
     ];
 
     /**
-     * @var \RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface
+     * @var \League\Container\ContainerInterface
      */
-    private $participantRepo;
+    private $container;
 
-    public function __construct(ParticipantRepositoryInterface $participantRepo)
+    public function __construct(ContainerInterface $container)
     {
-        $this->participantRepo = $participantRepo;
+        $this->container = $container;
     }
 
     public function transform(PlayerInterface $player)
@@ -50,8 +48,8 @@ class PlayerTransformer extends TransformerAbstract
      */
     public function includeComunidades(PlayerInterface $player)
     {
-        $communities = $this->participantRepository->findCommunitiesFromPlayer($player);
+        $communities = $player->getPlayerCommunities();
 
-        return $this->collection($communities, new CommunityTransformer());
+        return $this->collection($communities, $this->container->get(CommunityTransformer::class));
     }
 }

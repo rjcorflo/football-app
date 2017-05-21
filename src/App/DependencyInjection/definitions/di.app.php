@@ -37,9 +37,8 @@ return [
     AbstractPersistenceLayer::class => object(RedBeanPersistenceLayer::class),
 
     /* Data repository */
-    PlayerRepositoryInterface::class => object(PlayerRepository::class),
-    ParticipantRepositoryInterface::class => object(ParticipantRepository::class),
-    CommunityRepositoryInterface::class => object(CommunityRepository::class),
+    'RJ\PronosticApp\Model\Repository\*RepositoryInterface' =>
+        object('RJ\PronosticApp\Persistence\Model\Repository\*Repository'),
 
     /* Services */
     WebResourceGeneratorInterface::class => object(FractalGenerator::class),
