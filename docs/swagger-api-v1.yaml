@@ -78,9 +78,7 @@ paths:
           schema:
             type: object
             required:
-              - nickname
-              - email
-              - password
+              - player
             properties:
               player:
                 type: string
@@ -224,6 +222,33 @@ paths:
             $ref: '#/definitions/MessageResult'
       security:
         - token: []
+  /community/exist:
+    get:
+      summary: Comprueba si el nombre de una comunidad ya existe
+      description: Permite comprobar si el nombre una comunidad ya existe o no.
+      parameters:
+        - in: query
+          name: nombre
+          type: string
+          required: true
+          description : Nombre de la comunidad a comprobar
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: Comunidad creada correctamente
+          schema:
+            $ref: '#/definitions/MessageResult'
+        400:
+          description:
+          schema:
+            $ref: '#/definitions/MessageResult'
+        default:
+          description: Error durante el registro
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
 securityDefinitions:
   token:
     type: apiKey
@@ -247,6 +272,10 @@ definitions:
       privada:
         type: boolean
         description: Si la comunidad es privada o no
+    example:
+      id: 22
+      nombre: Porra
+      privada: true
   Player:
     type: object
     required:
@@ -269,6 +298,12 @@ definitions:
       apellidos:
         type: string
         description: Apellidos del jugador
+    example:
+      id: 7
+      nickname: nickA
+      email: prueba@prueba.com
+      nombre: Nombre
+      apellidos: Ape Llidos
   MessageResult:
     type: object
     properties:
@@ -282,7 +317,7 @@ definitions:
           type: string
     example:
       error: true
-      description: Validación incorreca del campo 'nombre'
+      description: Validación incorrecta del campo 'nombre'
       mensajes:
-        - Error A
-        - Error B
+        - Campo A incorrecto
+        - Campo B incorrecto
