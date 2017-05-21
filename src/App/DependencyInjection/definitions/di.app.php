@@ -4,18 +4,13 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\CommunityRepository;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\PlayerRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanPersistenceLayer;
 use RJ\PronosticApp\Util\Validation\GeneralValidator;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
+use RJ\PronosticApp\Log\LifecycleLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
@@ -38,14 +33,18 @@ return [
 
     /* Data repository */
     'RJ\PronosticApp\Model\Repository\*RepositoryInterface' =>
-        object('RJ\PronosticApp\Persistence\Model\Repository\*Repository'),
+        object('RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\*Repository'),
 
     /* Services */
     WebResourceGeneratorInterface::class => object(FractalGenerator::class),
     ValidatorInterface::class => object(GeneralValidator::class),
 
     /* Event configuration */
-    EventDispatcherInterface::class => object(EventDispatcher::class),
+    EventDispatcherInterface::class => function (ContainerInterface $c) {
+        $dispatcher = new EventDispatcher();
+        $dispatcher->addSubscriber($c->get(LifecycleLogger::class));
+        return $dispatcher;
+    },
 
     /* Logger configuration */
     StreamHandler::class => object()->constructor(string('{app.logsDir}/logs.log')),
