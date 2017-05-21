@@ -35,25 +35,35 @@ paths:
           schema:
             type: object
             required:
-             - nickname
-             - email
-             - password
+              - nickname
+              - email
+              - password
             properties:
-             nickname:
-               type: string
-               description: Nickname del jugador
-             email:
-               type: string
-               description: Email del jugador
-             password:
-               type: string
-               description: Password del jugador
-             nombre:
-               type: string
-               description: Nombre del juagdor
-             apellidos:
-               type: string
-               description: Apellidos del jugador
+              nickname:
+                type: string
+                description: Nickname del jugador
+              email:
+                type: string
+                description: Email del jugador
+              password:
+                type: string
+                description: Password del jugador
+              nombre:
+                type: string
+                description: Nombre del jugador
+              apellidos:
+                type: string
+                description: Apellidos del jugador
+              id_avatar:
+                type: integer
+                description: ID de la imagen del avatar para el jugador
+            example:
+              nickname: reymon
+              email: prueba@prueba.com
+              password: aaAA1234
+              nombre: Nombre
+              apellidos: Apellidos
+              id_avatar: 1
       tags:
         - Jugadores
       responses:
@@ -86,6 +96,9 @@ paths:
               password:
                 type: string
                 description: Password del jugador
+            example:
+              player: reymon
+              password: aaAA1234
       tags:
         - Jugadores
       responses:
@@ -158,17 +171,25 @@ paths:
           schema:
             type: object
             required:
-             - nombre
+              - nombre
             properties:
-             nombre:
-               type: string
-               description: Nombre de la comunidad
-             privada:
-               type: boolean
-               description: Si la comunidad es privada
-             password:
-               type: string
-               description: Password de la comunidad si es privada
+              nombre:
+                type: string
+                description: Nombre de la comunidad
+              privada:
+                type: boolean
+                description: Si la comunidad es privada
+              password:
+                type: string
+                description: Password de la comunidad si es privada
+              id_imagen:
+                type: integer
+                description: ID de la imagen de la comunidad
+            example:
+              nombre: Comunidad Molona
+              privada: true
+              password: 1234abCD
+              id_imagen: 2
       tags:
         - Comunidades
       responses:
@@ -298,12 +319,16 @@ definitions:
       apellidos:
         type: string
         description: Apellidos del jugador
+      url:
+        type: string
+        description: Url de la imagen del avatar del jugador
     example:
       id: 7
       nickname: nickA
       email: prueba@prueba.com
       nombre: Nombre
       apellidos: Ape Llidos
+      url: /images/1.jpg
   MessageResult:
     type: object
     properties:
