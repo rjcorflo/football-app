@@ -6,27 +6,36 @@ use League\Fractal\Manager;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
+use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
-use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
-use RJ\PronosticApp\WebResource\Fractal\Transformer\PlayerTransformer;
-use RJ\PronosticApp\WebResource\Fractal\Transformer\TokenTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
+use RJ\WebResource\Fractal\Resource\PlayerResource;
 
 class FractalGenerator implements WebResourceGeneratorInterface
 {
+    use PlayerResource;
+
+    /**
+     * @var \Psr\Container\ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @var \League\Fractal\Manager
+     */
     private $manager;
 
     /**
      * FractalGenerator constructor.
      * @param \League\Fractal\Manager $manager
      */
-    public function __construct(Manager $manager)
+    public function __construct(ContainerInterface $container, Manager $manager)
     {
+        $this->container = $container;
         $this->manager = $manager;
         $this->manager->setSerializer(new NoDataArraySerializer());
     }
@@ -56,25 +65,11 @@ class FractalGenerator implements WebResourceGeneratorInterface
         MessageResult $message,
         $resultType = self::JSON
     ) {
-        $resource = new Item($message, new MessageResultTransformer());
-        return $this->returnResourceType($this->manager->createData($resource), $resultType);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function createPlayerResource($player, $resultType = self::JSON)
-    {
-        if ($player instanceof PlayerInterface) {
-            $resource = new Item($player, new PlayerTransformer());
-        } elseif (is_array($player)) {
-            $resource = new Collection($player, new PlayerTransformer());
-        } else {
-            throw new \Exception("El recurso pasado no es un instancia que implemente " .
-                "PlayerInterface o sea un array PlayerInterface[]");
-        }
-
-        return $this->returnResourceType($this->manager->createData($resource), $resultType);
+        $resource = new Item($message, $this->container->get(MessageResultTransformer::class));
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
     }
 
     /**
@@ -85,32 +80,18 @@ class FractalGenerator implements WebResourceGeneratorInterface
         $resultType = self::JSON
     ) {
         if ($community instanceof CommunityInterface) {
-            $resource = new Item($community, new CommunityTransformer());
+            $resource = new Item($community, $this->container->get(CommunityTransformer::class));
         } elseif (is_array($community)) {
-            $resource = new Collection($community, new CommunityTransformer());
+            $resource = new Collection($community, $this->container->get(CommunityTransformer::class));
         } else {
             throw new \Exception("El recurso pasado no es un instancia que implemente " .
                 "CommunityInterface o sea un array CommunityInterface[]");
         }
 
-        return $this->returnResourceType($this->manager->createData($resource), $resultType);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function createTokenResource($token, $resultType = self::JSON)
-    {
-        if ($token instanceof TokenInterface) {
-            $resource = new Item($token, new TokenTransformer());
-        } elseif (is_array($token)) {
-            $resource = new Collection($token, new TokenTransformer());
-        } else {
-            throw new \Exception("El recurso pasado no es un instancia que implemente " .
-                "TokenInterface o sea un array TokenInterface[]");
-        }
-
-        return $this->returnResourceType($this->manager->createData($resource), $resultType);
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
     }
 
     private function returnResourceType(Scope $resource, $resultType)
