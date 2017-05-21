@@ -93,7 +93,7 @@ class CommunityController
             }
 
             $image = $this->imageRepository->getByIdOrCreate($idImage);
-            if ($idImage == 1) {
+            if ((int) $idImage === 1) {
                 $image->setUrl('/images/1.jpg');
             }
 
@@ -126,7 +126,6 @@ class CommunityController
     }
 
     public function communityPlayers(
-        ServerRequestInterface $request,
         ResponseInterface $response,
         $idCommunity
     ) {

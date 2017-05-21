@@ -111,7 +111,7 @@ class PlayerController
             }
 
             $image = $this->imageRepository->getByIdOrCreate($idAvatar);
-            if ($idAvatar == 1) {
+            if ((int)$idAvatar === 1) {
                 $image->setUrl('/images/1.jpg');
             }
 
