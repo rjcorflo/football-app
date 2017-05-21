@@ -110,12 +110,14 @@ class PlayerController
                 throw new \Exception("Error validando los datos de la imagen.");
             }
 
-            $image = $this->imageRepository->getByIdOrCreate($idAvatar);
-            if ((int)$idAvatar === 1) {
-                $image->setUrl('/images/1.jpg');
-            }
+            $image = $this->imageRepository->getById($idAvatar);
 
-            $player->setImage($image);
+            if ($image->getId() === 0) {
+                $image->setUrl('/images/1.jpg');
+                $player->setImage($image);
+            } else {
+                $player->setImage($image);
+            }
 
             try {
                 $this->playerRepository->store($player);

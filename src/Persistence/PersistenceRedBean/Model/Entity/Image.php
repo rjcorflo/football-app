@@ -12,7 +12,7 @@ class Image extends SimpleModel implements ImageInterface
      */
     public function getId() : int
     {
-        $this->bean->id;
+        return $this->bean->id;
     }
 
     /**

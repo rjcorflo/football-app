@@ -92,12 +92,14 @@ class CommunityController
                 throw new \Exception("Error validando los datos de la imagen.");
             }
 
-            $image = $this->imageRepository->getByIdOrCreate($idImage);
-            if ((int) $idImage === 1) {
-                $image->setUrl('/images/1.jpg');
-            }
+            $image = $this->imageRepository->getById($idImage);
 
-            $community->setImage($image);
+            if ($image->getId() === 0) {
+                $image->setUrl('/images/1.jpg');
+                $community->setImage($image);
+            } else {
+                $community->setImage($image);
+            }
 
             $result = $this->validator
                 ->existenceValidator()
