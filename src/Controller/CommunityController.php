@@ -64,6 +64,7 @@ class CommunityController
             $private = $bodyData['privada'] ?? 0;
             $password = $bodyData['password'] ?? '';
             $idImage = $bodyData['id_imagen'] ?? 1;
+            $color = $bodyData['color'] ?? '#FFFFFF';
 
             if (!$name) {
                 throw new \Exception("El campo nombre es obligatorio para crear una comunidad");
@@ -73,6 +74,7 @@ class CommunityController
             $community->setCommunityName($name);
             $community->setPrivate((bool)$private);
             $community->setPassword($password);
+            $community->setColor($color);
 
             $result = $this->validator
                 ->communityValidator()
@@ -157,11 +159,11 @@ class CommunityController
         ServerRequestInterface $request,
         ResponseInterface $response
     ) {
-        $parameters = $request->getQueryParams();
+        $bodyData = $request->getParsedBody();
 
         $result = new MessageResult();
 
-        if (!isset($parameters['nombre'])) {
+        if (!isset($bodyData['nombre'])) {
             $result->isError();
             $result->setDescription('El parametro nombre es necesario');
             $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
@@ -169,7 +171,7 @@ class CommunityController
             return $response;
         }
 
-        $nameExists = $this->communityRepository->checkIfNameExists($parameters['nombre']);
+        $nameExists = $this->communityRepository->checkIfNameExists($bodyData['nombre']);
 
         if ($nameExists) {
             $result->isError();

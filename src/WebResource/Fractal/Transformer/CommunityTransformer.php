@@ -33,7 +33,8 @@ class CommunityTransformer extends TransformerAbstract
             'id' => $community->getId(),
             'nombre' => $community->getCommunityName(),
             'privada' => $community->isPrivate(),
-            'url' => $community->getImage()->getUrl()
+            'url' => $community->getImage()->getUrl(),
+            'color' => $community->getColor()
         ];
     }
 

@@ -75,6 +75,16 @@ interface CommunityInterface
     public function getImage() : ImageInterface;
 
     /**
+     * @param string $color
+     */
+    public function setColor(string $color) : void;
+
+    /**
+     * @return string
+     */
+    public function getColor() : string;
+
+    /**
      * Get the list of players from the community.
      * @return PlayerInterface[] List of player from this community.
      */

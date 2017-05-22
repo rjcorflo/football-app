@@ -23,6 +23,13 @@ class CommunityValidator extends AbstractValidator
             $this->result->addMessage(sprintf("Error validando el campo 'nombre': %s", $e->getFullMessage()));
         }
 
+        try {
+            V::hexRgbColor()->assert($community->getColor());
+        } catch (NestedValidationException $e) {
+            $this->result->isError();
+            $this->result->addMessage(sprintf("Error validando el campo 'color': %s", $e->getFullMessage()));
+        }
+
         if ($community->isPrivate()) {
             try {
                 V::notBlank()->notOptional()->notEmpty()->assert($community->getPassword());

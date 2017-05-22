@@ -63,7 +63,7 @@ class Application extends App
                 $this->post('/create', [CommunityController::class, 'create']);
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
                 $this->get('/search', [CommunityController::class, 'search']);
-                $this->get('/exist', [CommunityController::class, 'exist']);
+                $this->post('/exist', [CommunityController::class, 'exist']);
             })->add(AuthenticationMiddleware::class);
         })->add(PersistenceMiddleware::class)
           ->add(InitializationMiddleware::class);

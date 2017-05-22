@@ -35,7 +35,8 @@ class PlayerTransformer extends TransformerAbstract
             'email' => $player->getEmail(),
             'nombre' => $player->getFirstName(),
             'apellidos' => $player->getLastName(),
-            'url' => $player->getImage()->getUrl()
+            'url' => $player->getImage()->getUrl(),
+            'color' => $player->getColor()
         ];
 
         return $item;

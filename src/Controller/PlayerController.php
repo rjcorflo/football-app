@@ -67,6 +67,7 @@ class PlayerController
             $firstName = $bodyData['nombre'] ?? '';
             $lastName = $bodyData['apellidos'] ?? '';
             $idAvatar = $bodyData['id_avatar'] ?? 1;
+            $color = $bodyData['color'] ?? '#FFFFFF';
 
             if (!$nickname || !$email || !$password) {
                 throw new \Exception("Los campos nickname, email y password son necesarios para poder registrarse");
@@ -80,6 +81,7 @@ class PlayerController
             $player->setFirstName($firstName);
             $player->setLastName($lastName);
             $player->setCreationDate(new \DateTime());
+            $player->setColor($color);
 
             // Data validation
             $result = $this->validator

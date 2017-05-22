@@ -141,6 +141,22 @@ class Player extends SimpleModel implements PlayerInterface
         return $this->bean->image->box();
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function setColor(string $color) : void
+    {
+        $this->bean->color = $color;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getColor() : string
+    {
+        return $this->bean->color;
+    }
+
 
     /**
      * @inheritdoc

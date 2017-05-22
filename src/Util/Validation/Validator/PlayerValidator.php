@@ -50,6 +50,13 @@ class PlayerValidator extends AbstractValidator
             $this->result->isError();
             $this->result->addMessage($e->getFullMessage());
         }
+
+        try {
+            V::hexRgbColor()->assert($player->getColor());
+        } catch (NestedValidationException $e) {
+            $this->result->isError();
+            $this->result->addMessage(sprintf("Error validando el campo 'color': %s", $e->getFullMessage()));
+        }
         
         return $this;
     }

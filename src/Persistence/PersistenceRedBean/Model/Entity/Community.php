@@ -4,7 +4,6 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
 use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
-use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
@@ -134,6 +133,23 @@ class Community extends SimpleModel implements CommunityInterface
     {
         return $this->bean->image->box();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setColor(string $color) : void
+    {
+        $this->bean->color = $color;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getColor() : string
+    {
+        return $this->bean->color;
+    }
+
 
     /**
      * @inheritDoc
