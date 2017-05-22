@@ -57,6 +57,11 @@ paths:
               id_avatar:
                 type: integer
                 description: ID de la imagen del avatar para el jugador
+                default: 1
+              color:
+                type: string
+                description: Color para el avatar del jugador en formato hexadecimal
+                default: '#FFFFFF'
             example:
               nickname: reymon
               email: prueba@prueba.com
@@ -64,6 +69,7 @@ paths:
               nombre: Nombre
               apellidos: Apellidos
               id_avatar: 1
+              color: '#FFAADD'
       tags:
         - Jugadores
       responses:
@@ -185,11 +191,17 @@ paths:
               id_imagen:
                 type: integer
                 description: ID de la imagen de la comunidad
+                default: 1
+              color:
+                type: string
+                description: Color de la imagen de la comunidad
+                default: '#FFFFFF'
             example:
               nombre: Comunidad Molona
               privada: true
               password: 1234abCD
               id_imagen: 2
+              color: '#FFDDAA'
       tags:
         - Comunidades
       responses:
@@ -293,10 +305,18 @@ definitions:
       privada:
         type: boolean
         description: Si la comunidad es privada o no
+      url:
+        type: string
+        description: Url de la imagen de la comunidad
+      color:
+        type: string
+        description: Color de la imgagen de la comunidad
     example:
       id: 22
       nombre: Porra
       privada: true
+      url: /images/2.jpg
+      color: '#11AADD'
   Player:
     type: object
     required:
@@ -322,6 +342,9 @@ definitions:
       url:
         type: string
         description: Url de la imagen del avatar del jugador
+      color:
+        type: string
+        description: Color del avatar del jugador
     example:
       id: 7
       nickname: nickA
@@ -329,6 +352,7 @@ definitions:
       nombre: Nombre
       apellidos: Ape Llidos
       url: /images/1.jpg
+      color: '#FFAA11'
   MessageResult:
     type: object
     properties:
