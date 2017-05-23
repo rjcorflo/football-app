@@ -8,99 +8,23 @@ use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
-class PlayerRepository implements PlayerRepositoryInterface
+/**
+ * Class PlayerRepository
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
+ * @method PlayerInterface create()
+ * @method int store(PlayerInterface $player)
+ * @method int[] storeMultiple(array $players)
+ * @method void trash(PlayerInterface $player)
+ * @method void trashMultiple(array $players)
+ * @method PlayerInterface getById(int $idPlayer)
+ * @method PlayerInterface getMultipleById(array $idsPlayers)
+ * @method PlayerInterface[] findAll()
+ */
+class PlayerRepository extends AbstractRepository implements PlayerRepositoryInterface
 {
     const BEAN_NAME = 'player';
-
-    /**
-     * @inheritdoc
-     */
-    public function create() : PlayerInterface
-    {
-        /**
-         * @var Player $bean
-         */
-        $bean = R::dispense(self::BEAN_NAME);
-
-        // Box to return correct type for type hinting
-        return $bean->box();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function store(PlayerInterface $player) : int
-    {
-        if (!$player instanceof Player) {
-            throw new \Exception("Object must be an instance of Player");
-        }
-
-        return R::store($player);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function storeMultiple(array $entities) : array
-    {
-        return R::storeAll($entities);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function trash(PlayerInterface $entity) : void
-    {
-        if (!$entity instanceof Player) {
-            throw new \Exception("Object must be an instance of Player");
-        }
-
-        R::trash($entity);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function trashMultiple(array $entities) : void
-    {
-        R::trashAll($entities);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getById(int $idEntity) : PlayerInterface
-    {
-        /**
-         * @var Player $bean
-         */
-        $bean = R::load(self::BEAN_NAME, $idEntity);
-
-        // Box to return correct type for type hinting
-        return $bean->box();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getMultipleById(array $playersIds) : array
-    {
-        $beans = R::loadAll(self::BEAN_NAME, $playersIds);
-
-        return RedBeanUtils::boxArray($beans);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function findAll() : array
-    {
-        $beans = R::findAll(self::BEAN_NAME);
-        return RedBeanUtils::boxArray($beans);
-    }
 
     /**
      * @inheritdoc
