@@ -2,6 +2,9 @@
 
 namespace RJ\PronosticApp\Model\Entity;
 
+/**
+ * Team interface.
+ */
 interface TeamInterface
 {
     /**

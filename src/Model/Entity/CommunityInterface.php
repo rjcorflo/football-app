@@ -2,6 +2,9 @@
 
 namespace RJ\PronosticApp\Model\Entity;
 
+/**
+ * Community inteface.
+ */
 interface CommunityInterface
 {
     /**
@@ -50,12 +53,12 @@ interface CommunityInterface
     public function getCreationDate() : \DateTime;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
+     * @param PlayerInterface $player
      */
     public function addAdmin(PlayerInterface $player) : void;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
+     * @param PlayerInterface $player
      */
     public function removeAdmin(PlayerInterface $player) : void;
 
@@ -70,7 +73,7 @@ interface CommunityInterface
     public function setImage(ImageInterface $image) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\ImageInterface
+     * @return ImageInterface
      */
     public function getImage() : ImageInterface;
 

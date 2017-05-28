@@ -101,13 +101,12 @@ interface PlayerInterface
     public function getPlayerCommunities() : array;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\TokenInterface $token
-     * @return \RJ\PronosticApp\Model\Entity\TokenInterface
+     * @param TokenInterface $token
      */
-    public function addToken(TokenInterface $token) : TokenInterface;
+    public function addToken(TokenInterface $token) : void;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\TokenInterface $idToken
+     * @param TokenInterface $idToken
      */
     public function removeToken(TokenInterface $idToken) : void;
 

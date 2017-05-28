@@ -10,12 +10,12 @@ interface TokenInterface
     public function getId() : int;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
+     * @param PlayerInterface $player
      */
     public function setPlayer(PlayerInterface $player) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\PlayerInterface
+     * @return PlayerInterface
      */
     public function getPlayer() : PlayerInterface;
 

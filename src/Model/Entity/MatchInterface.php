@@ -2,20 +2,32 @@
 
 namespace RJ\PronosticApp\Model\Entity;
 
+/**
+ * Match interface.
+ */
 interface MatchInterface
 {
+    /** @var string Match not played yet. */
+    const STATE_NOT_PLAYED = "NOT-PLAYED";
+
+    /** @var string Match currently in play. */
+    const STATE_PLAYING = "PLAYING";
+
+    /** @var string Match finished. */
+    const STATE_FINISHED = "FINISHED";
+
     /**
      * @return int
      */
     public function getId() : int;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\MatchdayInterface $matchday
+     * @param MatchdayInterface $matchday
      */
     public function setMatchday(MatchdayInterface $matchday) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\MatchdayInterface
+     * @return MatchdayInterface
      */
     public function getMatchday() : MatchdayInterface;
 
@@ -30,22 +42,22 @@ interface MatchInterface
     public function getStartTime() : \DateTime;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\TeamInterface $team
+     * @param TeamInterface $team
      */
     public function setLocalTeam(TeamInterface $team) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\TeamInterface
+     * @return TeamInterface
      */
     public function getLocalTeam() : TeamInterface;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\TeamInterface $team
+     * @param TeamInterface $team
      */
     public function setAwayTeam(TeamInterface $team) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\TeamInterface
+     * @return TeamInterface
      */
     public function getAwayTeam() : TeamInterface;
 
@@ -72,7 +84,7 @@ interface MatchInterface
     /**
      * @param string $state
      */
-    public function setState(string $state) : void;
+    public function setState(string $state = self::STATE_NOT_PLAYED) : void;
 
     /**
      * @return string

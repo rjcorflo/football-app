@@ -161,11 +161,9 @@ class Player extends SimpleModel implements PlayerInterface
     /**
      * @inheritdoc
      */
-    public function addToken(TokenInterface $token) : TokenInterface
+    public function addToken(TokenInterface $token) : void
     {
         $this->bean->xownTokenList[] = $token;
-
-        return $token;
     }
 
     /**

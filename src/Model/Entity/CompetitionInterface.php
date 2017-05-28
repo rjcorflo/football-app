@@ -2,6 +2,9 @@
 
 namespace RJ\PronosticApp\Model\Entity;
 
+/**
+ * Competition interface.
+ */
 interface CompetitionInterface
 {
     /**

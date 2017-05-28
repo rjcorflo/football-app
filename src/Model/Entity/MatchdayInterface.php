@@ -10,12 +10,12 @@ interface MatchdayInterface
     public function getId() : int;
 
     /**
-     * @param \RJ\PronosticApp\Model\Entity\CompetitionInterface $competition
+     * @param CompetitionInterface $competition
      */
     public function setCompetition(CompetitionInterface $competition) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\CompetitionInterface
+     * @return CompetitionInterface
      */
     public function getCompetition() : CompetitionInterface;
 
@@ -37,5 +37,5 @@ interface MatchdayInterface
     /**
      * @return string
      */
-    public function getAlias() : string;
+    public function getAlias() : ?string;
 }
