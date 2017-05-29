@@ -8,6 +8,9 @@ use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
+/**
+ * [AuthenticationMiddleware description]
+ */
 class AuthenticationMiddleware
 {
     /**

@@ -4,16 +4,12 @@ namespace RJ\PronosticApp\Controller;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Util\General\MessageResult;
-use RJ\PronosticApp\Util\Validation\ValidatorInterface;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
-use Slim\Http\Response;
 
 class DocumentationController
 {
+    /**
+     * @var ContainerInterface
+     */
     private $container;
 
     public function __construct(ContainerInterface $container)
