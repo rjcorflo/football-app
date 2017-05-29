@@ -3,7 +3,6 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RedBeanPHP\R;
-use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 
 /**
@@ -20,13 +19,11 @@ use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
  */
 class CommunityRepository extends AbstractRepository implements CommunityRepositoryInterface
 {
-    const BEAN_NAME = 'community';
-
     /**
      * @inheritDoc
      */
     public function checkIfNameExists(string $name) : bool
     {
-        return R::count(self::BEAN_NAME, 'name LIKE LOWER(?)', [$name]) > 0;
+        return R::count(self::ENTITY, 'name LIKE LOWER(?)', [$name]) > 0;
     }
 }

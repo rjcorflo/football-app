@@ -4,7 +4,9 @@ use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanEntityManager;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanPersistenceLayer;
 use RJ\PronosticApp\Util\Validation\GeneralValidator;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
@@ -36,6 +38,7 @@ return [
         object('RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\*Repository'),
 
     /* Services */
+    EntityManager::class => object(RedBeanEntityManager::class),
     WebResourceGeneratorInterface::class => object(FractalGenerator::class),
     ValidatorInterface::class => object(GeneralValidator::class),
 

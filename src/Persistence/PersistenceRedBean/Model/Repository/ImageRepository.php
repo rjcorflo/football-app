@@ -21,8 +21,6 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Image;
  */
 class ImageRepository extends AbstractRepository implements ImageRepositoryInterface
 {
-    const BEAN_NAME = 'image';
-
     /**
      * @inheritDoc
      */
@@ -31,7 +29,7 @@ class ImageRepository extends AbstractRepository implements ImageRepositoryInter
         /**
          * @var Image $image
          */
-        $image = R::findOneOrDispense(self::BEAN_NAME, 'id = :id', [':id' => $imageId]);
+        $image = R::findOneOrDispense(self::ENTITY, 'id = :id', [':id' => $imageId]);
 
         return $image->box();
     }

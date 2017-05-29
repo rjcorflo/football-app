@@ -24,14 +24,12 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
  */
 class PlayerRepository extends AbstractRepository implements PlayerRepositoryInterface
 {
-    const BEAN_NAME = 'player';
-
     /**
      * @inheritdoc
      */
     public function checkNickameExists(string $nickname) : bool
     {
-        return R::count(self::BEAN_NAME, 'nickname LIKE ?', [$nickname]) > 0;
+        return R::count(self::ENTITY, 'nickname LIKE ?', [$nickname]) > 0;
     }
 
     /**
@@ -39,7 +37,7 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
      */
     public function checkEmailExists(string $email) : bool
     {
-        return R::count(self::BEAN_NAME, 'email LIKE ?', [$email]) > 0;
+        return R::count(self::ENTITY, 'email LIKE ?', [$email]) > 0;
     }
 
     /**
@@ -47,7 +45,7 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
      */
     public function findPlayerByNicknameOrEmail(string $player) : array
     {
-        $players = R::find(self::BEAN_NAME, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
+        $players = R::find(self::ENTITY, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
         return RedBeanUtils::boxArray($players);
     }
 

@@ -7,6 +7,8 @@ use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 interface PlayerRepositoryInterface extends StandardRepositoryInterface
 {
+    const ENTITY = 'player';
+
     /**
      * Checks if nickname exists.
      * @param string $nickname

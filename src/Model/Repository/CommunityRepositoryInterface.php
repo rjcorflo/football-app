@@ -6,6 +6,8 @@ use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 interface CommunityRepositoryInterface extends StandardRepositoryInterface
 {
+    const ENTITY = 'community';
+
     /**
      * Check if a community name exists.
      * @param string $name

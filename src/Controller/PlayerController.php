@@ -6,7 +6,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\PronosticApp\Persistence;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -14,14 +14,9 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 class PlayerController
 {
     /**
-     * @var PlayerRepositoryInterface
+     * @var EntityManager $entityManager
      */
-    private $playerRepository;
-
-    /**
-     * @var ImageRepositoryInterface
-     */
-    private $imageRepository;
+    private $entityManager;
 
     /**
      * @var WebResourceGeneratorInterface
@@ -34,13 +29,11 @@ class PlayerController
     private $validator;
 
     public function __construct(
-        PlayerRepositoryInterface $playerRepository,
-        ImageRepositoryInterface $imageRepository,
+        EntityManager $entityManager,
         WebResourceGeneratorInterface $resourceGenerator,
         ValidatorInterface $validator
     ) {
-        $this->playerRepository = $playerRepository;
-        $this->imageRepository = $imageRepository;
+        $this->entityManager = $entityManager;
         $this->resourceGenerator = $resourceGenerator;
         $this->validator = $validator;
     }
@@ -73,8 +66,10 @@ class PlayerController
                 throw new \Exception("Los campos nickname, email y password son necesarios para poder registrarse");
             }
 
+            $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+
             // Initialize Player data
-            $player = $this->playerRepository->create();
+            $player = $playerRepository->create();
             $player->setNickname($nickname);
             $player->setEmail($email);
             $player->setPassword($password);
@@ -112,7 +107,8 @@ class PlayerController
                 throw new \Exception("Error validando los datos de la imagen.");
             }
 
-            $image = $this->imageRepository->getById($idAvatar);
+            $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
+            $image = $imageRepository->getById($idAvatar);
 
             if ($image->getId() === 0) {
                 $image->setUrl('/images/1.jpg');
@@ -122,7 +118,7 @@ class PlayerController
             }
 
             try {
-                $this->playerRepository->store($player);
+                $playerRepository->store($player);
                 $result->setDescription("Registro correcto");
             } catch (\Exception $e) {
                 $result->addMessage($e->getMessage());
@@ -155,8 +151,10 @@ class PlayerController
                 throw new \Exception('Los campos player y password son necesarios para poder hacer login.');
             }
 
+            $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+
             // Retrieve player
-            $players = $this->playerRepository->findPlayerByNicknameOrEmail($player);
+            $players = $playerRepository->findPlayerByNicknameOrEmail($player);
 
             if (count($players) !== 1) {
                 $result->addMessage("Nombre, email o password incorrectos");
@@ -175,7 +173,7 @@ class PlayerController
 
             // Correct login
             // Generate token
-            $token = $this->playerRepository->generateTokenForPlayer($player);
+            $token = $playerRepository->generateTokenForPlayer($player);
 
             $response->getBody()->write($this->resourceGenerator->createTokenResource($token));
             return $response;

@@ -6,6 +6,8 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 
 interface ImageRepositoryInterface extends StandardRepositoryInterface
 {
+    const ENTITY = 'image';
+
     /**
      * Get image by id or dispense if not exists.
      * @param int $imageId

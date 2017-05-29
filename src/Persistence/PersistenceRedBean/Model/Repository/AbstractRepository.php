@@ -9,8 +9,6 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 abstract class AbstractRepository implements StandardRepositoryInterface
 {
-    const BEAN_NAME = 'override-this';
-
     /**
      * @inheritdoc
      */

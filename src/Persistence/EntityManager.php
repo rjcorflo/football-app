@@ -7,7 +7,7 @@ namespace RJ\PronosticApp\Persistence;
  */
 abstract class EntityManager
 {
-    abstract public function getRepositories();
+    abstract public function getRepository(string $entity = null);
 
     abstract public function transaction(callable $transaction);
 

@@ -4,7 +4,6 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Community;
-use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
@@ -12,8 +11,6 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 class ParticipantRepository implements ParticipantRepositoryInterface
 {
-    const BEAN_NAME = 'participant';
-
     /**
      * @inheritDoc
      */
@@ -23,7 +20,7 @@ class ParticipantRepository implements ParticipantRepositoryInterface
             throw new \Exception("Object must be an instance of Community");
         }
 
-        $players = $community->unbox()->via(self::BEAN_NAME)->sharedPlayerList;
+        $players = $community->unbox()->via(self::ENTITY)->sharedPlayerList;
 
         return RedBeanUtils::boxArray($players);
     }
@@ -37,7 +34,7 @@ class ParticipantRepository implements ParticipantRepositoryInterface
             throw new \Exception("Object must be an instance of Player");
         }
 
-        $communities = $player->unbox()->via(self::BEAN_NAME)->sharedCommunityList;
+        $communities = $player->unbox()->via(self::ENTITY)->sharedCommunityList;
 
         return RedBeanUtils::boxArray($communities);
     }

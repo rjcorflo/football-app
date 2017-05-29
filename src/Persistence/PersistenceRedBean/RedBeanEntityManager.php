@@ -2,17 +2,26 @@
 
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean;
 
+use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RedBeanPHP\R;
 
 class RedBeanEntityManager extends EntityManager
 {
+    /** @var ContainerInterface */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->repositoryBag = $repositoryBag;
+    }
+
     /**
      * @inheritDoc
      */
-    public function getRepositories()
+    public function getRepository(string $class)
     {
-        throw new \LogicException('Not implemented'); // TODO
+        return $this->container->get($class);
     }
 
     /**
