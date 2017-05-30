@@ -5,12 +5,6 @@ namespace RJ\PronosticApp\Model\Repository;
 interface StandardRepositoryInterface
 {
     /**
-     * Name of the entity.
-     * @var string
-     */
-    const ENTITY = 'override-this';
-
-    /**
      * Return fresh created entity model. Is it not persisted.
      * @return object
      */

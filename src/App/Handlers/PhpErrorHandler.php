@@ -40,7 +40,7 @@ class PhpErrorHandler extends PhpError
         $result = new MessageResult();
         $result->isError();
         $result->setDescription("Error insesperado. Avise al administrador del servidor.");
-        $result->addMessage($error->getMessage());
+        $result->addMessageWithCode(MessageResult::DEFAULT, $error->getMessage());
 
         $this->writeToErrorLog($error);
 

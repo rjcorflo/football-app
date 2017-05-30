@@ -29,7 +29,7 @@ class TokenRepository extends AbstractRepository implements TokenRepositoryInter
         /**
          * @var SimpleModel[] $tokens
          */
-        $tokens = R::find(self::ENTITY, ['token LIKE ?'], [$token]);
+        $tokens = R::find(self::ENTITY, ['token LIKE ?'], [$tokenString]);
 
         if (count($tokens) === 0) {
             throw new \Exception("El token no existe");

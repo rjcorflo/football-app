@@ -17,7 +17,7 @@ abstract class AbstractRepository implements StandardRepositoryInterface
         /**
          * @var SimpleModel $bean
          */
-        $bean = R::dispense(static::BEAN_NAME);
+        $bean = R::dispense(static::ENTITY);
 
         // Box to return correct type for type hinting
         return $bean->box();
@@ -63,7 +63,7 @@ abstract class AbstractRepository implements StandardRepositoryInterface
         /**
          * @var SimpleModel $bean
          */
-        $bean = R::load(static::BEAN_NAME, $idEntity);
+        $bean = R::load(static::ENTITY, $idEntity);
 
         // Box to return correct type for type hinting
         return $bean->box();
@@ -74,7 +74,7 @@ abstract class AbstractRepository implements StandardRepositoryInterface
      */
     public function getMultipleById(array $entitiesIds) : array
     {
-        $beans = R::loadAll(static::BEAN_NAME, $entitiesIds);
+        $beans = R::loadAll(static::ENTITY, $entitiesIds);
         return RedBeanUtils::boxArray($beans);
     }
 
@@ -83,7 +83,7 @@ abstract class AbstractRepository implements StandardRepositoryInterface
      */
     public function findAll() : array
     {
-        $beans = R::findAll(static::BEAN_NAME);
+        $beans = R::findAll(static::ENTITY);
         return RedBeanUtils::boxArray($beans);
     }
 }

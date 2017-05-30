@@ -6,6 +6,7 @@ use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 
 class ExistenceValidator extends AbstractValidator
@@ -45,11 +46,17 @@ class ExistenceValidator extends AbstractValidator
 
             if ($existsNickname) {
                 $this->result->isError();
-                $this->result->addMessage("Ya existe un usuario con ese nickname.");
+                $this->result->addMessageWithCode(
+                    MessageResult::INVALID_USERNAME,
+                    "Ya existe un usuario con ese nickname."
+                );
             }
         } catch (\Throwable $e) {
             $this->result->isError();
-            $this->result->addMessage("Error comprobando la existencia del nickname.");
+            $this->result->addMessageWithCode(
+                MessageResult::INVALID_USERNAME,
+                "Error comprobando la existencia del nickname."
+            );
         }
 
         return $this;
@@ -66,11 +73,14 @@ class ExistenceValidator extends AbstractValidator
 
             if ($existsEmail) {
                 $this->result->isError();
-                $this->result->addMessage("Ya existe un usuario con ese email.");
+                $this->result->addMessageWithCode(MessageResult::INVALID_MAIL, "Ya existe un usuario con ese email.");
             }
         } catch (\Throwable $e) {
             $this->result->isError();
-            $this->result->addMessage("Error comprobando la existencia del email.");
+            $this->result->addMessageWithCode(
+                MessageResult::INVALID_USERNAME,
+                "Error comprobando la existencia del email."
+            );
         }
 
         return $this;
@@ -87,11 +97,17 @@ class ExistenceValidator extends AbstractValidator
 
             if ($existsName) {
                 $this->result->isError();
-                $this->result->addMessage("Ya existe una comunidad con ese nombre.");
+                $this->result->addMessageWithCode(
+                    MessageResult::DEFAULT,
+                    "Ya existe una comunidad con ese nombre."
+                );
             }
         } catch (\Throwable $e) {
             $this->result->isError();
-            $this->result->addMessage("Error comprobando la existencia del nombre de la comunidad.");
+            $this->result->addMessageWithCode(
+                MessageResult::DEFAULT,
+                "Error comprobando la existencia del nombre de la comunidad."
+            );
         }
 
         return $this;
@@ -100,7 +116,7 @@ class ExistenceValidator extends AbstractValidator
     /**
      * @inheritdoc
      */
-    public function validate() : ValidationResult
+    public function validate(): ValidationResult
     {
         if ($this->result->hasError()) {
             $this->result->setDescription("Ya existe un usuario con ese nickname o email.");

@@ -4,12 +4,16 @@ namespace RJ\PronosticApp\Util\General;
 
 class MessageResult
 {
+    const DEFAULT = 0;
+    const INVALID_MAIL = 1;
+    const INVALID_USERNAME = 2;
+
     protected $error = false;
 
     protected $description = "";
 
     /**
-     * @var string[]
+     * @var MessageItem[]
      */
     protected $messages = [];
 
@@ -38,11 +42,23 @@ class MessageResult
         return $this->description;
     }
 
-    public function addMessage(string $message) : void
+    public function addMessage(MessageItem $message) : void
     {
         $this->messages[] = $message;
     }
 
+    public function addMessageWithCode(int $code, ?string $observations) : void
+    {
+        $message = new MessageItem();
+        $message->setCode($code);
+        $message->setObservation($observations);
+
+        $this->messages[] = $message;
+    }
+
+    /**
+     * @return MessageItem[]
+     */
     public function getMessages() : array
     {
         return $this->messages;
