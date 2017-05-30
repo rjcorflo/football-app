@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Community inteface.
+ * Community interface.
  */
 interface CommunityInterface
 {

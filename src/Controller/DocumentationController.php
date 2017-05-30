@@ -12,11 +12,20 @@ class DocumentationController
      */
     private $container;
 
+    /**
+     * DocumentationController constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return int
+     */
     public function documentationSwagger(
         ServerRequestInterface $request,
         ResponseInterface $response

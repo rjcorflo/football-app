@@ -8,8 +8,15 @@ use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
 
 class PersistenceMiddleware
 {
+    /**
+     * @var AbstractPersistenceLayer
+     */
     private $persistenceLayer;
 
+    /**
+     * PersistenceMiddleware constructor.
+     * @param AbstractPersistenceLayer $persistenceLayer
+     */
     public function __construct(AbstractPersistenceLayer $persistenceLayer)
     {
         $this->persistenceLayer = $persistenceLayer;

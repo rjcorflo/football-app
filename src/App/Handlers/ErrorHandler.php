@@ -12,14 +12,14 @@ use UnexpectedValueException;
 class ErrorHandler extends Error
 {
     /**
-     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     * @var WebResourceGeneratorInterface
      */
     private $resourceGenerator;
 
     /**
      * ErrorHandler constructor.
      * @param bool $displayErrorDetails
-     * @param \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface $resourceGenerator
+     * @param WebResourceGeneratorInterface $resourceGenerator
      */
     public function __construct($displayErrorDetails, WebResourceGeneratorInterface $resourceGenerator)
     {

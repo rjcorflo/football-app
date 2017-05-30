@@ -156,7 +156,7 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function getPlayers() : array
     {
-        $players = $this->bean->via(ParticipantRepository::BEAN_NAME)->sharedPlayerList;
+        $players = $this->bean->via(ParticipantRepository::ENTITY)->sharedPlayerList;
 
         return RedBeanUtils::boxArray($players);
     }
@@ -166,7 +166,7 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function addPlayer(PlayerInterface $player) : void
     {
-        $participant = R::dispense(ParticipantRepository::BEAN_NAME);
+        $participant = R::dispense(ParticipantRepository::ENTITY);
         $participant->community = $this;
         $participant->player = $player;
         $participant->creationDate = new \DateTime();
@@ -179,6 +179,6 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function removePlayer(PlayerInterface $player) : void
     {
-        unset($this->bean->via(ParticipantRepository::BEAN_NAME)->sharedPlayerList[$player->getId()]);
+        unset($this->bean->via(ParticipantRepository::ENTITY)->sharedPlayerList[$player->getId()]);
     }
 }

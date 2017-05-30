@@ -2,10 +2,9 @@
 
 namespace RJ\PronosticApp\Model\Repository;
 
-use RJ\PronosticApp\Model\Entity\CommunityInterface;
-
 interface CommunityRepositoryInterface extends StandardRepositoryInterface
 {
+    /** @var string */
     const ENTITY = 'community';
 
     /**

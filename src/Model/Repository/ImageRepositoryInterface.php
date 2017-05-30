@@ -6,6 +6,7 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 
 interface ImageRepositoryInterface extends StandardRepositoryInterface
 {
+    /** @var string */
     const ENTITY = 'image';
 
     /**

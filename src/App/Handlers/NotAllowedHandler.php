@@ -18,13 +18,13 @@ use UnexpectedValueException;
 class NotAllowedHandler extends NotAllowed
 {
     /**
-     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     * @var WebResourceGeneratorInterface
      */
     private $resourceGenerator;
 
     /**
      * NotAllowedHandler constructor.
-     * @param \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface $resourceGenerator
+     * @param WebResourceGeneratorInterface $resourceGenerator
      */
     public function __construct(WebResourceGeneratorInterface $resourceGenerator)
     {

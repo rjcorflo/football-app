@@ -3,9 +3,12 @@ namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -13,9 +16,9 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 class CommunityController
 {
     /**
-     * @var \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface
+     * @var EntityManager $entityManager
      */
-    private $communityRepository;
+    private $entityManager;
 
     /**
      * @var ImageRepositoryInterface
@@ -23,23 +26,21 @@ class CommunityController
     private $imageRepository;
 
     /**
-     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     * @var WebResourceGeneratorInterface
      */
     private $resourceGenerator;
 
     /**
-     * @var \RJ\PronosticApp\Util\Validation\ValidatorInterface
+     * @var ValidatorInterface
      */
     private $validator;
 
     public function __construct(
-        CommunityRepositoryInterface $communityRepository,
-        ImageRepositoryInterface $imageRepository,
+        EntityManager $entityManager,
         WebResourceGeneratorInterface $resourceGenerator,
         ValidatorInterface $validator
     ) {
-        $this->communityRepository = $communityRepository;
-        $this->imageRepository = $imageRepository;
+        $this->entityManager = $entityManager;
         $this->resourceGenerator = $resourceGenerator;
         $this->validator = $validator;
     }
@@ -50,9 +51,7 @@ class CommunityController
     ) {
         $bodyData = $request->getParsedBody();
 
-        /**
-         * @var PlayerInterface $player
-         */
+        /** @var PlayerInterface $player */
         $player = $request->getAttribute('player');
 
         // Prepare result
@@ -70,7 +69,11 @@ class CommunityController
                 throw new \Exception("El campo nombre es obligatorio para crear una comunidad");
             }
 
-            $community = $this->communityRepository->create();
+            /** @var CommunityRepositoryInterface $communityRepository */
+            $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
+            /** @var CommunityInterface $community */
+            $community = $communityRepository->create();
             $community->setCommunityName($name);
             $community->setPrivate((bool)$private);
             $community->setPassword($password);
@@ -94,7 +97,11 @@ class CommunityController
                 throw new \Exception("Error validando los datos de la imagen.");
             }
 
-            $image = $this->imageRepository->getById($idImage);
+            /** @var ImageRepositoryInterface $imageRepository */
+            $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
+
+            /** @var ImageInterface $image */
+            $image = $imageRepository->getById($idImage);
 
             if ($image->getId() === 0) {
                 $image->setUrl('/images/1.jpg');
@@ -114,7 +121,7 @@ class CommunityController
 
             $community->addAdmin($player);
 
-            $this->communityRepository->store($community);
+            $communityRepository->store($community);
 
             $response->getBody()
                 ->write($this->resourceGenerator->exclude('jugadores')->createCommunityResource($community));
@@ -138,7 +145,11 @@ class CommunityController
          */
         //$player = $request->getAttribute('player');
 
-        $community =$this->communityRepository->getById($idCommunity);
+        /** @var CommunityRepositoryInterface $communityRepository */
+        $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+        
+        /** @var CommunityInterface $community */
+        $community = $communityRepository->getById($idCommunity);
 
         $players = $community->getPlayers();
 

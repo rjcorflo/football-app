@@ -3,6 +3,7 @@ namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
@@ -11,6 +12,11 @@ use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
+/**
+ * Class PlayerController.
+ * Expose player data.
+ * @package RJ\PronosticApp\Controller
+ */
 class PlayerController
 {
     /**
@@ -69,6 +75,7 @@ class PlayerController
             $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
 
             // Initialize Player data
+            /** @var PlayerInterface $player */
             $player = $playerRepository->create();
             $player->setNickname($nickname);
             $player->setEmail($email);
@@ -107,7 +114,9 @@ class PlayerController
                 throw new \Exception("Error validando los datos de la imagen.");
             }
 
+            /** @var ImageRepositoryInterface $imageRepository */
             $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
+            /** @var ImageInterface $image */
             $image = $imageRepository->getById($idAvatar);
 
             if ($image->getId() === 0) {
@@ -225,3 +234,4 @@ class PlayerController
         return $response;
     }
 }
+

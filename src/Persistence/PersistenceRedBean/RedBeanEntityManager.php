@@ -13,7 +13,7 @@ class RedBeanEntityManager extends EntityManager
 
     public function __construct(ContainerInterface $container)
     {
-        $this->repositoryBag = $repositoryBag;
+        $this->container = $container;
     }
 
     /**

@@ -7,6 +7,7 @@ use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 interface PlayerRepositoryInterface extends StandardRepositoryInterface
 {
+    /** @var string */
     const ENTITY = 'player';
 
     /**

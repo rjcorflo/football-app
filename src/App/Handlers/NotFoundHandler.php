@@ -18,13 +18,13 @@ use UnexpectedValueException;
 class NotFoundHandler extends NotFound
 {
     /**
-     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     * @var WebResourceGeneratorInterface
      */
     private $resourceGenerator;
 
     /**
      * NotFoundHandler constructor.
-     * @param \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface $resourceGenerator
+     * @param WebResourceGeneratorInterface $resourceGenerator
      */
     public function __construct(WebResourceGeneratorInterface $resourceGenerator)
     {

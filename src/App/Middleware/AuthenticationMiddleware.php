@@ -5,29 +5,30 @@ namespace RJ\PronosticApp\App\Middleware;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
- * [AuthenticationMiddleware description]
+ * Authentication middleware.
  */
 class AuthenticationMiddleware
 {
     /**
-     * @var PlayerRepositoryInterface
+     * @var EntityManager
      */
-    private $playerRepository;
+    private $entityManager;
 
     /**
-     * @var \RJ\PronosticApp\WebResource\WebResourceGeneratorInterface
+     * @var WebResourceGeneratorInterface
      */
     private $webResourceGenerator;
 
     public function __construct(
-        PlayerRepositoryInterface $playerRepository,
+        EntityManager $entityManager,
         WebResourceGeneratorInterface $webResourceGenerator
     ) {
-        $this->playerRepository = $playerRepository;
+        $this->entityManager = $entityManager;
         $this->webResourceGenerator = $webResourceGenerator;
     }
 
@@ -55,8 +56,11 @@ class AuthenticationMiddleware
                 throw new \Exception("No existe el token o se han pasado varios.");
             }
 
-            // Find player or launch excepction if not find one for token
-            $player = $this->playerRepository->findPlayerByToken($token[0]);
+            // Find player or launch exception if not find one for token
+            /** @var PlayerRepositoryInterface $playerRepository */
+            $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+            $player = $playerRepository->findPlayerByToken($token[0]);
+
             // Add player to request
             $request = $request->withAttribute('player', $player);
         } catch (\Exception $e) {
@@ -64,9 +68,10 @@ class AuthenticationMiddleware
             $result->isError();
             $result->setDescription("No puede acceder a este recurso sin estar logueado");
 
-            $response = $response->withHeader('Content-type', 'application/json');
-            $response = $response->withStatus(401, "Error autenticacion");
-            $response->getBody()->write($this->webResourceGenerator->createMessageResource($result));
+            $errorResponse = $response->withHeader('Content-type', 'application/json');
+            $errorResponse = $errorResponse->withStatus(401, "Error autenticacion");
+            $errorResponse->getBody()->write($this->webResourceGenerator->createMessageResource($result));
+
             return $response;
         }
 
