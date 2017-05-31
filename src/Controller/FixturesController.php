@@ -25,7 +25,7 @@ class FixturesController
         $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
 
         for ($index = 1; $index < 17; $index++) {
-            $image = $imageRepository->getByIdOrCreate(1);
+            $image = $imageRepository->getByIdOrCreate($index);
             $image->setUrl("/images/{$index}.jpg");
 
             $images[] = $image;
