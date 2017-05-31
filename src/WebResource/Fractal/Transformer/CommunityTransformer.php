@@ -33,13 +33,12 @@ class CommunityTransformer extends TransformerAbstract
             'id' => $community->getId(),
             'nombre' => $community->getCommunityName(),
             'privada' => $community->isPrivate(),
-            'url' => $community->getImage()->getUrl(),
-            'color' => $community->getColor()
+            'url' => $community->getImage()->getUrl()
         ];
     }
 
     /**
-     * Include Player
+     * Include Players
      *
      * @param CommunityInterface $community
      * @return \League\Fractal\Resource\Collection

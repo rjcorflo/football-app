@@ -4,10 +4,6 @@ namespace RJ\PronosticApp\Util\General;
 
 class MessageResult
 {
-    const DEFAULT = 0;
-    const INVALID_MAIL = 1;
-    const INVALID_USERNAME = 2;
-
     protected $error = false;
 
     protected $description = "";
@@ -51,6 +47,15 @@ class MessageResult
     {
         $message = new MessageItem();
         $message->setCode($code);
+        $message->setObservation($observations);
+
+        $this->messages[] = $message;
+    }
+
+    public function addDefaultMessage(?string $observations) : void
+    {
+        $message = new MessageItem();
+        $message->setCode(ErrorCodes::DEFAULT);
         $message->setObservation($observations);
 
         $this->messages[] = $message;

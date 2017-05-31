@@ -137,23 +137,6 @@ class Community extends SimpleModel implements CommunityInterface
     /**
      * @inheritDoc
      */
-    public function setColor(string $color) : void
-    {
-        $this->bean->color = $color;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getColor() : string
-    {
-        return $this->bean->color;
-    }
-
-
-    /**
-     * @inheritDoc
-     */
     public function getPlayers() : array
     {
         $players = $this->bean->via(ParticipantRepository::ENTITY)->sharedPlayerList;

@@ -3,7 +3,6 @@
 namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 

@@ -125,6 +125,46 @@ paths:
           description: Error al intentar hacer login
           schema:
             $ref: '#/definitions/MessageResult'
+  /player/exist:
+    post:
+      summary: Comprueba si el nickname o el email de un usuario ya existen
+      description: |
+        Permite comprobar si el email o el nickanme (o ambos) de un usuario están disponibles o no.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description : Nickname y/o email a comprobar
+          schema:
+            type: object
+            properties:
+              nickname:
+                type: string
+                description: Nickname a comprobar
+              email:
+                type: string
+                description: Email a comprobar
+            example:
+              nickname: Juanito
+      tags:
+        - Jugadores
+      responses:
+        200:
+          description: |
+            Información acerca de la comprobación del email o el nombre.
+            Devuelve error: true si alguno de los datos pasados ya existe.
+          schema:
+            $ref: '#/definitions/MessageResult'
+        400:
+          description: No se están pasando los parámetros necesarios
+          schema:
+            $ref: '#/definitions/MessageResult'
+        default:
+          description: Error genérico
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
   /player/logout:
     post:
       summary: Logout de un jugador
@@ -192,16 +232,11 @@ paths:
                 type: integer
                 description: ID de la imagen de la comunidad
                 default: 1
-              color:
-                type: string
-                description: Color de la imagen de la comunidad
-                default: '#FFFFFF'
             example:
               nombre: Comunidad Molona
               privada: true
               password: 1234abCD
               id_imagen: 2
-              color: '#FFDDAA'
       tags:
         - Comunidades
       responses:
@@ -256,11 +291,11 @@ paths:
       security:
         - token: []
   /community/exist:
-    get:
+    post:
       summary: Comprueba si el nombre de una comunidad ya existe
       description: Permite comprobar si el nombre una comunidad ya existe o no.
       parameters:
-        - in: query
+        - in: body
           name: nombre
           type: string
           required: true
@@ -308,9 +343,6 @@ definitions:
       url:
         type: string
         description: Url de la imagen de la comunidad
-      color:
-        type: string
-        description: Color de la imgagen de la comunidad
     example:
       id: 22
       nombre: Porra
@@ -363,10 +395,19 @@ definitions:
       mensajes:
         type: array
         items:
-          type: string
+          type: object
+          properties:
+            code:
+              type: integer
+              description: Código de identificación del error
+            obs:
+              type: string
+              description: Mensaje informativo
     example:
       error: true
       description: Validación incorrecta del campo 'nombre'
       mensajes:
-        - Campo A incorrecto
-        - Campo B incorrecto
+        - code: 0
+          obs: Mensaje de error estándar
+        - code: 1
+          obs: El mail ya existe

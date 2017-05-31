@@ -3,6 +3,7 @@ namespace RJ\PronosticApp\App\Handlers;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 use Slim\Handlers\PhpError;
@@ -40,7 +41,7 @@ class PhpErrorHandler extends PhpError
         $result = new MessageResult();
         $result->isError();
         $result->setDescription("Error insesperado. Avise al administrador del servidor.");
-        $result->addMessageWithCode(MessageResult::DEFAULT, $error->getMessage());
+        $result->addMessageWithCode(ErrorCodes::DEFAULT, $error->getMessage());
 
         $this->writeToErrorLog($error);
 

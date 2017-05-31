@@ -3,6 +3,7 @@ namespace RJ\PronosticApp\App\Handlers;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 use Slim\Handlers\Error;
@@ -42,7 +43,7 @@ class ErrorHandler extends Error
         $result = new MessageResult();
         $result->isError();
         $result->setDescription("Exception inesperada. Avise al administrador del servidor.");
-        $result->addMessageWithCode(MessageResult::DEFAULT, $exception->getMessage());
+        $result->addMessageWithCode(ErrorCodes::DEFAULT, $exception->getMessage());
 
         $this->writeToErrorLog($exception);
 

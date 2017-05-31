@@ -21,11 +21,6 @@ class CommunityController
     private $entityManager;
 
     /**
-     * @var ImageRepositoryInterface
-     */
-    private $imageRepository;
-
-    /**
      * @var WebResourceGeneratorInterface
      */
     private $resourceGenerator;
@@ -35,6 +30,12 @@ class CommunityController
      */
     private $validator;
 
+    /**
+     * CommunityController constructor.
+     * @param EntityManager $entityManager
+     * @param WebResourceGeneratorInterface $resourceGenerator
+     * @param ValidatorInterface $validator
+     */
     public function __construct(
         EntityManager $entityManager,
         WebResourceGeneratorInterface $resourceGenerator,
@@ -45,6 +46,12 @@ class CommunityController
         $this->validator = $validator;
     }
 
+    /**
+     * Create community method.
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function create(
         ServerRequestInterface $request,
         ResponseInterface $response
@@ -63,7 +70,6 @@ class CommunityController
             $private = $bodyData['privada'] ?? 0;
             $password = $bodyData['password'] ?? '';
             $idImage = $bodyData['id_imagen'] ?? 1;
-            $color = $bodyData['color'] ?? '#FFFFFF';
 
             if (!$name) {
                 throw new \Exception("El campo nombre es obligatorio para crear una comunidad");
@@ -77,7 +83,6 @@ class CommunityController
             $community->setCommunityName($name);
             $community->setPrivate((bool)$private);
             $community->setPassword($password);
-            $community->setColor($color);
 
             $result = $this->validator
                 ->communityValidator()
@@ -182,7 +187,10 @@ class CommunityController
             return $response;
         }
 
-        $nameExists = $this->communityRepository->checkIfNameExists($bodyData['nombre']);
+        /** @var CommunityRepositoryInterface $communityRepository */
+        $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
+        $nameExists = $communityRepository->checkIfNameExists($bodyData['nombre']);
 
         if ($nameExists) {
             $result->isError();

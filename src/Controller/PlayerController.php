@@ -7,7 +7,9 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -130,11 +132,65 @@ class PlayerController
                 $playerRepository->store($player);
                 $result->setDescription("Registro correcto");
             } catch (\Exception $e) {
-                $result->addMessage($e->getMessage());
+                $result->addDefaultMessage($e->getMessage());
                 throw new \Exception("Error al almacenar el jugador");
             }
         } catch (\Exception $e) {
             $result->isError();
+            $result->setDescription($e->getMessage());
+        }
+
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+        return $response;
+    }
+
+    public function exist(
+        ServerRequestInterface $request,
+        ResponseInterface $response
+    ) {
+        $bodyData = $request->getParsedBody();
+
+        // Prepare result
+        $result = new MessageResult();
+
+        try {
+            // Retrieve data
+            if (!isset($bodyData['nickname']) && !isset($bodyData['email'])) {
+                $result->isError();
+                $result->setDescription('El parametro nickname o email son necesarios');
+                $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+                $response = $response->withStatus(400, 'Parameter needed');
+                return $response;
+            }
+
+            $nickname = $bodyData['nickname'] ?? '';
+            $email = $bodyData['email'] ?? '';
+
+            /** @var PlayerRepositoryInterface $playerRepository */
+            $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+
+            if ($nickname != '' && $playerRepository->checkNickameExists($nickname)) {
+                $result->isError();
+                $result->addMessageWithCode(
+                    ErrorCodes::EXIST_PLAYER_USERNAME,
+                    'El nombre de usuario ya existe'
+                );
+            }
+
+            if ($email != '' && $playerRepository->checkEmailExists($email)) {
+                $result->isError();
+                $result->addMessageWithCode(
+                    ErrorCodes::EXIST_PLAYER_EMAIL,
+                    'El email ya existe'
+                );
+            }
+
+            if ($result->hasError()) {
+                throw new \Exception('Nombre de usuario o email existentes');
+            }
+
+            $result->setDescription('Datos disponibles');
+        } catch (\Exception $e) {
             $result->setDescription($e->getMessage());
         }
 
@@ -166,7 +222,10 @@ class PlayerController
             $players = $playerRepository->findPlayerByNicknameOrEmail($player);
 
             if (count($players) !== 1) {
-                $result->addMessage("Nombre, email o password incorrectos");
+                $result->addMessageWithCode(
+                    ErrorCodes::LOGIN_ERROR,
+                    "Nombre, email o password incorrectos"
+                );
                 throw new \Exception("Login incorrecto");
             }
 
@@ -176,7 +235,10 @@ class PlayerController
             $player = array_shift($players);
 
             if (!password_verify($bodyData['password'], $player->getPassword())) {
-                $result->addMessage("Nombre, mail o password incorrectos");
+                $result->addMessageWithCode(
+                    ErrorCodes::LOGIN_ERROR,
+                    "Nombre, email o password incorrectos"
+                );
                 throw new \Exception("Login incorrecto");
             }
 
@@ -209,7 +271,17 @@ class PlayerController
 
         try {
             $tokenString = $request->getHeader('X-Auth-Token');
-            $this->playerRepository->removePlayerToken($player, $tokenString[0]);
+
+            /** @var TokenRepositoryInterface $tokenRepository */
+            $tokenRepository = $this->entityManager->getRepository(TokenRepositoryInterface::class);
+            $token = $tokenRepository->findByTokenString($tokenString[0]);
+
+            $player->removeToken($token);
+
+            /** @var PlayerRepositoryInterface $playerRepository */
+            $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+
+            $playerRepository->store($player);
             $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
         } catch (\Exception $e) {
             $message->isError();
@@ -234,4 +306,3 @@ class PlayerController
         return $response;
     }
 }
-
