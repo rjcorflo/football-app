@@ -18,6 +18,8 @@ tags:
     description: Todo sobre los jugadores
   - name: Comunidades
     description: Comunidades actuales en funcionamiento
+  - name: Imágenes
+    description: Datos de las imágenes almacenadas
   - name: Pronósticos
     description: Prnósticos de los jugadores
   - name: Históricos
@@ -205,6 +207,30 @@ paths:
             $ref: '#/definitions/MessageResult'
       security:
         - token: []
+  /images/list:
+    get:
+      summary: Listado de imágenes del servidor
+      description: Devuelve un listado de las imágenes del servidor.
+      tags:
+        - Imágenes
+      responses:
+        200:
+          description: Lista de imágenes
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Image'
+            example:
+              - id: 1
+                url: /images/1.jpg
+              - id: 2
+                url: /images/2.jpg
+              - id: 3
+                url: /images/3.jpg
+        default:
+          description: Error recuperando el listado de imágenes
+          schema:
+            $ref: '#/definitions/MessageResult'
   /community/create:
     post:
       summary: Crea una nueva comunidad
@@ -247,7 +273,7 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error durante el registro
+          description: Error durante la creación de la comunidad
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -385,6 +411,14 @@ definitions:
       apellidos: Ape Llidos
       url: /images/1.jpg
       color: '#FFAA11'
+  Image:
+    type: object
+    properties:
+      id:
+        type: integer
+      url:
+        type: string
+        description: Url relativa de la imagen respecto del nombre del server
   MessageResult:
     type: object
     properties:
