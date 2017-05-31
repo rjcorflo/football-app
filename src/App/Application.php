@@ -9,6 +9,7 @@ use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use RJ\PronosticApp\Controller\CommunityController;
 use RJ\PronosticApp\Controller\DocumentationController;
+use RJ\PronosticApp\Controller\FixturesController;
 use RJ\PronosticApp\Controller\PlayerController;
 use function DI\string;
 
@@ -51,7 +52,10 @@ class Application extends App
         $this->group('/api/v1', function () {
             $this->get('/doc/swagger', [DocumentationController::class, 'documentationSwagger']);
 
+            $this->get('fixtures/images', [FixturesController::class, 'fixturesImages']);
+
             $this->post('/player/register', [PlayerController::class, 'register']);
+            $this->post('/player/exist', [PlayerController::class, 'exist']);
             $this->post('/player/login', [PlayerController::class, 'login']);
 
             $this->group('/player', function () {
