@@ -18,7 +18,7 @@ class CommunityTransformer extends TransformerAbstract
     ];
 
     /**
-     * @var \League\Container\ContainerInterface
+     * @var ContainerInterface
      */
     private $container;
 

@@ -8,12 +8,14 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
 use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
-use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
 
 class FractalGenerator implements WebResourceGeneratorInterface
 {
@@ -86,6 +88,26 @@ class FractalGenerator implements WebResourceGeneratorInterface
         } else {
             throw new \Exception("El recurso pasado no es un instancia que implemente " .
                 "CommunityInterface o sea un array CommunityInterface[]");
+        }
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createImageResource($images, $resultType = self::JSON)
+    {
+        if ($images instanceof ImageInterface) {
+            $resource = new Item($images, $this->container->get(ImageTransformer::class));
+        } elseif (is_array($images)) {
+            $resource = new Collection($images, $this->container->get(ImageTransformer::class));
+        } else {
+            throw new \Exception("El recurso pasado no es un instancia que implemente " .
+                "ImageInterface o sea un array ImageInterface[]");
         }
 
         return $this->returnResourceType(

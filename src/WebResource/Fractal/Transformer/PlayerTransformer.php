@@ -18,7 +18,7 @@ class PlayerTransformer extends TransformerAbstract
     ];
 
     /**
-     * @var \League\Container\ContainerInterface
+     * @var ContainerInterface
      */
     private $container;
 

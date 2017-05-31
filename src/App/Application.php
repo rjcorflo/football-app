@@ -10,6 +10,7 @@ use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use RJ\PronosticApp\Controller\CommunityController;
 use RJ\PronosticApp\Controller\DocumentationController;
 use RJ\PronosticApp\Controller\FixturesController;
+use RJ\PronosticApp\Controller\ImagesController;
 use RJ\PronosticApp\Controller\PlayerController;
 use function DI\string;
 
@@ -62,6 +63,8 @@ class Application extends App
                 $this->post('/logout', [PlayerController::class, 'logout']);
                 $this->get('/info', [PlayerController::class, 'info']);
             })->add(AuthenticationMiddleware::class);
+
+            $this->get('/images/list', [ImagesController::class, 'list']);
 
             $this->group('/community', function () {
                 $this->post('/create', [CommunityController::class, 'create']);
