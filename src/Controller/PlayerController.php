@@ -3,9 +3,7 @@ namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
@@ -85,6 +83,7 @@ class PlayerController
             $player->setFirstName($firstName);
             $player->setLastName($lastName);
             $player->setCreationDate(new \DateTime());
+            $player->setIdAvatar($idAvatar);
             $player->setColor($color);
 
             // Data validation
@@ -114,18 +113,6 @@ class PlayerController
 
             if ($result->hasError()) {
                 throw new \Exception("Error validando los datos de la imagen.");
-            }
-
-            /** @var ImageRepositoryInterface $imageRepository */
-            $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
-            /** @var ImageInterface $image */
-            $image = $imageRepository->getById($idAvatar);
-
-            if ($image->getId() === 0) {
-                $image->setUrl('/images/1.jpg');
-                $player->setImage($image);
-            } else {
-                $player->setImage($image);
             }
 
             try {

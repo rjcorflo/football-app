@@ -128,17 +128,17 @@ class Player extends SimpleModel implements PlayerInterface
     /**
      * @inheritDoc
      */
-    public function setImage(ImageInterface $image) : void
+    public function setIdAvatar(int $idAvatar): void
     {
-        $this->bean->image = $image;
+        $this->bean->id_avatar = $idAvatar;
     }
 
     /**
      * @inheritDoc
      */
-    public function getImage() : ImageInterface
+    public function getIdAvatar(): int
     {
-        return $this->bean->image->box();
+        return $this->bean->id_avatar;
     }
 
     /**

@@ -30,5 +30,9 @@ class ErrorCodes
 
     const INVALID_COMMUNITY_PASSWORD = 12;
 
-    const LOGIN_ERROR = 13;
+    const LOGIN_ERROR_INCORRECT_PASSWORD = 13;
+
+    const LOGIN_ERROR_INCORRECT_USERNAME = 14;
+
+    const INVALID_PLAYER_IDAVATAR = 15;
 }

@@ -74,14 +74,14 @@ interface PlayerInterface
     public function getCreationDate() : \DateTime;
 
     /**
-     * @param ImageInterface $image
+     * @param int $idAvatar
      */
-    public function setImage(ImageInterface $image) : void;
+    public function setIdAvatar(int $idAvatar) : void;
 
     /**
-     * @return \RJ\PronosticApp\Model\Entity\ImageInterface
+     * @return int
      */
-    public function getImage() : ImageInterface;
+    public function getIdAvatar() : int;
 
     /**
      * @param string $color

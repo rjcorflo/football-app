@@ -67,6 +67,16 @@ class PlayerValidator extends AbstractValidator
         }
 
         try {
+            V::intVal()->assert($player->getIdAvatar());
+        } catch (NestedValidationException $e) {
+            $this->result->isError();
+            $this->result->addMessageWithCode(
+                ErrorCodes::INVALID_PLAYER_IDAVATAR,
+                sprintf("Error validando el campo 'id_avatar': %s", $e->getFullMessage())
+            );
+        }
+
+        try {
             V::hexRgbColor()->assert($player->getColor());
         } catch (NestedValidationException $e) {
             $this->result->isError();
