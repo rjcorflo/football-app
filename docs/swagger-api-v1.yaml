@@ -397,9 +397,9 @@ definitions:
       apellidos:
         type: string
         description: Apellidos del jugador
-      url:
-        type: string
-        description: Url de la imagen del avatar del jugador
+      icon:
+        type: integre
+        description: Id de la imagen del avatar del jugador
       color:
         type: string
         description: Color del avatar del jugador
@@ -409,7 +409,7 @@ definitions:
       email: prueba@prueba.com
       nombre: Nombre
       apellidos: Ape Llidos
-      url: /images/1.jpg
+      icon: 7
       color: '#FFAA11'
   Image:
     type: object
