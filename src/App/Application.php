@@ -13,9 +13,18 @@ use RJ\PronosticApp\Controller\FixturesController;
 use RJ\PronosticApp\Controller\ImagesController;
 use RJ\PronosticApp\Controller\PlayerController;
 use function DI\string;
+use RJ\PronosticApp\Controller\PrivateCommunityController;
+use RJ\PronosticApp\Controller\PublicCommunityController;
 
+/**
+ * Class Application
+ * @package RJ\PronosticApp\App
+ */
 class Application extends App
 {
+    /**
+     * Application constructor.
+     */
     public function __construct()
     {
         parent::__construct();
@@ -28,6 +37,11 @@ class Application extends App
         $this->configureRoutes();
     }
 
+    /**
+     * Configure dependency container.
+     *
+     * @param ContainerBuilder $builder
+     */
     protected function configureContainer(ContainerBuilder $builder)
     {
         /* App paths configuration */
@@ -71,6 +85,15 @@ class Application extends App
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
                 $this->get('/search', [CommunityController::class, 'search']);
                 $this->post('/exist', [CommunityController::class, 'exist']);
+
+                $this->group('/private', function () {
+                    $this->post('/join', [PrivateCommunityController::class, 'join']);
+                });
+
+                $this->group('/public', function () {
+                    $this->post('/list', [PublicCommunityController::class, 'list']);
+                    $this->post('/join', [PublicCommunityController::class, 'join']);
+                });
             })->add(AuthenticationMiddleware::class);
         })->add(PersistenceMiddleware::class)
           ->add(InitializationMiddleware::class);

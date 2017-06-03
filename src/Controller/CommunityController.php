@@ -11,8 +11,8 @@ use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
-use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\Util\General\ResponseGenerator;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
@@ -25,6 +25,8 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  */
 class CommunityController
 {
+    use ResponseGenerator;
+
     /**
      * @var EntityManager $entityManager
      */
@@ -82,12 +84,12 @@ class CommunityController
             $idImage = $bodyData['id_imagen'] ?? 1;
 
             if (!$name) {
-                $result->addMessageWithCode(
-                    ErrorCodes::MISSING_PARAMETERS,
-                    'El campo nombre es obligatorio para crear una comunidad'
+                $response = $this->generateParameterNeededResponse(
+                    $response,
+                    'El parámetro "nombre" es obligatorio para crear una comunidad'
                 );
 
-                throw new \Exception('Faltan parámetros');
+                return $response;
             }
 
             /** @var CommunityRepositoryInterface $communityRepository */
@@ -210,10 +212,11 @@ class CommunityController
         $result = new MessageResult();
 
         if (!isset($bodyData['nombre'])) {
-            $result->isError();
-            $result->setDescription('El parametro nombre es necesario');
-            $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
-            $response = $response->withStatus(400, 'Parameter needed');
+            $response = $this->generateParameterNeededResponse(
+                $response,
+                'El parámetro "nombre" es obligatorio para crear una comunidad'
+            );
+
             return $response;
         }
 

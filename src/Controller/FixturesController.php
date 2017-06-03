@@ -6,16 +6,31 @@ use Psr\Http\Message\ResponseInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 
+/**
+ * Class FixturesController
+ *
+ * Create fictures and updates.
+ *
+ * @package RJ\PronosticApp\Controller
+ */
 class FixturesController
 {
     /** @var EntityManager $entityManager */
     private $entityManager;
 
+    /**
+     * FixturesController constructor.
+     * @param EntityManager $entityManager
+     */
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
     }
 
+    /**
+     * @param ResponseInterface $response
+     * @return int
+     */
     public function fixturesImages(
         ResponseInterface $response
     ) {
@@ -35,6 +50,6 @@ class FixturesController
             $imageRepository->storeMultiple($images);
         });
 
-        return $response->getBody()->write('OK');
+        return $response->getBody()->write('{result: "OK"}');
     }
 }

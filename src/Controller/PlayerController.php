@@ -1,4 +1,5 @@
 <?php
+
 namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -9,6 +10,7 @@ use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\Util\General\ResponseGenerator;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
@@ -19,6 +21,8 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  */
 class PlayerController
 {
+    use ResponseGenerator;
+
     /**
      * @var EntityManager $entityManager
      */
@@ -75,7 +79,12 @@ class PlayerController
             $color = $bodyData['color'] ?? '#FFFFFF';
 
             if (!$nickname || !$email || !$password) {
-                throw new \Exception("Los campos nickname, email y password son necesarios para poder registrarse");
+                $response = $this->generateParameterNeededResponse(
+                    $response,
+                    'Los parámetros ["nickname", "email", "password"] son obligatorios para registrarse'
+                );
+
+                return $response;
             }
 
             $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
@@ -156,10 +165,11 @@ class PlayerController
         try {
             // Retrieve data
             if (!isset($bodyData['nickname']) && !isset($bodyData['email'])) {
-                $result->isError();
-                $result->setDescription('El parametro nickname o email son necesarios');
-                $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
-                $response = $response->withStatus(400, 'Parameter needed');
+                $response = $this->generateParameterNeededResponse(
+                    $response,
+                    'Uno de los parámetros ["nickname", "email"] tiene que ser pasado para comprobar si existen'
+                );
+
                 return $response;
             }
 
@@ -220,7 +230,12 @@ class PlayerController
             $password = $bodyData['password'] ?? '';
 
             if (!$player || !$password) {
-                throw new \Exception('Los campos player y password son necesarios para poder hacer login.');
+                $response = $this->generateParameterNeededResponse(
+                    $response,
+                    'Los parámetros ["player", "password"] son obligatorios para poder loguearse'
+                );
+
+                return $response;
             }
 
             /** @var PlayerRepositoryInterface $playerRepository */
@@ -301,10 +316,16 @@ class PlayerController
             $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
 
             $playerRepository->store($player);
+
             $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
         } catch (\Exception $e) {
             $message->isError();
-            $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
+            $message->setDescription(
+                sprintf(
+                    "Jugador %s no ha podido hacer logout correctamente",
+                    $player->getNickname()
+                )
+            );
         }
 
         $response->getBody()->write($this->resourceGenerator->createMessageResource($message));

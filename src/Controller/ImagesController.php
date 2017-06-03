@@ -7,6 +7,13 @@ use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
+/**
+ * Class ImagesController
+ *
+ * Operate over images.
+ *
+ * @package RJ\PronosticApp\Controller
+ */
 class ImagesController
 {
     /** @var EntityManager $entityManager */
@@ -15,6 +22,11 @@ class ImagesController
     /** @var WebResourceGeneratorInterface */
     private $resourceGenerator;
 
+    /**
+     * ImagesController constructor.
+     * @param EntityManager $entityManager
+     * @param WebResourceGeneratorInterface $resourceGenerator
+     */
     public function __construct(
         EntityManager $entityManager,
         WebResourceGeneratorInterface $resourceGenerator
@@ -23,6 +35,12 @@ class ImagesController
         $this->resourceGenerator = $resourceGenerator;
     }
 
+    /**
+     * List images.
+     *
+     * @param ResponseInterface $response
+     * @return int
+     */
     public function list(
         ResponseInterface $response
     ) {

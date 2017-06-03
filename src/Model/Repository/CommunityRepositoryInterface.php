@@ -27,4 +27,10 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
      * @return bool
      */
     public function checkIfNameExists(string $name) : bool;
+
+    /**
+     * Find community by exact name.
+     * @return CommunityInterface
+     */
+    public function findByName(string $name): CommunityInterface;
 }
