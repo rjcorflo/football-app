@@ -48,7 +48,7 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function setPassword(string $password) : void
     {
-        $this->bean->password = $password;
+        $this->bean->password = password_hash($password, PASSWORD_BCRYPT);
     }
 
     /**

@@ -11,6 +11,7 @@ use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -81,7 +82,12 @@ class CommunityController
             $idImage = $bodyData['id_imagen'] ?? 1;
 
             if (!$name) {
-                throw new \Exception("El campo nombre es obligatorio para crear una comunidad");
+                $result->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
+                    'El campo nombre es obligatorio para crear una comunidad'
+                );
+
+                throw new \Exception('Faltan parámetros');
             }
 
             /** @var CommunityRepositoryInterface $communityRepository */
@@ -93,28 +99,19 @@ class CommunityController
             $community->setPrivate((bool)$private);
             $community->setPassword($password);
 
-            $result = $this->validator
-                ->communityValidator()
-                ->validateCommunityData($community)
-                ->validate();
+            $result = $this->validator->communityValidator()->validateCommunityData($community)->validate();
 
             if ($result->hasError()) {
                 throw new \Exception("Error validando los datos de la comunidad.");
             }
 
-            $result = $this->validator
-                ->existenceValidator()
-                ->checkIfNameExists($community)
-                ->validate();
+            $result = $this->validator->existenceValidator()->checkIfNameExists($community)->validate();
 
             if ($result->hasError()) {
                 throw new \Exception("Ya existe una comunidad con ese nombre.");
             }
 
-            $result = $this->validator
-                ->basicValidator()
-                ->validateId($idImage)
-                ->validate();
+            $result = $this->validator->basicValidator()->validateId($idImage)->validate();
 
             if ($result->hasError()) {
                 throw new \Exception("Error validando los datos de la imagen.");
@@ -161,8 +158,7 @@ class CommunityController
             $result->setDescription($e->getMessage());
         }
 
-        $response->getBody()
-            ->write($this->resourceGenerator->createMessageResource($result));
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 

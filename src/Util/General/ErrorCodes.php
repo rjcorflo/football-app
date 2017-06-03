@@ -35,4 +35,6 @@ class ErrorCodes
     const LOGIN_ERROR_INCORRECT_USERNAME = 14;
 
     const INVALID_PLAYER_IDAVATAR = 15;
+
+    const MISSING_PARAMETERS = 16;
 }
