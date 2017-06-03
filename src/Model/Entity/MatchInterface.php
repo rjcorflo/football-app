@@ -3,7 +3,8 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Match interface.
+ * Interface MatchInterface
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface MatchInterface
 {

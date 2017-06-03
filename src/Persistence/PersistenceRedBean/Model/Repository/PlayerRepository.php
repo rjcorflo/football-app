@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Token;
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
@@ -13,14 +14,6 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 /**
  * Class PlayerRepository
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
- * @method PlayerInterface create()
- * @method int store(PlayerInterface $player)
- * @method int[] storeMultiple(array $players)
- * @method void trash(PlayerInterface $player)
- * @method void trashMultiple(array $players)
- * @method PlayerInterface getById(int $idPlayer)
- * @method PlayerInterface getMultipleById(array $idsPlayers)
- * @method PlayerInterface[] findAll()
  */
 class PlayerRepository extends AbstractRepository implements PlayerRepositoryInterface
 {
@@ -52,37 +45,13 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
     /**
      * @inheritdoc
      */
-    public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface
-    {
-        /**
-         * @var Token $token
-         */
-        $token = R::dispense('token');
-        $token->token = bin2hex(random_bytes(20));
-
-        $player->addToken($token->box());
-
-        $this->store($player);
-
-        return $token->box();
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function findPlayerByToken(string $token) : PlayerInterface
     {
-        /**
-         * @var SimpleModel[] $tokens
-         */
-        $tokens = R::find('token', ['token LIKE ?'], [$token]);
+        /** @var TokenRepositoryInterface $tokenRepository */
+        $tokenRepository = $this->entityManager->getRepository(TokenRepositoryInterface::class);
 
-        if (count($tokens) !== 1) {
-            throw new \Exception("Error recuperando el usuario por el token");
-        }
+        $token = $tokenRepository->findByTokenString($token);
 
-        $token = array_shift($tokens);
-
-        return $token->player->box();
+        return $token->getPlayer();
     }
 }

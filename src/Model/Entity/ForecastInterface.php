@@ -3,7 +3,8 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Forecast interface.
+ * Interface ForecastInterface
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface ForecastInterface
 {

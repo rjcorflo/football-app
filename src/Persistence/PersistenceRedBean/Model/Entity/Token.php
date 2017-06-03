@@ -6,6 +6,10 @@ use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 
+/**
+ * Class Token
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
+ */
 class Token extends SimpleModel implements TokenInterface
 {
     /**
@@ -14,14 +18,6 @@ class Token extends SimpleModel implements TokenInterface
     public function getId() : int
     {
         return $this->bean->id;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function setPlayer(PlayerInterface $player) : void
-    {
-        $this->bean->player = $player;
     }
 
     /**
@@ -46,5 +42,14 @@ class Token extends SimpleModel implements TokenInterface
     public function getToken() : string
     {
         return $this->bean->token;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function generateRandomToken(): void
+    {
+        $token = bin2hex(random_bytes(20));
+        $this->setToken($token);
     }
 }

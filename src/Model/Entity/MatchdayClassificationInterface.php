@@ -3,7 +3,8 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Matchday classification.
+ * Interface MatchdayClassificationInterface
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface MatchdayClassificationInterface
 {

@@ -5,10 +5,32 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Repository\StandardRepositoryInterface;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
+/**
+ * Class AbstractRepository.
+ *
+ * Structure for a basic repository.
+ *
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
+ */
 abstract class AbstractRepository implements StandardRepositoryInterface
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * AbstractRepository constructor.
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @inheritdoc
      */

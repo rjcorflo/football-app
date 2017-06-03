@@ -3,8 +3,19 @@
 namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
-use RJ\PronosticApp\Model\Entity\TokenInterface;
 
+/**
+ * Repository for {@link PlayerInterface} entities.
+ *
+ * @method PlayerInterface create()
+ * @method int store(PlayerInterface $player)
+ * @method int[] storeMultiple(array $players)
+ * @method void trash(PlayerInterface $player)
+ * @method void trashMultiple(array $players)
+ * @method PlayerInterface getById(int $idPlayer)
+ * @method PlayerInterface[] getMultipleById(array $idsPlayers)
+ * @method PlayerInterface[] findAll()
+ */
 interface PlayerRepositoryInterface extends StandardRepositoryInterface
 {
     /** @var string */
@@ -23,13 +34,6 @@ interface PlayerRepositoryInterface extends StandardRepositoryInterface
      * @return bool
      */
     public function checkEmailExists(string $email) : bool;
-
-    /**
-     * Generate one token for player.
-     * @param PlayerInterface $player
-     * @return TokenInterface
-     */
-    public function generateTokenForPlayer(PlayerInterface $player) : TokenInterface;
 
     /**
      * Find player by nickname or email.

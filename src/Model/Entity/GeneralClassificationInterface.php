@@ -3,7 +3,8 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * General classification interface.
+ * Interface GeneralClassificationInterface
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface GeneralClassificationInterface
 {

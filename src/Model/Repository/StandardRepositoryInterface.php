@@ -2,11 +2,18 @@
 
 namespace RJ\PronosticApp\Model\Repository;
 
+/**
+ * Interface StandardRepositoryInterface
+ *
+ * Implements basic functionality for any repository.
+ *
+ * @package RJ\PronosticApp\Model\Repository
+ */
 interface StandardRepositoryInterface
 {
     /**
      * Return fresh created entity model. Is it not persisted.
-     * @return object
+     * @return mixed
      */
     public function create();
 
@@ -26,7 +33,7 @@ interface StandardRepositoryInterface
 
     /**
      * Delete entity.
-     * @param object $entity
+     * @param mixed $entity
      * @return void
      */
     public function trash($entity) : void;
@@ -41,7 +48,7 @@ interface StandardRepositoryInterface
     /**
      * Get entity by id.
      * @param int $entityId
-     * @return object
+     * @return mixed
      */
     public function getById(int $entityId);
 

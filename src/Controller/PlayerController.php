@@ -34,6 +34,12 @@ class PlayerController
      */
     private $validator;
 
+    /**
+     * PlayerController constructor.
+     * @param EntityManager $entityManager
+     * @param WebResourceGeneratorInterface $resourceGenerator
+     * @param ValidatorInterface $validator
+     */
     public function __construct(
         EntityManager $entityManager,
         WebResourceGeneratorInterface $resourceGenerator,
@@ -131,6 +137,13 @@ class PlayerController
         return $response;
     }
 
+    /**
+     * Check existence of player via mail or username.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function exist(
         ServerRequestInterface $request,
         ResponseInterface $response
@@ -185,6 +198,13 @@ class PlayerController
         return $response;
     }
 
+    /**
+     * Login for user.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function login(
         ServerRequestInterface $request,
         ResponseInterface $response
@@ -203,6 +223,7 @@ class PlayerController
                 throw new \Exception('Los campos player y password son necesarios para poder hacer login.');
             }
 
+            /** @var PlayerRepositoryInterface $playerRepository */
             $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
 
             // Retrieve player
@@ -210,28 +231,32 @@ class PlayerController
 
             if (count($players) !== 1) {
                 $result->addMessageWithCode(
-                    ErrorCodes::LOGIN_ERROR,
-                    "Nombre, email o password incorrectos"
+                    ErrorCodes::LOGIN_ERROR_INCORRECT_USERNAME,
+                    "Nombre o email incorrectos"
                 );
                 throw new \Exception("Login incorrecto");
             }
 
-            /**
-             * @var PlayerInterface $player
-             */
             $player = array_shift($players);
 
             if (!password_verify($bodyData['password'], $player->getPassword())) {
                 $result->addMessageWithCode(
-                    ErrorCodes::LOGIN_ERROR,
-                    "Nombre, email o password incorrectos"
+                    ErrorCodes::LOGIN_ERROR_INCORRECT_PASSWORD,
+                    "Password incorrecta"
                 );
                 throw new \Exception("Login incorrecto");
             }
 
             // Correct login
+
+            /** @var TokenRepositoryInterface $tokenRepository */
+            $tokenRepository = $this->entityManager->getRepository(TokenRepositoryInterface::class);
+
             // Generate token
-            $token = $playerRepository->generateTokenForPlayer($player);
+            $token = $tokenRepository->createRandomToken();
+            $player->addToken($token);
+
+            $playerRepository->store($player);
 
             $response->getBody()->write($this->resourceGenerator->createTokenResource($token));
             return $response;
@@ -244,6 +269,13 @@ class PlayerController
         return $response;
     }
 
+    /**
+     * Logout for user.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function logout(
         ServerRequestInterface $request,
         ResponseInterface $response
@@ -279,6 +311,13 @@ class PlayerController
         return $response;
     }
 
+    /**
+     * Get info about player.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function info(
         ServerRequestInterface $request,
         ResponseInterface $response

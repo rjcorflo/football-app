@@ -3,7 +3,11 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Community interface.
+ * Interface CommunityInterface
+ *
+ * All models of communities must implement this interface.
+ *
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface CommunityInterface
 {

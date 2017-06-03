@@ -2,6 +2,10 @@
 
 namespace RJ\PronosticApp\Model\Entity;
 
+/**
+ * Interface MatchdayInterface
+ * @package RJ\PronosticApp\Model\Entity
+ */
 interface MatchdayInterface
 {
     /**

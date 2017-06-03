@@ -10,17 +10,20 @@ use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 /**
  * Class TokenRepository
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
- * @method TokenInterface create()
- * @method int store(TokenInterface $image)
- * @method int[] storeMultiple(array $images)
- * @method void trash(TokenInterface $image)
- * @method void trashMultiple(array $images)
- * @method TokenInterface getById(int $idImage)
- * @method TokenInterface getMultipleById(array $idsImages)
- * @method TokenInterface[] findAll()
  */
 class TokenRepository extends AbstractRepository implements TokenRepositoryInterface
 {
+    /**
+     * @inheritdoc
+     */
+    public function createRandomToken(): TokenInterface
+    {
+        $token = $this->create();
+        $token->generateRandomToken();
+
+        return $token;
+    }
+
     /**
      * @inheritDoc
      */
@@ -31,8 +34,12 @@ class TokenRepository extends AbstractRepository implements TokenRepositoryInter
          */
         $tokens = R::find(self::ENTITY, ['token LIKE ?'], [$tokenString]);
 
-        if (count($tokens) === 0) {
-            throw new \Exception("El token no existe");
+        $numberOfTokens = count($tokens);
+
+        if ($numberOfTokens === 0) {
+            throw new \Exception('El token no existe');
+        } elseif ($numberOfTokens > 1) {
+            throw new \Exception('Error: se han recuperado varios tokens para la misma cadena');
         }
 
         $token = array_shift($tokens);

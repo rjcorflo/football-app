@@ -1,4 +1,5 @@
 <?php
+
 namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
@@ -8,11 +9,19 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
+/**
+ * Class CommunityController
+ *
+ * Operations over communities.
+ *
+ * @package RJ\PronosticApp\Controller
+ */
 class CommunityController
 {
     /**
@@ -94,6 +103,15 @@ class CommunityController
             }
 
             $result = $this->validator
+                ->existenceValidator()
+                ->checkIfNameExists($community)
+                ->validate();
+
+            if ($result->hasError()) {
+                throw new \Exception("Ya existe una comunidad con ese nombre.");
+            }
+
+            $result = $this->validator
                 ->basicValidator()
                 ->validateId($idImage)
                 ->validate();
@@ -108,25 +126,32 @@ class CommunityController
             /** @var ImageInterface $image */
             $image = $imageRepository->getById($idImage);
 
+            // If image is not find, set standard image
             if ($image->getId() === 0) {
-                $image->setUrl('/images/1.jpg');
+                $image = $imageRepository->getById(1);
                 $community->setImage($image);
             } else {
                 $community->setImage($image);
             }
 
-            $result = $this->validator
-                ->existenceValidator()
-                ->checkIfNameExists($community)
-                ->validate();
-
-            if ($result->hasError()) {
-                throw new \Exception("Ya existe una comunidad con ese nombre.");
-            }
-
             $community->addAdmin($player);
 
-            $communityRepository->store($community);
+            // Prepare to store community
+            $this->entityManager->transaction(function () use ($community, $player, $communityRepository) {
+
+                $communityRepository->store($community);
+
+                // Add player that create community as first participant
+                /** @var ParticipantRepositoryInterface $participantRepo */
+                $participantRepo = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
+                $participant = $participantRepo->create();
+
+                $participant->setCommunity($community);
+                $participant->setPlayer($player);
+                $participant->setCreationDate(new \DateTime());
+
+                $participantRepo->store($participant);
+            });
 
             $response->getBody()
                 ->write($this->resourceGenerator->exclude('jugadores')->createCommunityResource($community));
@@ -141,18 +166,20 @@ class CommunityController
         return $response;
     }
 
+    /**
+     * Get players from community.
+     *
+     * @param ResponseInterface $response
+     * @param $idCommunity
+     * @return ResponseInterface
+     */
     public function communityPlayers(
         ResponseInterface $response,
         $idCommunity
     ) {
-        /**
-         * @var PlayerInterface $player
-         */
-        //$player = $request->getAttribute('player');
-
         /** @var CommunityRepositoryInterface $communityRepository */
         $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
-        
+
         /** @var CommunityInterface $community */
         $community = $communityRepository->getById($idCommunity);
 
@@ -171,6 +198,13 @@ class CommunityController
 
     }
 
+    /**
+     * Check existence of community name.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function exist(
         ServerRequestInterface $request,
         ResponseInterface $response
@@ -199,6 +233,7 @@ class CommunityController
             $result->setDescription('Ese nombre de comunidad está disponible');
         }
 
-        return $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+        return $response;
     }
 }

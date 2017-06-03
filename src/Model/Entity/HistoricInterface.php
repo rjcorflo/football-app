@@ -3,7 +3,8 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Historic interface.
+ * Interface HistoricInterface
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface HistoricInterface
 {

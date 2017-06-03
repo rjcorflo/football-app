@@ -3,7 +3,11 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Competition interface.
+ * Interface CompetitionInterface
+ *
+ * All models of competitions must implement this interface.
+ *
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface CompetitionInterface
 {

@@ -3,7 +3,8 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Image interface.
+ * Interface ImageInterface
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface ImageInterface
 {

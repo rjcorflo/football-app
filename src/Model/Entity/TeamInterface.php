@@ -3,7 +3,11 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Team interface.
+ * Interface TeamInterface
+ *
+ * All models of teams must implement this interface.
+ *
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface TeamInterface
 {

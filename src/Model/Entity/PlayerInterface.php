@@ -2,9 +2,11 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Interface PlayerInterface.
+ * Interface PlayerInterface
  *
  * All models of players must implements this interface.
+ *
+ * @package RJ\PronosticApp\Model\Entity
  */
 interface PlayerInterface
 {
