@@ -95,5 +95,19 @@ class ParticipantRepository extends AbstractRepository implements ParticipantRep
         return $registers > 0;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function countPlayersFromCommunity(CommunityInterface $community): int
+    {
+        return R::count(static::ENTITY, 'community_id = ?', [$community->getId()]);
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function countCommunitiesFromPlayer(PlayerInterface $player): int
+    {
+        return R::count(static::ENTITY, 'player_id = ?', [$player->getId()]);
+    }
 }

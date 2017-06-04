@@ -24,7 +24,7 @@ class CommunityTransformer extends TransformerAbstract
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected $container;
 
     /**
      * CommunityTransformer constructor.

@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 
 /**
@@ -31,14 +32,23 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
 
     /**
      * Find community by exact name.
+     * @param string $name
      * @return CommunityInterface
-     * @throws NotFoundException If thera no communities with that name
+     * @throws NotFoundException If there is no communities with that name
      */
     public function findByName(string $name): CommunityInterface;
 
     /**
-     * Get all public commuties.
+     * Get all public communities.
      * @return CommunityInterface[]
      */
     public function getAllPublicCommunities() : array;
+
+    /**
+     * Retrieve a random community.
+     * If a player is passed, retrieve random community to which player is not member.
+     * @param PlayerInterface|null $player
+     * @return CommunityInterface
+     */
+    public function getRandomCommunity(PlayerInterface $player = null): CommunityInterface;
 }

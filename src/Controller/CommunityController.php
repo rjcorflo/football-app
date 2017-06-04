@@ -100,6 +100,7 @@ class CommunityController
             $community->setCommunityName($name);
             $community->setPrivate((bool)$private);
             $community->setPassword($password);
+            $community->setCreationDate(new \DateTime());
 
             $result = $this->validator->communityValidator()->validateCommunityData($community)->validate();
 

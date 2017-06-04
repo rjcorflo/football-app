@@ -58,4 +58,18 @@ interface ParticipantRepositoryInterface extends StandardRepositoryInterface
         PlayerInterface $player,
         CommunityInterface $community
     ): bool;
+
+    /**
+     * Return number of players from community.
+     * @param CommunityInterface $community
+     * @return int
+     */
+    public function countPlayersFromCommunity(CommunityInterface $community): int;
+
+    /**
+     * Return number of communities in which player participate.
+     * @param PlayerInterface $player
+     * @return int
+     */
+    public function countCommunitiesFromPlayer(PlayerInterface $player): int;
 }

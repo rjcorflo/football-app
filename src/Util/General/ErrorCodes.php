@@ -39,4 +39,6 @@ class ErrorCodes
     const MISSING_PARAMETERS = 16;
 
     const PLAYER_IS_NOT_MEMBER = 17;
+
+    const CANNOT_RETRIEVE_RANDOM_COMMUNITY = 18;
 }
