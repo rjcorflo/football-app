@@ -65,10 +65,13 @@ class Application extends App
     protected function configureRoutes()
     {
         $this->group('/api/v1', function () {
+            /* Documentation */
             $this->get('/doc/swagger', [DocumentationController::class, 'documentationSwagger']);
 
+            /* Fixtures */
             $this->get('/fixtures/images', [FixturesController::class, 'fixturesImages']);
 
+            /* Player */
             $this->post('/player/register', [PlayerController::class, 'register']);
             $this->post('/player/exist', [PlayerController::class, 'exist']);
             $this->post('/player/login', [PlayerController::class, 'login']);
@@ -78,8 +81,10 @@ class Application extends App
                 $this->get('/info', [PlayerController::class, 'info']);
             })->add(AuthenticationMiddleware::class);
 
+            /* Images */
             $this->get('/images/list', [ImagesController::class, 'list']);
 
+            /* Community */
             $this->group('/community', function () {
                 $this->post('/create', [CommunityController::class, 'create']);
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);

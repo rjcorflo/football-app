@@ -29,8 +29,9 @@ trait ResponseGenerator
             ErrorCodes::MISSING_PARAMETERS,
             $message
         );
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
+
         $response = $response->withStatus(400, 'Parameters needed');
+        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 }
