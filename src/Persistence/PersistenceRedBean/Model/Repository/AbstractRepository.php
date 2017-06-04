@@ -4,9 +4,11 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\StandardRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
  * Class AbstractRepository.
@@ -82,10 +84,19 @@ abstract class AbstractRepository implements StandardRepositoryInterface
      */
     public function getById(int $idEntity)
     {
-        /**
-         * @var SimpleModel $bean
-         */
         $bean = R::load(static::ENTITY, $idEntity);
+
+        error_log(print_r($bean, true));
+
+        if ((int)$bean->getID() === 0) {
+            $exception = new NotFoundException();
+            $exception->addMessageWithCode(
+                ErrorCodes::ENTITY_NOT_FOUND,
+                sprintf('No se encuentra la entidad %s con el id %s', static::ENTITY, $idEntity)
+            );
+
+            throw $exception;
+        }
 
         // Box to return correct type for type hinting
         return $bean->box();

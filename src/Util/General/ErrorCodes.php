@@ -2,6 +2,10 @@
 
 namespace RJ\PronosticApp\Util\General;
 
+/**
+ * Class ErrorCodes
+ * @package RJ\PronosticApp\Util\General
+ */
 class ErrorCodes
 {
     const DEFAULT = 0;
@@ -41,4 +45,6 @@ class ErrorCodes
     const PLAYER_IS_NOT_MEMBER = 17;
 
     const CANNOT_RETRIEVE_RANDOM_COMMUNITY = 18;
+
+    const ENTITY_NOT_FOUND = 19;
 }

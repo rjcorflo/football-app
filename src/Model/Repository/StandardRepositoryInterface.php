@@ -2,6 +2,8 @@
 
 namespace RJ\PronosticApp\Model\Repository;
 
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
+
 /**
  * Interface StandardRepositoryInterface
  *
@@ -49,6 +51,7 @@ interface StandardRepositoryInterface
      * Get entity by id.
      * @param int $entityId
      * @return mixed
+     * @throws NotFoundException
      */
     public function getById(int $entityId);
 

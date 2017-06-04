@@ -10,6 +10,7 @@ use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\Util\General\ResponseGenerator;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
@@ -22,6 +23,8 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  */
 class PublicCommunityController
 {
+    use ResponseGenerator;
+
     /**
      * @var EntityManager $entityManager
      */
@@ -87,6 +90,17 @@ class PublicCommunityController
         try {
             $aleatorio = $bodyData['aleatorio'] ?? true;
             $idComunidad = $bodyData['id_comunidad'] ?? 0;
+
+            if (!$aleatorio) {
+                if ((int)$idComunidad < 1) {
+                    $response = $this->generateParameterNeededResponse(
+                        $response,
+                        'Si el parámetro ["aleatorio"] es false, el parámetro ["id_comunidad"] es obligatorio'
+                    );
+
+                    return $response;
+                }
+            }
 
             /** @var PlayerInterface $player */
             $player = $request->getAttribute('player');
