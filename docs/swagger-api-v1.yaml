@@ -158,15 +158,11 @@ paths:
           schema:
             $ref: '#/definitions/MessageResult'
         400:
-          description: No se están pasando los parámetros necesarios
-          schema:
-            $ref: '#/definitions/MessageResult'
+          $ref: '#/responses/ParametersNeeded'
         default:
           description: Error genérico
           schema:
             $ref: '#/definitions/MessageResult'
-      security:
-        - token: []
   /player/logout:
     post:
       summary: Logout de un jugador
@@ -322,10 +318,19 @@ paths:
       description: Permite comprobar si el nombre una comunidad ya existe o no.
       parameters:
         - in: body
-          name: nombre
-          type: string
+          name: body
           required: true
-          description : Nombre de la comunidad a comprobar
+          description: Nombre de la comunidad a comprobar
+          schema:
+            type: object
+            required:
+              - nombre
+            properties:
+              nombre:
+                type: string
+                description: Nombre de la comunidad
+            example:
+              nombre: Comunidad 1
       tags:
         - Comunidades
       responses:
@@ -334,9 +339,52 @@ paths:
           schema:
             $ref: '#/definitions/MessageResult'
         400:
-          description:
+          $ref: '#/responses/ParametersNeeded'
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error durante el registro
           schema:
             $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /community/private/join:
+    post:
+      summary: Hace miembro de la comunidad privada al jugador actual
+      description: |
+        Hace miembro de la comunidad pasada al jugador identificado por el token, siempre que la comunidad
+        exista y la password pasada sea correcta.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Nombre de la comunidad a comprobar
+          schema:
+            type: object
+            required:
+              - nombre_comunidad
+              - password_comunidad
+            properties:
+              nombre_comunidad:
+                type: string
+                description: Nombre de la comunidad
+              password_comunidad:
+                type: string
+                description: Password de la comunidad
+            example:
+              nombre_comunidad: Comunidad 1
+              password_comunidad: 12345678
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: Comunidad creada correctamente
+          schema:
+            $ref: '#/definitions/MessageResult'
+        400:
+          $ref: '#/responses/ParametersNeeded'
+        401:
+          $ref: '#/responses/Unauthorized'
         default:
           description: Error durante el registro
           schema:
@@ -351,6 +399,10 @@ securityDefinitions:
 responses:
   Unauthorized:
     description: No autorizado para acceder al recurso
+    schema:
+      $ref: "#/definitions/MessageResult"
+  ParametersNeeded:
+    description: Faltan parámetros obligatorios
     schema:
       $ref: "#/definitions/MessageResult"
 definitions:
