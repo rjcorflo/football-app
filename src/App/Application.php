@@ -96,7 +96,7 @@ class Application extends App
                 });
 
                 $this->group('/public', function () {
-                    $this->post('/list', [PublicCommunityController::class, 'list']);
+                    $this->get('/list', [PublicCommunityController::class, 'list']);
                     $this->post('/join', [PublicCommunityController::class, 'join']);
                 });
             })->add(AuthenticationMiddleware::class);

@@ -17,7 +17,7 @@ class CommunityTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $defaultIncludes = [
+    protected $availableIncludes = [
         'jugadores'
     ];
 

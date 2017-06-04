@@ -155,7 +155,7 @@ class CommunityController
             });
 
             $response->getBody()
-                ->write($this->resourceGenerator->exclude('jugadores')->createCommunityResource($community));
+                ->write($this->resourceGenerator->createCommunityResource($community));
             return $response;
         } catch (\Exception $e) {
             $result->isError();

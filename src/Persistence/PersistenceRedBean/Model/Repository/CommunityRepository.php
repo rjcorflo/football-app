@@ -3,10 +3,11 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RedBeanPHP\R;
-use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Community;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
@@ -28,7 +29,7 @@ class CommunityRepository extends AbstractRepository implements CommunityReposit
      */
     public function findByName(string $name): CommunityInterface
     {
-        /** @var SimpleModel $community */
+        /** @var Community $community */
         $community = R::findOne(static::ENTITY, 'name LIKE LOWER(?)', [$name]);
 
         if ($community === null) {
@@ -42,5 +43,16 @@ class CommunityRepository extends AbstractRepository implements CommunityReposit
         }
 
         return $community->box();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAllPublicCommunities(): array
+    {
+        /** @var Community[] $commuties */
+        $communities = R::find(static::ENTITY, 'private = 0 ORDER BY name ASC');
+
+        return RedBeanUtils::boxArray($communities);
     }
 }

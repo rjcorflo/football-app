@@ -15,8 +15,14 @@ use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\PublicCommunityTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
+/**
+ * Class FractalGenerator
+ * Generate resources in JSON.
+ * @package RJ\PronosticApp\WebResource\Fractal
+ */
 class FractalGenerator implements WebResourceGeneratorInterface
 {
     use PlayerResource;
@@ -33,7 +39,8 @@ class FractalGenerator implements WebResourceGeneratorInterface
 
     /**
      * FractalGenerator constructor.
-     * @param \League\Fractal\Manager $manager
+     * @param ContainerInterface $container
+     * @param Manager $manager
      */
     public function __construct(ContainerInterface $container, Manager $manager)
     {
@@ -97,6 +104,28 @@ class FractalGenerator implements WebResourceGeneratorInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function createPublicCommunityResource(
+        $community,
+        $resultType = self::JSON
+    ) {
+        if ($community instanceof CommunityInterface) {
+            $resource = new Item($community, $this->container->get(PublicCommunityTransformer::class));
+        } elseif (is_array($community)) {
+            $resource = new Collection($community, $this->container->get(PublicCommunityTransformer::class));
+        } else {
+            throw new \Exception("El recurso pasado no es un instancia que implemente " .
+                "CommunityInterface o sea un array CommunityInterface[]");
+        }
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function createImageResource($images, $resultType = self::JSON)
@@ -116,6 +145,12 @@ class FractalGenerator implements WebResourceGeneratorInterface
         );
     }
 
+    /**
+     * @param Scope $resource
+     * @param $resultType
+     * @return array|string
+     * @throws \Exception
+     */
     private function returnResourceType(Scope $resource, $resultType)
     {
         switch ($resultType) {

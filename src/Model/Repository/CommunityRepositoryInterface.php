@@ -35,4 +35,10 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
      * @throws NotFoundException If thera no communities with that name
      */
     public function findByName(string $name): CommunityInterface;
+
+    /**
+     * Get all public commuties.
+     * @return CommunityInterface[]
+     */
+    public function getAllPublicCommunities() : array;
 }

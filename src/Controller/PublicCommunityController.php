@@ -2,6 +2,9 @@
 
 namespace RJ\PronosticApp\Controller;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
@@ -44,5 +47,22 @@ class PublicCommunityController
         $this->entityManager = $entityManager;
         $this->resourceGenerator = $resourceGenerator;
         $this->validator = $validator;
+    }
+
+    /**
+     * List all public communities.
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
+    public function list(
+        ResponseInterface $response
+    ) {
+        /** @var CommunityRepositoryInterface $communityRepository */
+        $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
+        $communities = $communityRepository->getAllPublicCommunities();
+
+        $response->getBody()->write($this->resourceGenerator->createPublicCommunityResource($communities));
+        return $response;
     }
 }

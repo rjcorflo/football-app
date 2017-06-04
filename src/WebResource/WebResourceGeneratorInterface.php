@@ -8,6 +8,10 @@ use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 
+/**
+ * Interface WebResourceGeneratorInterface
+ * @package RJ\PronosticApp\WebResource
+ */
 interface WebResourceGeneratorInterface
 {
     const JSON = 'json';
@@ -46,6 +50,13 @@ interface WebResourceGeneratorInterface
      * @return array|string
      */
     public function createCommunityResource($communities, $resultType = self::JSON);
+
+    /**
+     * @param CommunityInterface|CommunityInterface[] $communities
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createPublicCommunityResource($communities, $resultType = self::JSON);
 
     /**
      * @param TokenInterface|TokenInterface[] $tokens
