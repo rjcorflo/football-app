@@ -111,7 +111,7 @@ paths:
         - Jugadores
       responses:
         200:
-          description: Datos del jugador
+          description: Login correcto
           schema:
             type: object
             properties:
@@ -124,7 +124,7 @@ paths:
               jugador:
                 $ref: '#/definitions/Player'
         default:
-          description: Error al intentar hacer login
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
   /player/exist:
@@ -160,7 +160,7 @@ paths:
         400:
           $ref: '#/responses/ParametersNeeded'
         default:
-          description: Error genérico
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
   /player/logout:
@@ -178,7 +178,7 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error al intentar hacer logout
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -198,7 +198,7 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error al intentar recuperar la información del jugador
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -224,7 +224,7 @@ paths:
               - id: 3
                 url: /images/3.jpg
         default:
-          description: Error recuperando el listado de imágenes
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
   /community/create:
@@ -269,7 +269,7 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error durante la creación de la comunidad
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -288,7 +288,7 @@ paths:
         - Comunidades
       responses:
         200:
-          description: Comunidad creada correctamente
+          description: Listado de jugadores de la comunidad
           schema:
             type: array
             items:
@@ -307,7 +307,7 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error durante el registro
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -335,7 +335,7 @@ paths:
         - Comunidades
       responses:
         200:
-          description: Comunidad creada correctamente
+          description: Compruebas si el nombre de la comunidad existe. Devuelve "error: true" en tal caso.
           schema:
             $ref: '#/definitions/MessageResult'
         400:
@@ -343,7 +343,7 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error durante el registro
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -378,7 +378,7 @@ paths:
         - Comunidades
       responses:
         200:
-          description: Comunidad creada correctamente
+          description: El jugador se ha hecho miembro de la comunidad correctamente
           schema:
             $ref: '#/definitions/MessageResult'
         400:
@@ -386,7 +386,36 @@ paths:
         401:
           $ref: '#/responses/Unauthorized'
         default:
-          description: Error durante el registro
+          description: Error inesperado
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /community/public/list:
+    get:
+      summary: Lista todas las comunidades públicas
+      description: |
+        Devuelve un listado con todas las comunidades públicas.
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: Lista de todas las comunidades públicas
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PublicCommunity'
+            example:
+              - id: 1
+                nombre: Comunidad 1
+                url: /images/1.jpg
+              - id: 2
+                nombre: Comunidad 2
+                url: /images/2.jpg
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error inesperado
           schema:
             $ref: '#/definitions/MessageResult'
       security:
@@ -425,6 +454,23 @@ definitions:
       id: 22
       nombre: Porra
       privada: true
+      url: /images/2.jpg
+      color: '#11AADD'
+  PublicCommunity:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Identificador único de la comunidad
+      nombre:
+        type: string
+        description: Nombre de la comunidad
+      url:
+        type: string
+        description: Url de la imagen de la comunidad
+    example:
+      id: 21
+      nombre: Porrados
       url: /images/2.jpg
       color: '#11AADD'
   Player:
