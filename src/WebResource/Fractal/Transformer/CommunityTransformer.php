@@ -6,6 +6,10 @@ use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
+/**
+ * Class CommunityTransformer
+ * @package RJ\PronosticApp\WebResource\Fractal\Transformer
+ */
 class CommunityTransformer extends TransformerAbstract
 {
     /**
@@ -22,11 +26,19 @@ class CommunityTransformer extends TransformerAbstract
      */
     private $container;
 
+    /**
+     * CommunityTransformer constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param CommunityInterface $community
+     * @return array
+     */
     public function transform(CommunityInterface $community)
     {
         return [

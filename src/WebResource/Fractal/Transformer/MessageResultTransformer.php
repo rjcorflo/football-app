@@ -6,6 +6,10 @@ use League\Fractal\TransformerAbstract;
 use RJ\PronosticApp\Util\General\MessageItem;
 use RJ\PronosticApp\Util\General\MessageResult;
 
+/**
+ * Class MessageResultTransformer
+ * @package RJ\PronosticApp\WebResource\Fractal\Transformer
+ */
 class MessageResultTransformer extends TransformerAbstract
 {
     /**
@@ -17,6 +21,10 @@ class MessageResultTransformer extends TransformerAbstract
         'mensajes'
     ];
 
+    /**
+     * @param MessageResult $messageResult
+     * @return array
+     */
     public function transform(MessageResult $messageResult)
     {
         return [

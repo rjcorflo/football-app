@@ -6,6 +6,10 @@ use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 
+/**
+ * Class TokenTransformer
+ * @package RJ\PronosticApp\WebResource\Fractal\Transformer
+ */
 class TokenTransformer extends TransformerAbstract
 {
     /**
@@ -22,11 +26,19 @@ class TokenTransformer extends TransformerAbstract
      */
     private $container;
 
+    /**
+     * TokenTransformer constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @param TokenInterface $token
+     * @return array
+     */
     public function transform(TokenInterface $token)
     {
         return [
