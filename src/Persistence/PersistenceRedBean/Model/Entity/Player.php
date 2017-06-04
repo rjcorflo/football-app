@@ -9,6 +9,10 @@ use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
+/**
+ * Class Player
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
+ */
 class Player extends SimpleModel implements PlayerInterface
 {
     /**

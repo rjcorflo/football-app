@@ -35,6 +35,9 @@
             "RJ\\PronosticApp\\": "src"
         }
     },
+    "config": {
+        "process-timeout": 0
+    },
     "scripts": {
         "dev:start": "robo develop:start",
         "dev:push": "robo develop:publish",

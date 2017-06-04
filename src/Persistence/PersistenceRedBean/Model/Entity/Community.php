@@ -10,15 +10,12 @@ use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantRepository;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
+/**
+ * Class Community
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
+ */
 class Community extends SimpleModel implements CommunityInterface
 {
-    private $participantRepository;
-
-    public function __construct()
-    {
-        $this->participantRepository = new ParticipantRepository();
-    }
-
     /**
      * @inheritdoc
      */
@@ -48,7 +45,7 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function setPassword(string $password) : void
     {
-        $this->bean->password = password_hash($password, PASSWORD_BCRYPT);
+        $this->bean->password = $password;
     }
 
     /**

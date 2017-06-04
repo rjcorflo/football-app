@@ -21,7 +21,7 @@ use function DI\string;
 
 return [
     /* Slim configuration */
-    'settings.displayErrorDetails' => true,
+    'settings.displayErrorDetails' => false,
 
     'errorHandler' => DI\object(\RJ\PronosticApp\App\Handlers\ErrorHandler::class)
         ->constructor(DI\get('settings.displayErrorDetails'), get(WebResourceGeneratorInterface::class)),
