@@ -335,7 +335,7 @@ paths:
         - Comunidades
       responses:
         200:
-          description: Compruebas si el nombre de la comunidad existe. Devuelve "error: true" en tal caso.
+          description: Compruebas si el nombre de la comunidad existe. Devuelve "error" true en tal caso.
           schema:
             $ref: '#/definitions/MessageResult'
         400:
@@ -358,7 +358,7 @@ paths:
         - in: body
           name: body
           required: true
-          description: Nombre de la comunidad a comprobar
+          description: Datos de la comunidad privada a la que unirse
           schema:
             type: object
             required:
@@ -412,6 +412,46 @@ paths:
               - id: 2
                 nombre: Comunidad 2
                 url: /images/2.jpg
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error inesperado
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /community/public/join:
+    post:
+      summary: Hace miembro de una comunidad pública al jugador actual
+      description: |
+        Hace miembro de la comunidad pasada al jugador identificado por el token.
+        Si se le pasa el parámetro "aleatorio" a true se seleccionará una comunidad para las que el
+        jugador aún no sea miembro. Si se le pasa el parámetro a false, hay que pasar obligatoriamente el
+        "id_comunidad" para seleccionar la comunidad a la que unirá el jugador.
+      parameters:
+        - in: body
+          name: body
+          required: true
+          description: Datos necesarios para unirse a la comunidad pública
+          schema:
+            type: object
+            properties:
+              aleatorio:
+                type: boolean
+                description: Si la unión a la comunidad debe ser aleatoria o no
+              id_comunidad:
+                type: integer
+                description: ID de la comunidad en caso de que aleatorio se pase a false
+            example:
+              aleatorio: false
+              id_comunidad: 52
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: El jugador se ha hecho miembro de la comunidad correctamente
+          schema:
+            $ref: '#/definitions/MessageResult'
         401:
           $ref: '#/responses/Unauthorized'
         default:
