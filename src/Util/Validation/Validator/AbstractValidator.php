@@ -4,6 +4,10 @@ namespace RJ\PronosticApp\Util\Validation\Validator;
 
 use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 
+/**
+ * Class AbstractValidator
+ * @package RJ\PronosticApp\Util\Validation\Validator
+ */
 abstract class AbstractValidator
 {
     /**

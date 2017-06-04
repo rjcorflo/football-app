@@ -2,12 +2,17 @@
 
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
+use RedBeanPHP\R;
+use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\ParticipantInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Community;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
  * Class ParticipantRepository
@@ -42,4 +47,53 @@ class ParticipantRepository extends AbstractRepository implements ParticipantRep
 
         return RedBeanUtils::boxArray($communities);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByPlayerAndCommunity(
+        PlayerInterface $player,
+        CommunityInterface $community
+    ): ParticipantInterface {
+        /** @var SimpleModel $participant */
+        $participant = R::findOne(
+            static::ENTITY,
+            'community_id = ? AND player_id = ?',
+            [$community->getId(), $player->getId()]
+        );
+
+        if ($participant === null) {
+            $exception = new NotFoundException();
+            $exception->addMessageWithCode(
+                ErrorCodes::PLAYER_IS_NOT_MEMBER,
+                sprintf(
+                    'El jugador %s no es miembro de la comunidad %s',
+                    $player->getNickname(),
+                    $community->getCommunityName()
+                )
+            );
+
+            throw $exception;
+        }
+
+        return $participant->box();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function checkIfPlayerIsAlreadyFromCommunity(
+        PlayerInterface $player,
+        CommunityInterface $community
+    ): bool {
+        $registers = R::count(
+            static::ENTITY,
+            'community_id = ? AND player_id = ?',
+            [$community->getId(), $player->getId()]
+        );
+
+        return $registers > 0;
+    }
+
+
 }

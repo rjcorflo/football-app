@@ -6,6 +6,8 @@ use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
  * Class CommunityRepository
@@ -28,6 +30,16 @@ class CommunityRepository extends AbstractRepository implements CommunityReposit
     {
         /** @var SimpleModel $community */
         $community = R::findOne(static::ENTITY, 'name LIKE LOWER(?)', [$name]);
+
+        if ($community === null) {
+            $exception = new NotFoundException();
+            $exception->addMessageWithCode(
+                ErrorCodes::EXIST_COMMUNITY_NAME,
+                'No existe una comunidad con ese nombre'
+            );
+
+            throw $exception;
+        }
 
         return $community->box();
     }

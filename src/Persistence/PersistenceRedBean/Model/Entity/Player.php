@@ -142,7 +142,7 @@ class Player extends SimpleModel implements PlayerInterface
      */
     public function getIdAvatar(): int
     {
-        return $this->bean->id_avatar;
+        return $this->bean->id_avatar ?? 1;
     }
 
     /**
@@ -158,7 +158,7 @@ class Player extends SimpleModel implements PlayerInterface
      */
     public function getColor() : string
     {
-        return $this->bean->color;
+        return $this->bean->color ?? '#FFFFFF';
     }
 
 

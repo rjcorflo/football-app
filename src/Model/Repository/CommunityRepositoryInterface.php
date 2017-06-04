@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 
 /**
  * Repository for {@link CommunityInterface} entities.
@@ -31,6 +32,7 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
     /**
      * Find community by exact name.
      * @return CommunityInterface
+     * @throws NotFoundException If thera no communities with that name
      */
     public function findByName(string $name): CommunityInterface;
 }

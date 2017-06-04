@@ -5,34 +5,32 @@ namespace RJ\PronosticApp\Util\Validation\Validator;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 
+/**
+ * Class ExistenceValidator
+ * @package RJ\PronosticApp\Util\Validation\Validator
+ */
 class ExistenceValidator extends AbstractValidator
 {
     /**
-     * @var \RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface
+     * @var EntityManager
      */
-    private $playerRepository;
-
-    /**
-     * @var \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface
-     */
-    private $communityRepository;
+    private $entityManager;
 
     /**
      * ExistenceValidator constructor.
-     * @param \RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface $playerRepository
-     * @param \RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface $communityRepository
+     * @param EntityManager $enityManager
      */
     public function __construct(
-        PlayerRepositoryInterface $playerRepository,
-        CommunityRepositoryInterface $communityRepository
+        EntityManager $enityManager
     ) {
         parent::__construct();
-        $this->playerRepository = $playerRepository;
-        $this->communityRepository = $communityRepository;
+        $this->entityManager = $enityManager;
     }
 
     /**
@@ -41,8 +39,11 @@ class ExistenceValidator extends AbstractValidator
      */
     public function checkIfNicknameExists(PlayerInterface $player)
     {
+        /** @var PlayerRepositoryInterface $playerRepository */
+        $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+
         try {
-            $existsNickname = $this->playerRepository->checkNickameExists($player->getNickname());
+            $existsNickname = $playerRepository->checkNickameExists($player->getNickname());
 
             if ($existsNickname) {
                 $this->result->isError();
@@ -68,8 +69,11 @@ class ExistenceValidator extends AbstractValidator
      */
     public function checkIfEmailExists(PlayerInterface $player)
     {
+        /** @var PlayerRepositoryInterface $playerRepository */
+        $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
+
         try {
-            $existsEmail = $this->playerRepository->checkEmailExists($player->getEmail());
+            $existsEmail = $playerRepository->checkEmailExists($player->getEmail());
 
             if ($existsEmail) {
                 $this->result->isError();
@@ -95,8 +99,11 @@ class ExistenceValidator extends AbstractValidator
      */
     public function checkIfNameExists(CommunityInterface $community)
     {
+        /** @var CommunityRepositoryInterface $communityRepository */
+        $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
         try {
-            $existsName = $this->communityRepository->checkIfNameExists($community->getCommunityName());
+            $existsName = $communityRepository->checkIfNameExists($community->getCommunityName());
 
             if ($existsName) {
                 $this->result->isError();
@@ -110,6 +117,41 @@ class ExistenceValidator extends AbstractValidator
             $this->result->addMessageWithCode(
                 ErrorCodes::DEFAULT,
                 "Error comprobando la existencia del nombre de la comunidad."
+            );
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param PlayerInterface $player
+     * @param CommunityInterface $community
+     * @return $this
+     */
+    public function checkIfPlayerIsAlreadyFromCommunity(PlayerInterface $player, CommunityInterface $community)
+    {
+        /** @var ParticipantRepositoryInterface $participantRepo */
+        $participantRepo = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
+
+        try {
+            $exists = $participantRepo->checkIfPlayerIsAlreadyFromCommunity($player, $community);
+
+            if ($exists) {
+                $this->result->isError();
+                $this->result->addMessageWithCode(
+                    ErrorCodes::EXIST_COMMUNITY_NAME,
+                    sprintf(
+                        'El jugador %s ya es miembro de la comunidad %s.',
+                        $player->getNickname(),
+                        $community->getCommunityName()
+                    )
+                );
+            }
+        } catch (\Throwable $e) {
+            $this->result->isError();
+            $this->result->addMessageWithCode(
+                ErrorCodes::DEFAULT,
+                "Error comprobando si el jugador ya participa en la comunidad pasada."
             );
         }
 

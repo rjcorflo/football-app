@@ -37,4 +37,6 @@ class ErrorCodes
     const INVALID_PLAYER_IDAVATAR = 15;
 
     const MISSING_PARAMETERS = 16;
+
+    const PLAYER_IS_NOT_MEMBER = 17;
 }

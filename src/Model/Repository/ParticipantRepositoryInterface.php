@@ -36,4 +36,26 @@ interface ParticipantRepositoryInterface extends StandardRepositoryInterface
      * @return CommunityInterface[]
      */
     public function findCommunitiesFromPlayer(PlayerInterface $player): array;
+
+    /**
+     * Find participation from player in community.
+     * @param PlayerInterface $player
+     * @param CommunityInterface $community
+     * @return mixed
+     */
+    public function findByPlayerAndCommunity(
+        PlayerInterface $player,
+        CommunityInterface $community
+    ): ParticipantInterface;
+
+    /**
+     * Check if player is already a participant of the community.
+     * @param PlayerInterface $player
+     * @param CommunityInterface $community
+     * @return bool
+     */
+    public function checkIfPlayerIsAlreadyFromCommunity(
+        PlayerInterface $player,
+        CommunityInterface $community
+    ): bool;
 }

@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ErrorCodes;
@@ -90,16 +91,6 @@ class PrivateCommunityController
             // Retrieve community
             $community = $communityRepository->findByName($communityName);
 
-            // Checks that comunity exists, is private and passwords match
-            if ($community === null) {
-                $result->addMessageWithCode(
-                    ErrorCodes::EXIST_COMMUNITY_NAME,
-                    'No existe una comunidad con ese nombre'
-                );
-
-                throw new \Exception('No pudo unirse a la comunidad');
-            }
-
             if (!$community->isPrivate()) {
                 $result->addMessageWithCode(
                     ErrorCodes::DEFAULT,
@@ -120,6 +111,14 @@ class PrivateCommunityController
             /** @var PlayerInterface $player */
             $player = $request->getAttribute('player');
 
+            // Check player is not already member of community
+            $result = $this->validator->existenceValidator()
+                ->checkIfPlayerIsAlreadyFromCommunity($player, $community)->validate();
+
+            if ($result->hasError()) {
+                throw new \Exception('El jugador ya es miembro de la comunidad');
+            }
+
             /** @var ParticipantRepositoryInterface $participantRepo */
             $participantRepo = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
 
@@ -129,6 +128,17 @@ class PrivateCommunityController
             $participant->setCreationDate(new \DateTime());
 
             $participantRepo->store($participant);
+
+            $result->setDescription(
+                sprintf(
+                    'El jugador %s se ha unido correctamente a la comunidad privada %s',
+                    $player->getNickname(),
+                    $community->getCommunityName()
+                )
+            );
+        } catch (NotFoundException $nfe) {
+            $result = $nfe->convertToMessageResult();
+            $result->setDescription('Error recuperando la comunidad a la que desea unirse');
         } catch (\Exception $e) {
             $result->isError();
             $result->setDescription($e->getMessage());
