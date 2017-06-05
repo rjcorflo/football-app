@@ -17,7 +17,8 @@ use RJ\PronosticApp\Controller\PrivateCommunityController;
 use RJ\PronosticApp\Controller\PublicCommunityController;
 
 /**
- * Class Application
+ * Main class Application.
+ *
  * @package RJ\PronosticApp\App
  */
 class Application extends App
@@ -32,6 +33,9 @@ class Application extends App
         $this->bootstrap();
     }
 
+    /**
+     * Bootstrap method for application.
+     */
     protected function bootstrap()
     {
         $this->configureRoutes();
@@ -62,6 +66,9 @@ class Application extends App
         $builder->addDefinitions(__DIR__ . '/DependencyInjection/definitions/di.app.php');
     }
 
+    /**
+     * Configure app routes.
+     */
     protected function configureRoutes()
     {
         $this->group('/api/v1', function () {

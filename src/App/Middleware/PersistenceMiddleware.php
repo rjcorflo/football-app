@@ -6,6 +6,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
 
+/**
+ * Class PersistenceMiddleware.
+ *
+ * Initialize persistence layer.
+ *
+ * @package RJ\PronosticApp\App\Middleware
+ */
 class PersistenceMiddleware
 {
     /**
@@ -15,6 +22,7 @@ class PersistenceMiddleware
 
     /**
      * PersistenceMiddleware constructor.
+     *
      * @param AbstractPersistenceLayer $persistenceLayer
      */
     public function __construct(AbstractPersistenceLayer $persistenceLayer)

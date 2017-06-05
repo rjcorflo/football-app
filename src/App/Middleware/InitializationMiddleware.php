@@ -7,6 +7,13 @@ use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Event\AppInitEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
+/**
+ * Class InitializationMiddleware.
+ *
+ * Launch initialization and finished events.
+ *
+ * @package RJ\PronosticApp\App\Middleware
+ */
 class InitializationMiddleware
 {
     /**
@@ -14,6 +21,11 @@ class InitializationMiddleware
      */
     private $dispatcher;
 
+    /**
+     * InitializationMiddleware constructor.
+     *
+     * @param EventDispatcherInterface $dispatcher
+     */
     public function __construct(EventDispatcherInterface $dispatcher)
     {
         $this->dispatcher = $dispatcher;

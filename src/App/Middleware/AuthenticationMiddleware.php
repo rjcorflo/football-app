@@ -6,7 +6,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
-use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
@@ -27,6 +26,7 @@ class AuthenticationMiddleware
 
     /**
      * AuthenticationMiddleware constructor.
+     *
      * @param EntityManager $entityManager
      * @param WebResourceGeneratorInterface $webResourceGenerator
      */

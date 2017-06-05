@@ -10,6 +10,12 @@ use Slim\Handlers\Error;
 use Slim\Http\Body;
 use UnexpectedValueException;
 
+/**
+ * Default Slim application error handler
+ *
+ * It outputs the error message and diagnostic information in either JSON, XML,
+ * or HTML based on the Accept header.
+ */
 class ErrorHandler extends Error
 {
     /**
@@ -43,7 +49,10 @@ class ErrorHandler extends Error
         $result = new MessageResult();
         $result->isError();
         $result->setDescription("Exception inesperada. Avise al administrador del servidor.");
-        $result->addMessageWithCode(ErrorCodes::DEFAULT_ERROR, $exception->getMessage());
+
+        if ($this->displayErrorDetails) {
+            $result->addMessageWithCode(ErrorCodes::DEFAULT_ERROR, $exception->getMessage());
+        }
 
         $this->writeToErrorLog($exception);
 
