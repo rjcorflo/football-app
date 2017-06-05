@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 
 /**
  * Repository for {@link PlayerInterface} entities.
@@ -38,9 +39,10 @@ interface PlayerRepositoryInterface extends StandardRepositoryInterface
     /**
      * Find player by nickname or email.
      * @param string $name
-     * @return PlayerInterface[] List of players.
+     * @return PlayerInterface Player.
+     * @throws NotFoundException Player not found.
      */
-    public function findPlayerByNicknameOrEmail(string $name) : array;
+    public function findPlayerByNicknameOrEmail(string $name) : PlayerInterface;
 
     /**
      * @param string $token

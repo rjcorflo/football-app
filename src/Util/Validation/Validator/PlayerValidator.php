@@ -7,6 +7,11 @@ use Respect\Validation\Validator as V;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 
+/**
+ * Validate player data.
+ *
+ * @package RJ\PronosticApp\Util\Validation\Validator
+ */
 class PlayerValidator extends AbstractValidator
 {
     /**
@@ -17,7 +22,7 @@ class PlayerValidator extends AbstractValidator
     public function validatePlayerData(PlayerInterface $player)
     {
         try {
-            V::alnum()->length(3, 20)->assert($player->getNickname());
+            V::alnum()->length(4, 20)->assert($player->getNickname());
         } catch (NestedValidationException $e) {
             $this->result->isError();
             $this->result->addMessageWithCode(
@@ -87,5 +92,17 @@ class PlayerValidator extends AbstractValidator
         }
         
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validate(): void
+    {
+        if ($this->result->hasError()) {
+            $this->result->setDescription('Error validando los datos del jugador');
+        }
+
+        parent::validate();
     }
 }

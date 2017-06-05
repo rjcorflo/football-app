@@ -35,12 +35,6 @@ class InitializationMiddleware
          */
         $response = $next($request, $response);
 
-        // Prepare new response
-        $response = $response->withHeader(
-            "Content-Type",
-            "application/json"
-        );
-
         return $response;
     }
 }

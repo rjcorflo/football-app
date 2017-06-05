@@ -7,14 +7,12 @@ use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Exception\Request\MissingParametersException;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Persistence\EntityManager;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
-use RJ\PronosticApp\Util\General\ResponseGenerator;
-use RJ\PronosticApp\Util\Validation\ValidatorInterface;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
  * Class CommunityController
@@ -23,41 +21,8 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  *
  * @package RJ\PronosticApp\Controller
  */
-class CommunityController
+class CommunityController extends BaseController
 {
-    use ResponseGenerator;
-
-    /**
-     * @var EntityManager $entityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var WebResourceGeneratorInterface
-     */
-    private $resourceGenerator;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * CommunityController constructor.
-     * @param EntityManager $entityManager
-     * @param WebResourceGeneratorInterface $resourceGenerator
-     * @param ValidatorInterface $validator
-     */
-    public function __construct(
-        EntityManager $entityManager,
-        WebResourceGeneratorInterface $resourceGenerator,
-        ValidatorInterface $validator
-    ) {
-        $this->entityManager = $entityManager;
-        $this->resourceGenerator = $resourceGenerator;
-        $this->validator = $validator;
-    }
-
     /**
      * Create community method.
      * @param ServerRequestInterface $request
@@ -73,9 +38,6 @@ class CommunityController
         /** @var PlayerInterface $player */
         $player = $request->getAttribute('player');
 
-        // Prepare result
-        $result = new MessageResult();
-
         try {
             // Retrieve data
             $name = $bodyData['nombre'] ?? '';
@@ -84,12 +46,13 @@ class CommunityController
             $idImage = $bodyData['id_imagen'] ?? 1;
 
             if (!$name) {
-                $response = $this->generateParameterNeededResponse(
-                    $response,
-                    'El parámetro "nombre" es obligatorio para crear una comunidad'
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
+                    'El parámetro ["nombre"] es obligatorio'
                 );
 
-                return $response;
+                throw $exception;
             }
 
             /** @var CommunityRepositoryInterface $communityRepository */
@@ -102,23 +65,11 @@ class CommunityController
             $community->setPassword($password);
             $community->setCreationDate(new \DateTime());
 
-            $result = $this->validator->communityValidator()->validateCommunityData($community)->validate();
+            $this->validator->communityValidator()->validateCommunityData($community)->validate();
 
-            if ($result->hasError()) {
-                throw new \Exception("Error validando los datos de la comunidad.");
-            }
+            $this->validator->existenceValidator()->checkIfNameExists($community)->validate();
 
-            $result = $this->validator->existenceValidator()->checkIfNameExists($community)->validate();
-
-            if ($result->hasError()) {
-                throw new \Exception("Ya existe una comunidad con ese nombre.");
-            }
-
-            $result = $this->validator->basicValidator()->validateId($idImage)->validate();
-
-            if ($result->hasError()) {
-                throw new \Exception("Error validando los datos de la imagen.");
-            }
+            $this->validator->basicValidator()->validateId($idImage)->validate();
 
             /** @var ImageRepositoryInterface $imageRepository */
             $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
@@ -155,15 +106,13 @@ class CommunityController
                 $participantRepo->store($participant);
             });
 
-            $response->getBody()
-                ->write($this->resourceGenerator->createCommunityResource($community));
-            return $response;
+            $resource = $this->resourceGenerator->createCommunityResource($community);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $result->isError();
-            $result->setDescription($e->getMessage());
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 
@@ -181,22 +130,20 @@ class CommunityController
         /** @var CommunityRepositoryInterface $communityRepository */
         $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
 
-        /** @var CommunityInterface $community */
-        $community = $communityRepository->getById($idCommunity);
+        try {
+            /** @var CommunityInterface $community */
+            $community = $communityRepository->getById($idCommunity);
 
-        $players = $community->getPlayers();
+            $players = $community->getPlayers();
 
-        $response->getBody()
-            ->write($this->resourceGenerator->exclude('comunidades.jugadores')->createPlayerResource($players));
+            $resource = $this->resourceGenerator->exclude('comunidades.jugadores')->createPlayerResource($players);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
+        } catch (\Exception $e) {
+            $response = $this->generateJsonErrorResponse($response, $e);
+        }
+
         return $response;
-    }
-
-    public function search(
-        ServerRequestInterface $request,
-        ResponseInterface $response
-    ) {
-        $parameters = $request->getQueryParams();
-
     }
 
     /**
@@ -214,28 +161,36 @@ class CommunityController
 
         $result = new MessageResult();
 
-        if (!isset($bodyData['nombre'])) {
-            $response = $this->generateParameterNeededResponse(
-                $response,
-                'El parámetro "nombre" es obligatorio para crear una comunidad'
-            );
+        try {
+            if (!isset($bodyData['nombre'])) {
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
+                    'El parámetro ["nombre"] es obligatorio'
+                );
 
-            return $response;
+                throw $exception;
+            }
+
+            /** @var CommunityRepositoryInterface $communityRepository */
+            $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
+            $nameExists = $communityRepository->checkIfNameExists($bodyData['nombre']);
+
+            if ($nameExists) {
+                $result->isError();
+                $result->setDescription('Ya existe una comunidad con ese nombre');
+            } else {
+                $result->setDescription('Ese nombre de comunidad está disponible');
+            }
+
+            $resource = $this->resourceGenerator->createMessageResource($result);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
+        } catch (\Exception $e) {
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        /** @var CommunityRepositoryInterface $communityRepository */
-        $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
-
-        $nameExists = $communityRepository->checkIfNameExists($bodyData['nombre']);
-
-        if ($nameExists) {
-            $result->isError();
-            $result->setDescription('Ya existe una comunidad con ese nombre');
-        } else {
-            $result->setDescription('Ese nombre de comunidad está disponible');
-        }
-
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 }

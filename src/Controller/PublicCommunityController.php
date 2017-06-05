@@ -5,14 +5,11 @@ namespace RJ\PronosticApp\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Exception\Request\MissingParametersException;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Persistence\EntityManager;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
-use RJ\PronosticApp\Util\General\ResponseGenerator;
-use RJ\PronosticApp\Util\Validation\ValidatorInterface;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
  * Class PublicCommunityController.
@@ -21,41 +18,8 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  *
  * @package RJ\PronosticApp\Controller
  */
-class PublicCommunityController
+class PublicCommunityController extends BaseController
 {
-    use ResponseGenerator;
-
-    /**
-     * @var EntityManager $entityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var WebResourceGeneratorInterface
-     */
-    private $resourceGenerator;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * CommunityController constructor.
-     * @param EntityManager $entityManager
-     * @param WebResourceGeneratorInterface $resourceGenerator
-     * @param ValidatorInterface $validator
-     */
-    public function __construct(
-        EntityManager $entityManager,
-        WebResourceGeneratorInterface $resourceGenerator,
-        ValidatorInterface $validator
-    ) {
-        $this->entityManager = $entityManager;
-        $this->resourceGenerator = $resourceGenerator;
-        $this->validator = $validator;
-    }
-
     /**
      * List all public communities.
      * @param ResponseInterface $response
@@ -67,9 +31,16 @@ class PublicCommunityController
         /** @var CommunityRepositoryInterface $communityRepository */
         $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
 
-        $communities = $communityRepository->getAllPublicCommunities();
+        try {
+            $communities = $communityRepository->getAllPublicCommunities();
 
-        $response->getBody()->write($this->resourceGenerator->createPublicCommunityResource($communities));
+            $resource = $this->resourceGenerator->createPublicCommunityResource($communities);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
+        } catch (\Exception $e) {
+            $response = $this->generateJsonErrorResponse($response, $e);
+        }
+
         return $response;
     }
 
@@ -93,12 +64,13 @@ class PublicCommunityController
 
             if (!$aleatorio) {
                 if ((int)$idComunidad < 1) {
-                    $response = $this->generateParameterNeededResponse(
-                        $response,
+                    $exception = new MissingParametersException();
+                    $exception->addMessageWithCode(
+                        ErrorCodes::MISSING_PARAMETERS,
                         'Si el parámetro ["aleatorio"] es false, el parámetro ["id_comunidad"] es obligatorio'
                     );
 
-                    return $response;
+                    throw $exception;
                 }
             }
 
@@ -115,12 +87,10 @@ class PublicCommunityController
             }
 
             // Check player is not already member of community
-            $result = $this->validator->existenceValidator()
-                ->checkIfPlayerIsAlreadyFromCommunity($player, $community)->validate();
-
-            if ($result->hasError()) {
-                throw new \Exception('El jugador ya es miembro de la comunidad');
-            }
+            $this->validator
+                ->existenceValidator()
+                ->checkIfPlayerIsAlreadyFromCommunity($player, $community)
+                ->validate();
 
             /** @var ParticipantRepositoryInterface $participantRepo */
             $participantRepo = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
@@ -139,15 +109,14 @@ class PublicCommunityController
                     $community->getCommunityName()
                 )
             );
-        } catch (NotFoundException $nfe) {
-            $result = $nfe->convertToMessageResult();
-            $result->setDescription('Error recuperando la comunidad a la que desea unirse');
+
+            $resource = $this->resourceGenerator->createMessageResource($result);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $result->isError();
-            $result->setDescription($e->getMessage());
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 }

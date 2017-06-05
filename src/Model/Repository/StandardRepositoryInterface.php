@@ -15,12 +15,14 @@ interface StandardRepositoryInterface
 {
     /**
      * Return fresh created entity model. Is it not persisted.
+     *
      * @return mixed
      */
     public function create();
 
     /**
      * Persist entity.
+     *
      * @param $entity
      * @return int ID of created entity.
      */
@@ -28,6 +30,7 @@ interface StandardRepositoryInterface
 
     /**
      * Persists multiple entities at once.
+     *
      * @param array $entities
      * @return int[] Array of IDs.
      */
@@ -35,6 +38,7 @@ interface StandardRepositoryInterface
 
     /**
      * Delete entity.
+     *
      * @param mixed $entity
      * @return void
      */
@@ -42,6 +46,7 @@ interface StandardRepositoryInterface
 
     /**
      * Delete multiples entities.
+     *
      * @param array $entities
      * @return void
      */
@@ -49,6 +54,7 @@ interface StandardRepositoryInterface
 
     /**
      * Get entity by id.
+     *
      * @param int $entityId
      * @return mixed
      * @throws NotFoundException
@@ -57,6 +63,7 @@ interface StandardRepositoryInterface
 
     /**
      * Get various entities by id.
+     *
      * @param int[] $entitiesIds
      * @return array List of entities.
      */
@@ -64,6 +71,7 @@ interface StandardRepositoryInterface
 
     /**
      * Returns all entities.
+     *
      * @return array List of all entities.
      */
     public function findAll() : array;

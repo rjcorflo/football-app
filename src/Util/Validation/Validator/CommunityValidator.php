@@ -7,6 +7,11 @@ use Respect\Validation\Validator as V;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 
+/**
+ * Validate data from community.
+ *
+ * @package RJ\PronosticApp\Util\Validation\Validator
+ */
 class CommunityValidator extends AbstractValidator
 {
     /**
@@ -17,7 +22,7 @@ class CommunityValidator extends AbstractValidator
     public function validateCommunityData(CommunityInterface $community)
     {
         try {
-            V::alnum()->length(3, 20)->assert($community->getCommunityName());
+            V::alnum()->length(4, 20)->assert($community->getCommunityName());
         } catch (NestedValidationException $e) {
             $this->result->isError();
             $this->result->addMessageWithCode(
@@ -39,5 +44,17 @@ class CommunityValidator extends AbstractValidator
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validate(): void
+    {
+        if ($this->result->hasError()) {
+            $this->result->setDescription('Error validando los datos de la comunidad');
+        }
+
+        parent::validate();
     }
 }

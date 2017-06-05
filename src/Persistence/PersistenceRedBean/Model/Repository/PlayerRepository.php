@@ -2,14 +2,13 @@
 
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
-use RJ\PronosticApp\Model\Entity\TokenInterface;
-use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Token;
 use RedBeanPHP\R;
-use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
+use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
  * Class PlayerRepository
@@ -36,10 +35,22 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
     /**
      * @inheritDoc
      */
-    public function findPlayerByNicknameOrEmail(string $player) : array
+    public function findPlayerByNicknameOrEmail(string $player) : PlayerInterface
     {
-        $players = R::find(self::ENTITY, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
-        return RedBeanUtils::boxArray($players);
+        /** @var Player $player */
+        $player = R::findOne(self::ENTITY, '(nickname LIKE :name OR email LIKE :name)', [':name' => $player]);
+
+        if ($player === null) {
+            $exception = new NotFoundException('Usuario no encontrado');
+            $exception->addMessageWithCode(
+                ErrorCodes::LOGIN_ERROR_INCORRECT_USERNAME,
+                "Nombre o email incorrectos"
+            );
+
+            throw new $exception;
+        }
+
+        return $player->box();
     }
 
     /**

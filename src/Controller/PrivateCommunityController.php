@@ -5,15 +5,13 @@ namespace RJ\PronosticApp\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Exception\PasswordNotMatchException;
+use RJ\PronosticApp\Model\Exception\Request\MissingParametersException;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
-use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
-use RJ\PronosticApp\Util\General\ResponseGenerator;
-use RJ\PronosticApp\Util\Validation\ValidatorInterface;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
+use RJ\PronosticApp\Util\Validation\Exception\ValidationException;
 
 /**
  * Class PrivateCommunityController.
@@ -22,41 +20,8 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  *
  * @package RJ\PronosticApp\Controller
  */
-class PrivateCommunityController
+class PrivateCommunityController extends BaseController
 {
-    use ResponseGenerator;
-
-    /**
-     * @var EntityManager $entityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var WebResourceGeneratorInterface
-     */
-    private $resourceGenerator;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * CommunityController constructor.
-     * @param EntityManager $entityManager
-     * @param WebResourceGeneratorInterface $resourceGenerator
-     * @param ValidatorInterface $validator
-     */
-    public function __construct(
-        EntityManager $entityManager,
-        WebResourceGeneratorInterface $resourceGenerator,
-        ValidatorInterface $validator
-    ) {
-        $this->entityManager = $entityManager;
-        $this->resourceGenerator = $resourceGenerator;
-        $this->validator = $validator;
-    }
-
     /**
      * Join to private community.
      *
@@ -74,12 +39,13 @@ class PrivateCommunityController
 
         try {
             if (!isset($bodyData['nombre_comunidad']) || !isset($bodyData['password_comunidad'])) {
-                $response = $this->generateParameterNeededResponse(
-                    $response,
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
                     'Los parámetros ["nombre_comunidad","password_comunidad"] son obligatorios'
                 );
 
-                return $response;
+                throw $exception;
             }
 
             $communityName = $bodyData['nombre_comunidad'];
@@ -92,19 +58,21 @@ class PrivateCommunityController
             $community = $communityRepository->findByName($communityName);
 
             if (!$community->isPrivate()) {
-                $result->addMessageWithCode(
-                    ErrorCodes::DEFAULT,
+                $exception = new ValidationException('No pudo unirse a la comunidad');
+                $exception->addMessageWithCode(
+                    ErrorCodes::COMMUNITY_IS_NOT_PRIVATE,
                     'La comunidad no es privada'
                 );
-                throw new \Exception('No pudo unirse a la comunidad');
+                throw $exception;
             }
 
             if (!password_verify($communityPass, $community->getPassword())) {
-                $result->addMessageWithCode(
-                    ErrorCodes::LOGIN_ERROR_INCORRECT_PASSWORD,
+                $exception = new PasswordNotMatchException('No pudo unirse a la comunidad');
+                $exception->addMessageWithCode(
+                    ErrorCodes::INCORRECT_PASSWORD,
                     'Pasword incorrecta'
                 );
-                throw new \Exception('No pudo unirse a la comunidad');
+                throw $exception;
             }
 
             // Proceed to add player as participant
@@ -112,12 +80,9 @@ class PrivateCommunityController
             $player = $request->getAttribute('player');
 
             // Check player is not already member of community
-            $result = $this->validator->existenceValidator()
-                ->checkIfPlayerIsAlreadyFromCommunity($player, $community)->validate();
-
-            if ($result->hasError()) {
-                throw new \Exception('El jugador ya es miembro de la comunidad');
-            }
+            $this->validator->existenceValidator()
+                ->checkIfPlayerIsAlreadyFromCommunity($player, $community)
+                ->validate();
 
             /** @var ParticipantRepositoryInterface $participantRepo */
             $participantRepo = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
@@ -136,12 +101,12 @@ class PrivateCommunityController
                     $community->getCommunityName()
                 )
             );
-        } catch (NotFoundException $nfe) {
-            $result = $nfe->convertToMessageResult();
-            $result->setDescription('Error recuperando la comunidad a la que desea unirse');
+
+            $resource = $this->resourceGenerator->createMessageResource($result);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $result->isError();
-            $result->setDescription($e->getMessage());
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
         $response->getBody()->write($this->resourceGenerator->createMessageResource($result));

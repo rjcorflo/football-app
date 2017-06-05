@@ -3,18 +3,19 @@
 namespace RJ\PronosticApp\Util\General;
 
 /**
- * Class ErrorCodes
+ * List of ErrorCodes
+ *
  * @package RJ\PronosticApp\Util\General
  */
 class ErrorCodes
 {
-    const DEFAULT = 0;
+    const DEFAULT_ERROR = 0;
 
-    const EXIST_PLAYER_EMAIL = 1;
+    const PLAYER_EMAIL_ALREADY_EXISTS = 1;
 
-    const EXIST_PLAYER_USERNAME = 2;
+    const PLAYER_USERNAME_ALREADY_EXISTS = 2;
 
-    const EXIST_COMMUNITY_NAME = 3;
+    const COMMUNITY_NAME_ALREADY_EXISTS = 3;
 
     const INVALID_ID = 4;
 
@@ -34,9 +35,9 @@ class ErrorCodes
 
     const INVALID_COMMUNITY_PASSWORD = 12;
 
-    const LOGIN_ERROR_INCORRECT_PASSWORD = 13;
+    const INCORRECT_PASSWORD = 13;
 
-    const LOGIN_ERROR_INCORRECT_USERNAME = 14;
+    const INCORRECT_USERNAME = 14;
 
     const INVALID_PLAYER_IDAVATAR = 15;
 
@@ -47,4 +48,8 @@ class ErrorCodes
     const CANNOT_RETRIEVE_RANDOM_COMMUNITY = 18;
 
     const ENTITY_NOT_FOUND = 19;
+
+    const PLAYER_IS_ALREADY_MEMBER = 20;
+
+    const COMMUNITY_IS_NOT_PRIVATE = 21;
 }

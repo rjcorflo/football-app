@@ -31,8 +31,7 @@ class PublicCommunityTransformer extends CommunityTransformer
     public function transform(CommunityInterface $community)
     {
         $resource = parent::transform($community);
-        unset($resource['privada']);
-        $resource['fecha_creacion'] = $community->getCreationDate()->format(\DateTime::ATOM);
+        $resource['fecha_creacion'] = $community->getCreationDate()->format('d-m-Y');
         $resource['numero_jugadores'] = $this->participantRepo->countPlayersFromCommunity($community);
 
         return $resource;

@@ -5,6 +5,7 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 use RedBeanPHP\R;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 
 /**
@@ -37,7 +38,7 @@ class TokenRepository extends AbstractRepository implements TokenRepositoryInter
         $numberOfTokens = count($tokens);
 
         if ($numberOfTokens === 0) {
-            throw new \Exception('El token no existe');
+            throw new NotFoundException('El token no existe');
         } elseif ($numberOfTokens > 1) {
             throw new \Exception('Error: se han recuperado varios tokens para la misma cadena');
         }

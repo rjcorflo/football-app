@@ -43,7 +43,7 @@ class ErrorHandler extends Error
         $result = new MessageResult();
         $result->isError();
         $result->setDescription("Exception inesperada. Avise al administrador del servidor.");
-        $result->addMessageWithCode(ErrorCodes::DEFAULT, $exception->getMessage());
+        $result->addMessageWithCode(ErrorCodes::DEFAULT_ERROR, $exception->getMessage());
 
         $this->writeToErrorLog($exception);
 

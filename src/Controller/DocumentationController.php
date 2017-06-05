@@ -5,6 +5,10 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+/**
+ * Class DocumentationController
+ * @package RJ\PronosticApp\Controller
+ */
 class DocumentationController
 {
     /**

@@ -2,6 +2,11 @@
 
 namespace RJ\PronosticApp\Util\General;
 
+/**
+ * Message result for control and response.
+ *
+ * @package RJ\PronosticApp\Util\General
+ */
 class MessageResult
 {
     protected $error = false;
@@ -55,7 +60,7 @@ class MessageResult
     public function addDefaultMessage(?string $observations) : void
     {
         $message = new MessageItem();
-        $message->setCode(ErrorCodes::DEFAULT);
+        $message->setCode(ErrorCodes::DEFAULT_ERROR);
         $message->setObservation($observations);
 
         $this->messages[] = $message;

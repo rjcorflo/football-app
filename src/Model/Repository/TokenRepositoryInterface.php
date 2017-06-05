@@ -23,13 +23,15 @@ interface TokenRepositoryInterface extends StandardRepositoryInterface
 
     /**
      * Generate a new token with a random string already setted.
+     *
      * @return TokenInterface
      */
     public function createRandomToken() : TokenInterface;
 
     /**
      * Find token by string.
-     * @param  string         $tokenString
+     *
+     * @param  string $tokenString
      * @return TokenInterface
      */
     public function findByTokenString(string $tokenString) : TokenInterface;

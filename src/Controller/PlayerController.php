@@ -5,55 +5,24 @@ namespace RJ\PronosticApp\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Exception\PasswordNotMatchException;
+use RJ\PronosticApp\Model\Exception\Request\MissingParametersException;
+use RJ\PronosticApp\Model\Repository\Exception\PersistenceException;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
-use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
-use RJ\PronosticApp\Util\General\ResponseGenerator;
-use RJ\PronosticApp\Util\Validation\ValidatorInterface;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
+use RJ\PronosticApp\Util\Validation\Exception\ValidationException;
 
 /**
  * Class PlayerController.
+ *
  * Expose player data.
+ *
  * @package RJ\PronosticApp\Controller
  */
-class PlayerController
+class PlayerController extends BaseController
 {
-    use ResponseGenerator;
-
-    /**
-     * @var EntityManager $entityManager
-     */
-    private $entityManager;
-
-    /**
-     * @var WebResourceGeneratorInterface
-     */
-    private $resourceGenerator;
-
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * PlayerController constructor.
-     * @param EntityManager $entityManager
-     * @param WebResourceGeneratorInterface $resourceGenerator
-     * @param ValidatorInterface $validator
-     */
-    public function __construct(
-        EntityManager $entityManager,
-        WebResourceGeneratorInterface $resourceGenerator,
-        ValidatorInterface $validator
-    ) {
-        $this->entityManager = $entityManager;
-        $this->resourceGenerator = $resourceGenerator;
-        $this->validator = $validator;
-    }
-
     /**
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
@@ -79,12 +48,13 @@ class PlayerController
             $color = $bodyData['color'] ?? '#FFFFFF';
 
             if (!$nickname || !$email || !$password) {
-                $response = $this->generateParameterNeededResponse(
-                    $response,
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
                     'Los parámetros ["nickname", "email", "password"] son obligatorios para registrarse'
                 );
 
-                return $response;
+                throw $exception;
             }
 
             $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
@@ -102,47 +72,39 @@ class PlayerController
             $player->setColor($color);
 
             // Data validation
-            $result = $this->validator
+            $this->validator
                 ->playerValidator()
                 ->validatePlayerData($player)
                 ->validate();
 
-            if ($result->hasError()) {
-                throw new \Exception("Error validando los datos del jugador.");
-            }
-
-            $result = $this->validator
+            // Validate existence
+            $this->validator
                 ->existenceValidator()
                 ->checkIfEmailExists($player)
                 ->checkIfNicknameExists($player)
                 ->validate();
 
-            if ($result->hasError()) {
-                throw new \Exception($result->getDescription());
-            }
-
-            $result = $this->validator
+            $this->validator
                 ->basicValidator()
                 ->validateId($idAvatar)
                 ->validate();
-
-            if ($result->hasError()) {
-                throw new \Exception("Error validando los datos de la imagen.");
-            }
 
             try {
                 $playerRepository->store($player);
                 $result->setDescription("Registro correcto");
             } catch (\Exception $e) {
-                $result->addDefaultMessage($e->getMessage());
-                throw new \Exception("Error al almacenar el jugador");
+                $exception = new PersistenceException('Error al almacenar el jugador');
+                $exception->addDefaultMessage($e->getMessage());
+                throw $exception;
             }
+
+            $resource = $this->resourceGenerator->createMessageResource($result);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $result->isError();
-            $result->setDescription($e->getMessage());
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 
@@ -165,12 +127,13 @@ class PlayerController
         try {
             // Retrieve data
             if (!isset($bodyData['nickname']) && !isset($bodyData['email'])) {
-                $response = $this->generateParameterNeededResponse(
-                    $response,
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
                     'Uno de los parámetros ["nickname", "email"] tiene que ser pasado para comprobar si existen'
                 );
 
-                return $response;
+                throw $exception;
             }
 
             $nickname = $bodyData['nickname'] ?? '';
@@ -182,7 +145,7 @@ class PlayerController
             if ($nickname != '' && $playerRepository->checkNickameExists($nickname)) {
                 $result->isError();
                 $result->addMessageWithCode(
-                    ErrorCodes::EXIST_PLAYER_USERNAME,
+                    ErrorCodes::PLAYER_USERNAME_ALREADY_EXISTS,
                     'El nombre de usuario ya existe'
                 );
             }
@@ -190,21 +153,27 @@ class PlayerController
             if ($email != '' && $playerRepository->checkEmailExists($email)) {
                 $result->isError();
                 $result->addMessageWithCode(
-                    ErrorCodes::EXIST_PLAYER_EMAIL,
+                    ErrorCodes::PLAYER_EMAIL_ALREADY_EXISTS,
                     'El email ya existe'
                 );
             }
 
             if ($result->hasError()) {
-                throw new \Exception('Nombre de usuario o email existentes');
+                $result->setDescription('Nombre de usuario o email existentes');
+
+                $exception = ValidationException::createFromMessageResult($result);
+                throw $exception;
             }
 
             $result->setDescription('Datos disponibles');
+
+            $resource = $this->resourceGenerator->createMessageResource($result);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $result->setDescription($e->getMessage());
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 
@@ -221,49 +190,38 @@ class PlayerController
     ) {
         $bodyData = $request->getParsedBody();
 
-        // Prepare result
-        $result = new MessageResult();
-
         try {
             // Retrieve data
-            $player = $bodyData['player'] ?? '';
+            $playerData = $bodyData['player'] ?? '';
             $password = $bodyData['password'] ?? '';
 
-            if (!$player || !$password) {
-                $response = $this->generateParameterNeededResponse(
-                    $response,
+            if (!$playerData || !$password) {
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
                     'Los parámetros ["player", "password"] son obligatorios para poder loguearse'
                 );
 
-                return $response;
+                throw $exception;
             }
 
             /** @var PlayerRepositoryInterface $playerRepository */
             $playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
 
             // Retrieve player
-            $players = $playerRepository->findPlayerByNicknameOrEmail($player);
-
-            if (count($players) !== 1) {
-                $result->addMessageWithCode(
-                    ErrorCodes::LOGIN_ERROR_INCORRECT_USERNAME,
-                    "Nombre o email incorrectos"
-                );
-                throw new \Exception("Login incorrecto");
-            }
-
-            $player = array_shift($players);
+            $player = $playerRepository->findPlayerByNicknameOrEmail($playerData);
 
             if (!password_verify($bodyData['password'], $player->getPassword())) {
-                $result->addMessageWithCode(
-                    ErrorCodes::LOGIN_ERROR_INCORRECT_PASSWORD,
+                $exception = new PasswordNotMatchException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::INCORRECT_PASSWORD,
                     "Password incorrecta"
                 );
-                throw new \Exception("Login incorrecto");
+
+                throw $exception;
             }
 
             // Correct login
-
             /** @var TokenRepositoryInterface $tokenRepository */
             $tokenRepository = $this->entityManager->getRepository(TokenRepositoryInterface::class);
 
@@ -273,14 +231,13 @@ class PlayerController
 
             $playerRepository->store($player);
 
-            $response->getBody()->write($this->resourceGenerator->createTokenResource($token));
-            return $response;
+            $resource = $this->resourceGenerator->createTokenResource($token);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $result->isError();
-            $result->setDescription($e->getMessage());
+            $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 
@@ -318,17 +275,22 @@ class PlayerController
             $playerRepository->store($player);
 
             $message->setDescription(sprintf("Jugador %s ha hecho logout correctamente", $player->getNickname()));
+
+            $resource = $this->resourceGenerator->createMessageResource($message);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
-            $message->isError();
-            $message->setDescription(
+            $exception = new \Exception(
                 sprintf(
                     "Jugador %s no ha podido hacer logout correctamente",
                     $player->getNickname()
-                )
+                ),
+                $e
             );
+
+            $response = $this->generateJsonErrorResponse($response, $exception);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($message));
         return $response;
     }
 
@@ -348,8 +310,9 @@ class PlayerController
          */
         $player = $request->getAttribute('player');
 
-        $response->getBody()->write($this->resourceGenerator
-            ->exclude('comunidades.jugadores')->createPlayerResource($player));
-        return $response;
+        $resource = $this->resourceGenerator
+            ->exclude('comunidades.jugadores')->createPlayerResource($player);
+
+        return $this->generateJsonCorrectResponse($response, $resource);
     }
 }

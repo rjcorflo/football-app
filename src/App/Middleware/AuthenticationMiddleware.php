@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
@@ -24,6 +25,11 @@ class AuthenticationMiddleware
      */
     private $webResourceGenerator;
 
+    /**
+     * AuthenticationMiddleware constructor.
+     * @param EntityManager $entityManager
+     * @param WebResourceGeneratorInterface $webResourceGenerator
+     */
     public function __construct(
         EntityManager $entityManager,
         WebResourceGeneratorInterface $webResourceGenerator
@@ -67,12 +73,13 @@ class AuthenticationMiddleware
             $result = new MessageResult();
             $result->isError();
             $result->setDescription("No puede acceder a este recurso sin estar logueado");
+            $result->addDefaultMessage($e->getMessage());
 
-            $errorResponse = $response->withHeader('Content-type', 'application/json');
-            $errorResponse = $errorResponse->withStatus(401, "Error autenticacion");
+            $errorResponse = $response->withHeader('Content-Type', 'application/json');
+            $errorResponse = $errorResponse->withStatus(401, 'Error autenticacion');
             $errorResponse->getBody()->write($this->webResourceGenerator->createMessageResource($result));
 
-            return $response;
+            return $errorResponse;
         }
 
         $response = $next($request, $response);

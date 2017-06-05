@@ -7,6 +7,11 @@ use Respect\Validation\Validator as V;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 
+/**
+ * Validator for basic data.
+ *
+ * @package RJ\PronosticApp\Util\Validation\Validator
+ */
 class BasicDataValidator extends AbstractValidator
 {
     /**
@@ -31,5 +36,17 @@ class BasicDataValidator extends AbstractValidator
         }
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function validate(): void
+    {
+        if ($this->result->hasError()) {
+            $this->result->setDescription('Error validando los datos');
+        }
+
+        parent::validate();
     }
 }

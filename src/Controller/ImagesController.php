@@ -4,8 +4,6 @@ namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
-use RJ\PronosticApp\Persistence\EntityManager;
-use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
  * Class ImagesController
@@ -14,32 +12,13 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  *
  * @package RJ\PronosticApp\Controller
  */
-class ImagesController
+class ImagesController extends BaseController
 {
-    /** @var EntityManager $entityManager */
-    private $entityManager;
-
-    /** @var WebResourceGeneratorInterface */
-    private $resourceGenerator;
-
-    /**
-     * ImagesController constructor.
-     * @param EntityManager $entityManager
-     * @param WebResourceGeneratorInterface $resourceGenerator
-     */
-    public function __construct(
-        EntityManager $entityManager,
-        WebResourceGeneratorInterface $resourceGenerator
-    ) {
-        $this->entityManager = $entityManager;
-        $this->resourceGenerator = $resourceGenerator;
-    }
-
     /**
      * List images.
      *
      * @param ResponseInterface $response
-     * @return int
+     * @return ResponseInterface
      */
     public function list(
         ResponseInterface $response
@@ -47,8 +26,16 @@ class ImagesController
         /** @var ImageRepositoryInterface $imageRepository */
         $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
 
-        $images = $imageRepository->findAll();
+        try {
+            $images = $imageRepository->findAll();
 
-        return $response->getBody()->write($this->resourceGenerator->createImageResource($images));
+            $resource = $this->resourceGenerator->createImageResource($images);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
+        } catch (\Exception $e) {
+            $response = $this->generateJsonErrorResponse($response, $e);
+        }
+
+        return $response;
     }
 }

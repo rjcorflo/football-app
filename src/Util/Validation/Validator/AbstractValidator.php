@@ -2,10 +2,12 @@
 
 namespace RJ\PronosticApp\Util\Validation\Validator;
 
+use RJ\PronosticApp\Util\Validation\Exception\ValidationException;
 use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 
 /**
- * Class AbstractValidator
+ * Base class for validators.
+ *
  * @package RJ\PronosticApp\Util\Validation\Validator
  */
 abstract class AbstractValidator
@@ -24,11 +26,15 @@ abstract class AbstractValidator
     }
 
     /**
-     * Return validations of all data.
-     * @return ValidationResult
+     * Validate data. Throws exception if there are errors.
+     *
+     * @throws ValidationException
      */
-    public function validate() : ValidationResult
+    public function validate(): void
     {
-        return $this->result;
+        if ($this->result->hasError()) {
+            $exception = ValidationException::createFromMessageResult($this->result);
+            throw $exception;
+        }
     }
 }

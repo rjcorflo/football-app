@@ -9,10 +9,10 @@ use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ErrorCodes;
-use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 
 /**
- * Class ExistenceValidator
+ * Validate data existence.
+ *
  * @package RJ\PronosticApp\Util\Validation\Validator
  */
 class ExistenceValidator extends AbstractValidator
@@ -48,14 +48,14 @@ class ExistenceValidator extends AbstractValidator
             if ($existsNickname) {
                 $this->result->isError();
                 $this->result->addMessageWithCode(
-                    ErrorCodes::EXIST_PLAYER_USERNAME,
+                    ErrorCodes::PLAYER_USERNAME_ALREADY_EXISTS,
                     "Ya existe un usuario con ese nickname."
                 );
             }
         } catch (\Throwable $e) {
             $this->result->isError();
             $this->result->addMessageWithCode(
-                ErrorCodes::DEFAULT,
+                ErrorCodes::DEFAULT_ERROR,
                 "Error comprobando la existencia del nickname."
             );
         }
@@ -78,14 +78,14 @@ class ExistenceValidator extends AbstractValidator
             if ($existsEmail) {
                 $this->result->isError();
                 $this->result->addMessageWithCode(
-                    ErrorCodes::EXIST_PLAYER_EMAIL,
+                    ErrorCodes::PLAYER_EMAIL_ALREADY_EXISTS,
                     "Ya existe un usuario con ese email."
                 );
             }
         } catch (\Throwable $e) {
             $this->result->isError();
             $this->result->addMessageWithCode(
-                ErrorCodes::DEFAULT,
+                ErrorCodes::DEFAULT_ERROR,
                 "Error comprobando la existencia del email."
             );
         }
@@ -108,14 +108,14 @@ class ExistenceValidator extends AbstractValidator
             if ($existsName) {
                 $this->result->isError();
                 $this->result->addMessageWithCode(
-                    ErrorCodes::EXIST_COMMUNITY_NAME,
+                    ErrorCodes::COMMUNITY_NAME_ALREADY_EXISTS,
                     "Ya existe una comunidad con ese nombre."
                 );
             }
         } catch (\Throwable $e) {
             $this->result->isError();
             $this->result->addMessageWithCode(
-                ErrorCodes::DEFAULT,
+                ErrorCodes::DEFAULT_ERROR,
                 "Error comprobando la existencia del nombre de la comunidad."
             );
         }
@@ -139,7 +139,7 @@ class ExistenceValidator extends AbstractValidator
             if ($exists) {
                 $this->result->isError();
                 $this->result->addMessageWithCode(
-                    ErrorCodes::EXIST_COMMUNITY_NAME,
+                    ErrorCodes::PLAYER_IS_ALREADY_MEMBER,
                     sprintf(
                         'El jugador %s ya es miembro de la comunidad %s.',
                         $player->getNickname(),
@@ -150,7 +150,7 @@ class ExistenceValidator extends AbstractValidator
         } catch (\Throwable $e) {
             $this->result->isError();
             $this->result->addMessageWithCode(
-                ErrorCodes::DEFAULT,
+                ErrorCodes::DEFAULT_ERROR,
                 "Error comprobando si el jugador ya participa en la comunidad pasada."
             );
         }
@@ -161,12 +161,12 @@ class ExistenceValidator extends AbstractValidator
     /**
      * @inheritdoc
      */
-    public function validate(): ValidationResult
+    public function validate(): void
     {
         if ($this->result->hasError()) {
             $this->result->setDescription("Error registro existente.");
         }
 
-        return $this->result;
+        parent::validate();
     }
 }
