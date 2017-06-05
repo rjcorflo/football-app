@@ -14,4 +14,6 @@ class PersistenceException extends PronosticAppException
     protected $responseCode = 404;
 
     protected $responseStatus = 'Error persistiendo los datos';
+
+    protected $message = 'Error durante la persistencia de datos';
 }

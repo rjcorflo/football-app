@@ -12,4 +12,6 @@ class PasswordNotMatchException extends PronosticAppException
     protected $responseCode = 401;
 
     protected $responseStatus = 'Password incorrecta';
+
+    protected $message = 'Passwords no coinciden';
 }

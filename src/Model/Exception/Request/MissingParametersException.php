@@ -14,4 +14,6 @@ class MissingParametersException extends PronosticAppException
     protected $responseCode = 400;
 
     protected $responseStatus = 'Faltan parametros';
+
+    protected $message = 'Faltan parametros';
 }

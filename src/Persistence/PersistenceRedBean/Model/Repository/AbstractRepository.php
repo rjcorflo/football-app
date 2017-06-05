@@ -87,8 +87,6 @@ abstract class AbstractRepository implements StandardRepositoryInterface
     {
         $bean = R::load(static::ENTITY, $idEntity);
 
-        error_log(print_r($bean, true));
-
         if ((int)$bean->getID() === 0) {
             $exception = new NotFoundException();
             $exception->addMessageWithCode(

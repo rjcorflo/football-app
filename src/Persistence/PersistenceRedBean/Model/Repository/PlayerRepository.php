@@ -44,7 +44,7 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
         if ($player === null) {
             $exception = new NotFoundException('Usuario no encontrado');
             $exception->addMessageWithCode(
-                ErrorCodes::LOGIN_ERROR_INCORRECT_USERNAME,
+                ErrorCodes::ENTITY_NOT_FOUND,
                 "Nombre o email incorrectos"
             );
 

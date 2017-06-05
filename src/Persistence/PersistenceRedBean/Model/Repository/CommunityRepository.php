@@ -37,7 +37,7 @@ class CommunityRepository extends AbstractRepository implements CommunityReposit
         if ($community === null) {
             $exception = new NotFoundException();
             $exception->addMessageWithCode(
-                ErrorCodes::EXIST_COMMUNITY_NAME,
+                ErrorCodes::ENTITY_NOT_FOUND,
                 'No existe una comunidad con ese nombre'
             );
 

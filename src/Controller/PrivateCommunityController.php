@@ -109,7 +109,6 @@ class PrivateCommunityController extends BaseController
             $response = $this->generateJsonErrorResponse($response, $e);
         }
 
-        $response->getBody()->write($this->resourceGenerator->createMessageResource($result));
         return $response;
     }
 }

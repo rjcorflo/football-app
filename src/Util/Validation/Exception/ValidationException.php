@@ -14,4 +14,6 @@ class ValidationException extends PronosticAppException
     protected $responseCode = 400;
 
     protected $responseStatus = 'Error en la validacion de los datos';
+
+    protected $message = 'Error validando los datos';
 }

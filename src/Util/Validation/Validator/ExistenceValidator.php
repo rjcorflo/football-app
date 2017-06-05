@@ -172,7 +172,7 @@ class ExistenceValidator extends AbstractValidator
     public function validate(): void
     {
         if ($this->result->hasError()) {
-            $this->result->setDescription("Error registro existente.");
+            $this->result->setDescription("Error registro existente");
         }
 
         parent::validate();
