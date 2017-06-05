@@ -4,6 +4,13 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Util;
 
 use RedBeanPHP\SimpleModel;
 
+/**
+ * Class RedBeanUtils.
+ *
+ * Utility class to work with RedbeanPhp library.
+ *
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Util
+ */
 class RedBeanUtils
 {
     /**

@@ -7,7 +7,8 @@ use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 /**
- * Class Token
+ * Class Token.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
  */
 class Token extends SimpleModel implements TokenInterface

@@ -11,7 +11,8 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Player;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
- * Class PlayerRepository
+ * Class PlayerRepository.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
  */
 class PlayerRepository extends AbstractRepository implements PlayerRepositoryInterface

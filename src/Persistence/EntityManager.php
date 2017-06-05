@@ -3,12 +3,16 @@
 namespace RJ\PronosticApp\Persistence;
 
 /**
- * [abstract description]
+ * Entity manager.
+ *
+ * Has operations to work with the persistence of entitites.
+ *
  */
 abstract class EntityManager
 {
     /**
      * Get entity repository via interface.
+     *
      * @param string $entity
      * @return object
      */
@@ -16,6 +20,7 @@ abstract class EntityManager
 
     /**
      * Perform callable as transaction.
+     *
      * @param callable $transaction
      * @return mixed
      */
@@ -23,16 +28,21 @@ abstract class EntityManager
 
     /**
      * Begin a transaction.
+     *
      * @return mixed
      */
     abstract public function beginTransaction();
 
     /**
+     * Commit transaction.
+     *
      * @return mixed
      */
     abstract public function commit();
 
     /**
+     * Rollback transaction.
+     *
      * @return mixed
      */
     abstract public function rollback();

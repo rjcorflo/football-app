@@ -6,11 +6,23 @@ use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 use RedBeanPHP\R;
 
+/**
+ * Class RedBeanEntityManager.
+ *
+ * Entity manager made via RedBeanPhp library.
+ *
+ * @package RJ\PronosticApp\Persistence\PersistenceRedBean
+ */
 class RedBeanEntityManager extends EntityManager
 {
     /** @var ContainerInterface */
     private $container;
 
+    /**
+     * RedBeanEntityManager constructor.
+     *
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;

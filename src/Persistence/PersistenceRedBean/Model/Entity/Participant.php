@@ -8,7 +8,8 @@ use RJ\PronosticApp\Model\Entity\ParticipantInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 /**
- * Class Participant
+ * Class Participant.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
  */
 class Participant extends SimpleModel implements ParticipantInterface

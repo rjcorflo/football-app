@@ -11,7 +11,8 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\ParticipantR
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 /**
- * Class Community
+ * Class Community.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
  */
 class Community extends SimpleModel implements CommunityInterface

@@ -11,4 +11,7 @@ use RJ\PronosticApp\Model\Exception\PronosticAppException;
  */
 class PersistenceException extends PronosticAppException
 {
+    protected $responseCode = 404;
+
+    protected $responseStatus = 'Error persistiendo los datos';
 }

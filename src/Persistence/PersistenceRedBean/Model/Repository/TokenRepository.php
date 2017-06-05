@@ -9,7 +9,8 @@ use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 use RJ\PronosticApp\Model\Repository\TokenRepositoryInterface;
 
 /**
- * Class TokenRepository
+ * Class TokenRepository.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
  */
 class TokenRepository extends AbstractRepository implements TokenRepositoryInterface

@@ -13,5 +13,5 @@ class NotFoundException extends PronosticAppException
 {
     protected $responseCode = 404;
 
-    protected $responseStatus = 'N se ha encontrado el recurso';
+    protected $responseStatus = 'No se ha encontrado el recurso';
 }

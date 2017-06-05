@@ -8,7 +8,8 @@ use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Image;
 
 /**
- * Class ImageRepository
+ * Class ImageRepository.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
  */
 class ImageRepository extends AbstractRepository implements ImageRepositoryInterface

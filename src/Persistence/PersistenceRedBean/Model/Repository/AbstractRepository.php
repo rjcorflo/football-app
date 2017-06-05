@@ -26,6 +26,7 @@ abstract class AbstractRepository implements StandardRepositoryInterface
 
     /**
      * AbstractRepository constructor.
+     *
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)

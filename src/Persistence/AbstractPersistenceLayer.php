@@ -4,6 +4,14 @@ namespace RJ\PronosticApp\Persistence;
 
 use Psr\Container\ContainerInterface;
 
+/**
+ * Class AbstractPersistenceLayer.
+ *
+ * Layer for persistence.
+ * Realize operations for initialization and finalization of persistence layer.
+ *
+ * @package RJ\PronosticApp\Persistence
+ */
 abstract class AbstractPersistenceLayer
 {
     /**
@@ -39,7 +47,7 @@ abstract class AbstractPersistenceLayer
     abstract public function initialize();
 
     /**
-     * Finalize and free persistence  resources.
+     * Finalize and free persistence resources.
      *
      * @return void
      */

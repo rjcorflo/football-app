@@ -15,7 +15,8 @@ use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 
 /**
- * Class ParticipantRepository
+ * Class ParticipantRepository.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
  */
 class ParticipantRepository extends AbstractRepository implements ParticipantRepositoryInterface

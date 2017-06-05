@@ -6,7 +6,8 @@ use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
 
 /**
- * Class Image
+ * Class Image.
+ *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
  */
 class Image extends SimpleModel implements ImageInterface
