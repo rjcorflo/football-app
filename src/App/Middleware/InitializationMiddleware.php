@@ -41,7 +41,7 @@ class InitializationMiddleware
      */
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, callable $next)
     {
-        $this->dispatcher->dispatch(AppInitEvent::NAME, new AppInitEvent());
+        $this->dispatcher->dispatch(AppInitEvent::NAME, new AppInitEvent($request));
         /**
          * @var ResponseInterface $response
          */

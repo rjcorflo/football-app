@@ -6,6 +6,13 @@ use Psr\Log\LoggerInterface;
 use RJ\PronosticApp\Event\AppInitEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
+/**
+ * Class LifecycleLogger.
+ *
+ * Log information for each request.
+ *
+ * @package RJ\PronosticApp\Log
+ */
 class LifecycleLogger implements EventSubscriberInterface
 {
     /**
@@ -35,10 +42,10 @@ class LifecycleLogger implements EventSubscriberInterface
     }
 
     /**
-     * Log entry.
+     * Log entries.
      */
-    public function logEntry()
+    public function logEntry(AppInitEvent $event)
     {
-        $this->logger->info('New entry.');
+        $this->logger->info('New entry.', $event->getRequest()->getServerParams());
     }
 }

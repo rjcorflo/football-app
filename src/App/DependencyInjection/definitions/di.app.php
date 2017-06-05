@@ -1,18 +1,20 @@
 <?php
 
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Monolog\Processor\PsrLogMessageProcessor;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
-use RJ\PronosticApp\Persistence\EntityManager;
+use RJ\PronosticApp\Log\LifecycleLogger;
 use RJ\PronosticApp\Persistence\AbstractPersistenceLayer;
+use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanEntityManager;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\RedBeanPersistenceLayer;
 use RJ\PronosticApp\Util\Validation\GeneralValidator;
 use RJ\PronosticApp\Util\Validation\ValidatorInterface;
 use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
-use RJ\PronosticApp\Log\LifecycleLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\get;
@@ -50,15 +52,22 @@ return [
     },
 
     /* Logger configuration */
+    'maxLogFiles' => 20,
+
     StreamHandler::class => object()->constructor(string('{app.logsDir}/logs.log')),
+    RotatingFileHandler::class => object()->constructor(string('{app.logsDir}/logger.log'), get('maxLogFiles')),
+
     'logger.handlers' => [
-        get(StreamHandler::class)
+        get(RotatingFileHandler::class)
     ],
+
     LoggerInterface::class => function (ContainerInterface $container) {
-        $logger = new Logger('logger');
+        $logger = new Logger('REQUEST');
         foreach ($container->get('logger.handlers') as $handlers) {
             $logger->pushHandler($handlers);
         }
+        $logger->pushProcessor(new PsrLogMessageProcessor());
+
         return $logger;
     },
 ];
