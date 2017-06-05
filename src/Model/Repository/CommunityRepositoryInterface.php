@@ -15,7 +15,7 @@ use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
  * @method void trash(CommunityInterface $community)
  * @method void trashMultiple(array $communities)
  * @method CommunityInterface getById(int $idCommunity)
- * @method CommunityInterface getMultipleById(array $idsCommunities)
+ * @method CommunityInterface[] getMultipleById(array $idsCommunities)
  * @method CommunityInterface[] findAll()
  */
 interface CommunityRepositoryInterface extends StandardRepositoryInterface

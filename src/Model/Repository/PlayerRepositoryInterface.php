@@ -47,6 +47,8 @@ interface PlayerRepositoryInterface extends StandardRepositoryInterface
     /**
      * @param string $token
      * @return PlayerInterface Player.
+     * @throws NotFoundException
+     * @throws \Exception
      */
     public function findPlayerByToken(string $token) : PlayerInterface;
 }

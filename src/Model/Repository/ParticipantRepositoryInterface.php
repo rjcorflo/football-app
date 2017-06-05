@@ -5,6 +5,7 @@ namespace RJ\PronosticApp\Model\Repository;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ParticipantInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 
 /**
  * Repository for {@link ParticipantInterface} entities.
@@ -42,6 +43,7 @@ interface ParticipantRepositoryInterface extends StandardRepositoryInterface
      * @param PlayerInterface $player
      * @param CommunityInterface $community
      * @return mixed
+     * @throws NotFoundException
      */
     public function findByPlayerAndCommunity(
         PlayerInterface $player,

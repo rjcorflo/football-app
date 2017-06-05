@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Interface ParticipantInterface
+ * Interface ParticipantInterface.
  *
  * All models of participant must implement this interface.
  *

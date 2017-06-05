@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Interface CommunityInterface
+ * Interface CommunityInterface.
  *
  * All models of communities must implement this interface.
  *
@@ -83,18 +83,21 @@ interface CommunityInterface
 
     /**
      * Get the list of players from the community.
+     *
      * @return PlayerInterface[] List of player from this community.
      */
     public function getPlayers() : array;
 
     /**
      * Add a player to community.
+     *
      * @param PlayerInterface $player
      */
     public function addPlayer(PlayerInterface $player) : void;
 
     /**
      * Remove a player from the community.
+     *
      * @param PlayerInterface $player
      */
     public function removePlayer(PlayerInterface $player) : void;

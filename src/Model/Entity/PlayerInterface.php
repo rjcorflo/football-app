@@ -2,7 +2,7 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Interface PlayerInterface
+ * Interface PlayerInterface.
  *
  * All models of players must implements this interface.
  *
@@ -103,16 +103,22 @@ interface PlayerInterface
     public function getPlayerCommunities() : array;
 
     /**
+     * Add token for the player.
+     *
      * @param TokenInterface $token
      */
     public function addToken(TokenInterface $token) : void;
 
     /**
+     * Delete player token.
+     *
      * @param TokenInterface $idToken
      */
     public function removeToken(TokenInterface $idToken) : void;
 
     /**
+     * Get player's tokens.
+     *
      * @return TokenInterface[]
      */
     public function getTokens() :array;

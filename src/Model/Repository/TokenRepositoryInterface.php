@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
 
 /**
  * Repository for {@link TokenInterface} entities.
@@ -33,6 +34,8 @@ interface TokenRepositoryInterface extends StandardRepositoryInterface
      *
      * @param  string $tokenString
      * @return TokenInterface
+     * @throws NotFoundException
+     * @throws \Exception
      */
     public function findByTokenString(string $tokenString) : TokenInterface;
 }

@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Interface TokenInterface
+ * Interface TokenInterface.
  *
  * All models of tokens must implement this interface.
  *
@@ -32,7 +32,7 @@ interface TokenInterface
     public function getToken() : string;
 
     /**
-     * Generate a random string token.
+     * Generate a random string for the token.
      */
     public function generateRandomToken() : void;
 }
