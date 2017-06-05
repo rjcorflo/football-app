@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\Util\General;
 
 /**
- * List of ErrorCodes
+ * List of Error Codes.
  *
  * @package RJ\PronosticApp\Util\General
  */

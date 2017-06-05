@@ -2,6 +2,11 @@
 
 namespace RJ\PronosticApp\Util\General;
 
+/**
+ * Class MessageItem.
+ *
+ * @package RJ\PronosticApp\Util\General
+ */
 class MessageItem
 {
     /** @var  int $code */

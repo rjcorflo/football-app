@@ -15,7 +15,8 @@ use RJ\PronosticApp\Util\General\ErrorCodes;
 class CommunityValidator extends AbstractValidator
 {
     /**
-     * Validate attributes from player.
+     * Validate attributes from community.
+     *
      * @param \RJ\PronosticApp\Model\Entity\CommunityInterface $community
      * @return $this
      */

@@ -34,6 +34,8 @@ class ExistenceValidator extends AbstractValidator
     }
 
     /**
+     * Check if nickname of player is already in use.
+     *
      * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
      * @return $this
      */
@@ -64,6 +66,8 @@ class ExistenceValidator extends AbstractValidator
     }
 
     /**
+     * Check if email is already in use.
+     *
      * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
      * @return $this
      */
@@ -94,6 +98,8 @@ class ExistenceValidator extends AbstractValidator
     }
 
     /**
+     * Check if community name is already in use.
+     *
      * @param \RJ\PronosticApp\Model\Entity\CommunityInterface $community
      * @return $this
      */
@@ -124,6 +130,8 @@ class ExistenceValidator extends AbstractValidator
     }
 
     /**
+     * Check if player is already a member from community.
+     *
      * @param PlayerInterface $player
      * @param CommunityInterface $community
      * @return $this

@@ -16,6 +16,7 @@ class PlayerValidator extends AbstractValidator
 {
     /**
      * Validate attributes from player.
+     *
      * @param \RJ\PronosticApp\Model\Entity\PlayerInterface $player
      * @return $this
      */

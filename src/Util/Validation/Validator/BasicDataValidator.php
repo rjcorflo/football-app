@@ -15,11 +15,6 @@ use RJ\PronosticApp\Util\Validation\General\ValidationResult;
 class BasicDataValidator extends AbstractValidator
 {
     /**
-     * @var ValidationResult
-     */
-    protected $result;
-
-    /**
      * @param $identifier
      * @return $this
      */
