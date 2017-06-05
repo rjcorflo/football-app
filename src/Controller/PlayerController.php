@@ -31,7 +31,7 @@ class PlayerController extends BaseController
     public function register(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
         // Prepare result
@@ -118,7 +118,7 @@ class PlayerController extends BaseController
     public function exist(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
         // Prepare result
@@ -187,7 +187,7 @@ class PlayerController extends BaseController
     public function login(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
         try {
@@ -251,7 +251,7 @@ class PlayerController extends BaseController
     public function logout(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         /**
          * @var PlayerInterface $player
          */
@@ -304,7 +304,7 @@ class PlayerController extends BaseController
     public function info(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         /**
          * @var PlayerInterface $player
          */

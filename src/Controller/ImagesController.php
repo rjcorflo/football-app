@@ -20,9 +20,8 @@ class ImagesController extends BaseController
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function list(
-        ResponseInterface $response
-    ) {
+    public function list(ResponseInterface $response): ResponseInterface
+    {
         /** @var ImageRepositoryInterface $imageRepository */
         $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
 

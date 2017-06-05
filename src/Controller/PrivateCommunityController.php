@@ -32,7 +32,7 @@ class PrivateCommunityController extends BaseController
     public function join(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
         $result = new MessageResult();

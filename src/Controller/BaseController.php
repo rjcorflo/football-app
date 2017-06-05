@@ -34,7 +34,8 @@ abstract class BaseController
     protected $validator;
 
     /**
-     * CommunityController constructor.
+     * Base Controller constructor.
+     *
      * @param EntityManager $entityManager
      * @param WebResourceGeneratorInterface $resourceGenerator
      * @param ValidatorInterface $validator

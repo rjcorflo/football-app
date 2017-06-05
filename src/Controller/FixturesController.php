@@ -9,7 +9,7 @@ use RJ\PronosticApp\Persistence\EntityManager;
 /**
  * Class FixturesController
  *
- * Create fictures and updates.
+ * Create fixtures and updates.
  *
  * @package RJ\PronosticApp\Controller
  */
@@ -28,12 +28,13 @@ class FixturesController
     }
 
     /**
+     * Fixtures for images.
+     *
      * @param ResponseInterface $response
-     * @return int
+     * @return ResponseInterface
      */
-    public function fixturesImages(
-        ResponseInterface $response
-    ) {
+    public function fixturesImages(ResponseInterface $response): ResponseInterface
+    {
         $images = [];
 
         /** @var ImageRepositoryInterface $imageRepository */
@@ -50,6 +51,8 @@ class FixturesController
             $imageRepository->storeMultiple($images);
         });
 
-        return $response->getBody()->write('{result: "OK"}');
+        $response->getBody()->write('{result: "OK"}');
+
+        return $response;
     }
 }

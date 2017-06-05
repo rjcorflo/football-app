@@ -22,12 +22,13 @@ class PublicCommunityController extends BaseController
 {
     /**
      * List all public communities.
+     *
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
     public function list(
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         /** @var CommunityRepositoryInterface $communityRepository */
         $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
 
@@ -45,7 +46,8 @@ class PublicCommunityController extends BaseController
     }
 
     /**
-     * Join to private community.
+     * Join to public community.
+     *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
@@ -53,7 +55,7 @@ class PublicCommunityController extends BaseController
     public function join(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) {
+    ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
         $result = new MessageResult();

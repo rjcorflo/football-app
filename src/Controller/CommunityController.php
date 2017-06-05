@@ -15,7 +15,7 @@ use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
 
 /**
- * Class CommunityController
+ * Class CommunityController.
  *
  * Operations over communities.
  *
@@ -25,6 +25,7 @@ class CommunityController extends BaseController
 {
     /**
      * Create community method.
+     *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
