@@ -7,13 +7,14 @@ use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 /**
- * Class CommunityTransformer
+ * Class CommunityTransformer.
+ *
  * @package RJ\PronosticApp\WebResource\Fractal\Transformer
  */
 class CommunityTransformer extends TransformerAbstract
 {
     /**
-     * List of resources to automatically include
+     * List of available resources for including.
      *
      * @var array
      */
@@ -28,6 +29,7 @@ class CommunityTransformer extends TransformerAbstract
 
     /**
      * CommunityTransformer constructor.
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -50,7 +52,7 @@ class CommunityTransformer extends TransformerAbstract
     }
 
     /**
-     * Include Players
+     * Include Players.
      *
      * @param CommunityInterface $community
      * @return \League\Fractal\Resource\Collection

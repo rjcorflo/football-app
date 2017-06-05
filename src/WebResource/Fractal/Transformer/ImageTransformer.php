@@ -7,25 +7,12 @@ use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
 
 /**
- * Class ImageTransformer
+ * Class ImageTransformer.
+ *
  * @package RJ\PronosticApp\WebResource\Fractal\Transformer
  */
 class ImageTransformer extends TransformerAbstract
 {
-    /**
-     * @var ContainerInterface
-     */
-    private $container;
-
-    /**
-     * ImageTransformer constructor.
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * @param ImageInterface $image
      * @return array

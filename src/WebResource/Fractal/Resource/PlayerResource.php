@@ -9,6 +9,13 @@ use RJ\PronosticApp\WebResource\Fractal\FractalGenerator;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\PlayerTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\TokenTransformer;
 
+/**
+ * Trait PlayerResource
+ *
+ * Adapt Player entities.
+ *
+ * @package RJ\PronosticApp\WebResource\Fractal\Resource
+ */
 trait PlayerResource
 {
     /**

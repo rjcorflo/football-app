@@ -19,8 +19,10 @@ use RJ\PronosticApp\WebResource\Fractal\Transformer\PublicCommunityTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
- * Class FractalGenerator
+ * Class FractalGenerator.
+ *
  * Generate resources in JSON.
+ *
  * @package RJ\PronosticApp\WebResource\Fractal
  */
 class FractalGenerator implements WebResourceGeneratorInterface

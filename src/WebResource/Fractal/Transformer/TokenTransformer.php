@@ -13,7 +13,7 @@ use RJ\PronosticApp\Model\Entity\TokenInterface;
 class TokenTransformer extends TransformerAbstract
 {
     /**
-     * List of resources to automatically include
+     * List of resources to automatically include.
      *
      * @var array
      */
@@ -28,6 +28,7 @@ class TokenTransformer extends TransformerAbstract
 
     /**
      * TokenTransformer constructor.
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -47,7 +48,7 @@ class TokenTransformer extends TransformerAbstract
     }
 
     /**
-     * Include Player
+     * Include Player.
      *
      * @param TokenInterface $token
      * @return \League\Fractal\Resource\Item

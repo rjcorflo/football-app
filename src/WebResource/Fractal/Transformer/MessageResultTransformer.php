@@ -13,7 +13,7 @@ use RJ\PronosticApp\Util\General\MessageResult;
 class MessageResultTransformer extends TransformerAbstract
 {
     /**
-     * List of resources to automatically include
+     * List of resources to automatically include.
      *
      * @var array
      */

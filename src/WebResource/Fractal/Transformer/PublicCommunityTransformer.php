@@ -8,7 +8,8 @@ use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 
 /**
- * Class CommunityTransformer
+ * Class CommunityTransformer.
+ *
  * @package RJ\PronosticApp\WebResource\Fractal\Transformer
  */
 class PublicCommunityTransformer extends CommunityTransformer
@@ -18,6 +19,11 @@ class PublicCommunityTransformer extends CommunityTransformer
      */
     private $participantRepo;
 
+    /**
+     * PublicCommunityTransformer constructor.
+     *
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);

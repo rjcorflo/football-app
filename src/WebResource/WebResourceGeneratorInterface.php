@@ -9,7 +9,10 @@ use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 
 /**
- * Interface WebResourceGeneratorInterface
+ * Interface WebResourceGeneratorInterface.
+ *
+ * Creates web resource from entities.
+ *
  * @package RJ\PronosticApp\WebResource
  */
 interface WebResourceGeneratorInterface
