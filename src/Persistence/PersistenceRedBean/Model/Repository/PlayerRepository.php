@@ -48,7 +48,7 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
                 "Nombre o email incorrectos"
             );
 
-            throw new $exception;
+            throw $exception;
         }
 
         return $player->box();
