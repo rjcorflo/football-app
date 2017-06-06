@@ -15,7 +15,6 @@ use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
-use RJ\PronosticApp\WebResource\Fractal\Transformer\PublicCommunityTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
@@ -94,28 +93,6 @@ class FractalGenerator implements WebResourceGeneratorInterface
             $resource = new Item($community, $this->container->get(CommunityTransformer::class));
         } elseif (is_array($community)) {
             $resource = new Collection($community, $this->container->get(CommunityTransformer::class));
-        } else {
-            throw new \Exception("El recurso pasado no es un instancia que implemente " .
-                "CommunityInterface o sea un array CommunityInterface[]");
-        }
-
-        return $this->returnResourceType(
-            $this->manager->createData($resource),
-            $resultType
-        );
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function createPublicCommunityResource(
-        $community,
-        $resultType = self::JSON
-    ) {
-        if ($community instanceof CommunityInterface) {
-            $resource = new Item($community, $this->container->get(PublicCommunityTransformer::class));
-        } elseif (is_array($community)) {
-            $resource = new Collection($community, $this->container->get(PublicCommunityTransformer::class));
         } else {
             throw new \Exception("El recurso pasado no es un instancia que implemente " .
                 "CommunityInterface o sea un array CommunityInterface[]");

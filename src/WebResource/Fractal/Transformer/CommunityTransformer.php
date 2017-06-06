@@ -5,6 +5,7 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 
 /**
  * Class CommunityTransformer.
@@ -28,6 +29,11 @@ class CommunityTransformer extends TransformerAbstract
     protected $container;
 
     /**
+     * @var ParticipantRepositoryInterface
+     */
+    private $participantRepo;
+
+    /**
      * CommunityTransformer constructor.
      *
      * @param ContainerInterface $container
@@ -35,6 +41,8 @@ class CommunityTransformer extends TransformerAbstract
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+
+        $this->participantRepo = $this->container->get(ParticipantRepositoryInterface::class);
     }
 
     /**
@@ -47,7 +55,9 @@ class CommunityTransformer extends TransformerAbstract
             'id' => $community->getId(),
             'nombre' => $community->getCommunityName(),
             'privada' => $community->isPrivate(),
-            'url' => $community->getImage()->getUrl()
+            'url' => $community->getImage()->getUrl(),
+            'fecha_creacion' => $community->getCreationDate()->format('d-m-Y'),
+            'numero_jugadores' => $this->participantRepo->countPlayersFromCommunity($community)
         ];
     }
 

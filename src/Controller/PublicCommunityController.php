@@ -40,7 +40,7 @@ class PublicCommunityController extends BaseController
 
             $communities = $communityRepository->getAllPublicCommunities($player);
 
-            $resource = $this->resourceGenerator->createPublicCommunityResource($communities);
+            $resource = $this->resourceGenerator->createCommunityResource($communities);
 
             $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
