@@ -21,7 +21,7 @@ tags:
   - name: Imágenes
     description: Datos de las imágenes almacenadas
   - name: Pronósticos
-    description: Prnósticos de los jugadores
+    description: Pronósticos de los jugadores
   - name: Históricos
     descritpion: Posicionamiento a lo largo de la competición
 paths:
@@ -158,7 +158,7 @@ paths:
           schema:
             $ref: '#/definitions/MessageResult'
         400:
-          $ref: '#/responses/ParametersNeeded'
+          $ref: '#/responses/GeneralError'
         default:
           description: Error inesperado
           schema:
@@ -195,6 +195,54 @@ paths:
           description: Datos del jugador
           schema:
             $ref: '#/definitions/Player'
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error inesperado
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
+  /player/communities:
+    post:
+      summary: Comunidades del jugador
+      description: |
+        Permite a un jugador recuperar su lista de comunidades.
+      parameters:
+        - in: body
+          name: body
+          required: false
+          description : Filtros para la lista de comunidades del jugador
+          schema:
+            type: object
+            properties:
+              fecha:
+                type: string
+                description: Fecha en formato dd-MM-yyyy
+            example:
+              fecha: 12-05-2017
+      tags:
+        - Jugadores
+      responses:
+        200:
+          description: Listado de comunidades del jugador
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Community'
+            example:
+              - id: 1
+                nombre: Porra1
+                privada: true
+                url: /images/2.jpg
+                fecha_creacion: 15-05-2017
+                numero_jugadores: 6
+              - id: 7
+                nombre: Porra2
+                privada: false
+                url: /images/7.jpg
+                fecha_creacion: 17-05-2017
+                numero_jugadores: 12
         401:
           $ref: '#/responses/Unauthorized'
         default:
@@ -299,11 +347,15 @@ paths:
                 email: perro@guau.com
                 nombre: Dog
                 apellidos: Doggy
+                icon: 7
+                color: '#FFAA11'
               - id: 5,
                 nickname: Gato
                 email: gato@miau.com
                 nombre: Kitty
                 apellidos: Soft
+                icon: 3
+                color: '#FFFFFF'
         401:
           $ref: '#/responses/Unauthorized'
         default:
@@ -339,7 +391,7 @@ paths:
           schema:
             $ref: '#/definitions/MessageResult'
         400:
-          $ref: '#/responses/ParametersNeeded'
+          $ref: '#/responses/GeneralError'
         401:
           $ref: '#/responses/Unauthorized'
         default:
@@ -382,7 +434,7 @@ paths:
           schema:
             $ref: '#/definitions/MessageResult'
         400:
-          $ref: '#/responses/ParametersNeeded'
+          $ref: '#/responses/GeneralError'
         401:
           $ref: '#/responses/Unauthorized'
         default:
@@ -404,14 +456,22 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/PublicCommunity'
+              $ref: '#/definitions/Community'
             example:
               - id: 1
-                nombre: Comunidad 1
-                url: /images/1.jpg
-              - id: 2
-                nombre: Comunidad 2
+                nombre: Porra1
+                privada: false
                 url: /images/2.jpg
+                fecha_creacion: 15-05-2017
+                numero_jugadores: 7
+              - id: 3
+                nombre: Porra3
+                privada: false
+                url: /images/7.jpg
+                fecha_creacion: 17-05-2017
+                numero_jugadores: 3
+        400:
+          $ref: '#/responses/GeneralError'
         401:
           $ref: '#/responses/Unauthorized'
         default:
@@ -470,8 +530,12 @@ responses:
     description: No autorizado para acceder al recurso
     schema:
       $ref: "#/definitions/MessageResult"
-  ParametersNeeded:
-    description: Faltan parámetros obligatorios
+  GeneralError:
+    description: Error genérico
+    schema:
+      $ref: "#/definitions/MessageResult"
+  NotFound:
+    description: Recurso no encontrado
     schema:
       $ref: "#/definitions/MessageResult"
 definitions:
@@ -490,29 +554,19 @@ definitions:
       url:
         type: string
         description: Url de la imagen de la comunidad
+      fecha_cracion:
+        type: string
+        description: Fecha de creación en formato dd-MM-yyyy
+      numero_jugadores:
+        type: int
+        description: Número de participantes en la comunidad
     example:
       id: 22
       nombre: Porra
       privada: true
       url: /images/2.jpg
-      color: '#11AADD'
-  PublicCommunity:
-    type: object
-    properties:
-      id:
-        type: integer
-        description: Identificador único de la comunidad
-      nombre:
-        type: string
-        description: Nombre de la comunidad
-      url:
-        type: string
-        description: Url de la imagen de la comunidad
-    example:
-      id: 21
-      nombre: Porrados
-      url: /images/2.jpg
-      color: '#11AADD'
+      fecha_creacion: 15-05-2017
+      numero_jugadores: 7
   Player:
     type: object
     required:
