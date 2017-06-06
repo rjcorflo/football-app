@@ -12,9 +12,10 @@ use RJ\PronosticApp\Controller\DocumentationController;
 use RJ\PronosticApp\Controller\FixturesController;
 use RJ\PronosticApp\Controller\ImagesController;
 use RJ\PronosticApp\Controller\PlayerController;
-use function DI\string;
+use RJ\PronosticApp\Controller\PlayerLoginController;
 use RJ\PronosticApp\Controller\PrivateCommunityController;
 use RJ\PronosticApp\Controller\PublicCommunityController;
+use function DI\string;
 
 /**
  * Main class Application.
@@ -79,13 +80,14 @@ class Application extends App
             $this->get('/fixtures/images', [FixturesController::class, 'fixturesImages']);
 
             /* Player */
-            $this->post('/player/register', [PlayerController::class, 'register']);
-            $this->post('/player/exist', [PlayerController::class, 'exist']);
-            $this->post('/player/login', [PlayerController::class, 'login']);
+            $this->post('/player/register', [PlayerLoginController::class, 'register']);
+            $this->post('/player/login', [PlayerLoginController::class, 'login']);
+            $this->post('/player/exist', [PlayerLoginController::class, 'exist']);
 
             $this->group('/player', function () {
-                $this->post('/logout', [PlayerController::class, 'logout']);
+                $this->post('/logout', [PlayerLoginController::class, 'logout']);
                 $this->get('/info', [PlayerController::class, 'info']);
+                $this->get('/communities', [PlayerController::class, 'listCommunities']);
             })->add(AuthenticationMiddleware::class);
 
             /* Images */

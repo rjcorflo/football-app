@@ -30,7 +30,7 @@ class ParticipantRepository extends AbstractRepository implements ParticipantRep
             throw new \Exception("Object must be an instance of Community");
         }
 
-        $players = $community->unbox()->via(static::ENTITY)->sharedPlayerList;
+        $players = $community->unbox()->with('ORDER BY nickname')->via(static::ENTITY)->sharedPlayerList;
 
         return RedBeanUtils::boxArray($players);
     }
@@ -44,7 +44,7 @@ class ParticipantRepository extends AbstractRepository implements ParticipantRep
             throw new \Exception("Object must be an instance of Player");
         }
 
-        $communities = $player->unbox()->via(static::ENTITY)->sharedCommunityList;
+        $communities = $player->unbox()->with('ORDER BY name')->via(static::ENTITY)->sharedCommunityList;
 
         return RedBeanUtils::boxArray($communities);
     }
