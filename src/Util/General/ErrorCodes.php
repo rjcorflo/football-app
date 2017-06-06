@@ -52,4 +52,6 @@ class ErrorCodes
     const PLAYER_IS_ALREADY_MEMBER = 20;
 
     const COMMUNITY_IS_NOT_PRIVATE = 21;
+
+    const INCORRECT_DATE = 22;
 }

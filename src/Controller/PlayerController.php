@@ -6,6 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
+use RJ\PronosticApp\Util\General\ErrorCodes;
+use RJ\PronosticApp\Util\Validation\Exception\ValidationException;
 
 /**
  * Class PlayerController.
@@ -44,10 +46,11 @@ class PlayerController extends BaseController
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
-    public function listCommunities(
+    public function listPlayerCommunities(
         ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
+        $bodyData = $request->getParsedBody();
         /**
          * @var PlayerInterface $player
          */
@@ -57,7 +60,22 @@ class PlayerController extends BaseController
             /** @var ParticipantRepositoryInterface $participantRepo */
             $participantRepo = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
 
-            $commutiesList = $participantRepo->findCommunitiesFromPlayer($player);
+            $date = null;
+
+            if (isset($bodyData['fecha'])) {
+                $date = \DateTime::createFromFormat('d-m-Y', $bodyData['fecha']);
+
+                if (!$date) {
+                    $exception = new ValidationException('Error validando la fecha');
+                    $exception->addMessageWithCode(
+                        ErrorCodes::INCORRECT_DATE,
+                        'Error parseando el campo fecha recibido. Debe venir en formato dd-MM-yyyy.'
+                    );
+                    throw $exception;
+                }
+            }
+
+            $commutiesList = $participantRepo->findCommunitiesFromPlayer($player, $date);
 
             $resource = $this->resourceGenerator->createCommunityResource($commutiesList);
 

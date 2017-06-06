@@ -33,10 +33,15 @@ interface ParticipantRepositoryInterface extends StandardRepositoryInterface
 
     /**
      * List player's communities.
+     *
+     * Return player's communities. If a date is passed, return only communities in which the player has joined
+     * after that date.
+     *
      * @param PlayerInterface $player
+     * @param \DateTime|null $date
      * @return CommunityInterface[]
      */
-    public function findCommunitiesFromPlayer(PlayerInterface $player): array;
+    public function findCommunitiesFromPlayer(PlayerInterface $player, \DateTime $date = null): array;
 
     /**
      * Find participation from player in community.

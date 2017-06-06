@@ -87,7 +87,7 @@ class Application extends App
             $this->group('/player', function () {
                 $this->post('/logout', [PlayerLoginController::class, 'logout']);
                 $this->get('/info', [PlayerController::class, 'info']);
-                $this->get('/communities', [PlayerController::class, 'listCommunities']);
+                $this->post('/communities', [PlayerController::class, 'listPlayerCommunities']);
             })->add(AuthenticationMiddleware::class);
 
             /* Images */
