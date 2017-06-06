@@ -23,17 +23,22 @@ class PublicCommunityController extends BaseController
     /**
      * List all public communities.
      *
+     * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @return ResponseInterface
      */
     public function list(
+        ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
         /** @var CommunityRepositoryInterface $communityRepository */
         $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
 
         try {
-            $communities = $communityRepository->getAllPublicCommunities();
+            /** @var PlayerInterface $player */
+            $player = $request->getAttribute('player');
+
+            $communities = $communityRepository->getAllPublicCommunities($player);
 
             $resource = $this->resourceGenerator->createPublicCommunityResource($communities);
 
