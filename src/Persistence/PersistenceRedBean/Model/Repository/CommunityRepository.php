@@ -50,10 +50,23 @@ class CommunityRepository extends AbstractRepository implements CommunityReposit
     /**
      * @inheritDoc
      */
-    public function getAllPublicCommunities(): array
+    public function getAllPublicCommunities(PlayerInterface $player = null): array
     {
-        /** @var Community[] $commuties */
-        $communities = R::find(static::ENTITY, 'private = 0 ORDER BY name ASC');
+        if ($player === null) {
+            /** @var Community[] $commuties */
+            $communities = R::find(static::ENTITY, 'private = 0 ORDER BY name ASC');
+        } else {
+            /** @var Community[] $commuties */
+            $communities = R::find(
+                static::ENTITY,
+                'private = 0
+                 AND id NOT IN (SELECT community_id
+                                  FROM `participant` p
+                                 WHERE p.player_id = ?)
+                 ORDER BY name ASC',
+                [$player->getId()]
+            );
+        }
 
         return RedBeanUtils::boxArray($communities);
     }

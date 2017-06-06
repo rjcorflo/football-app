@@ -25,6 +25,7 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
 
     /**
      * Check if a community name exists.
+     *
      * @param string $name
      * @return bool
      */
@@ -32,6 +33,7 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
 
     /**
      * Find community by exact name.
+     *
      * @param string $name
      * @return CommunityInterface
      * @throws NotFoundException If there is no communities with that name
@@ -40,13 +42,19 @@ interface CommunityRepositoryInterface extends StandardRepositoryInterface
 
     /**
      * Get all public communities.
+     *
+     * If a player is passed, retrieve all public communities to which player is not a member.
+     *
+     * @param PlayerInterface $player
      * @return CommunityInterface[]
      */
-    public function getAllPublicCommunities() : array;
+    public function getAllPublicCommunities(PlayerInterface $player = null) : array;
 
     /**
      * Retrieve a random community.
+     *
      * If a player is passed, retrieve random community to which player is not member.
+     *
      * @param PlayerInterface|null $player
      * @return CommunityInterface
      */

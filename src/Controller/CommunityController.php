@@ -13,6 +13,7 @@ use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\Util\Validation\Exception\ValidationException;
 
 /**
  * Class CommunityController.
@@ -173,17 +174,24 @@ class CommunityController extends BaseController
                 throw $exception;
             }
 
+            $communityName = $bodyData['nombre'];
+
             /** @var CommunityRepositoryInterface $communityRepository */
             $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
 
-            $nameExists = $communityRepository->checkIfNameExists($bodyData['nombre']);
+            $nameExists = $communityRepository->checkIfNameExists($communityName);
 
             if ($nameExists) {
-                $result->isError();
-                $result->setDescription('Ya existe una comunidad con ese nombre');
-            } else {
-                $result->setDescription('Ese nombre de comunidad está disponible');
+                $exception = new ValidationException('El registro ya existe');
+                $exception->addMessageWithCode(
+                    ErrorCodes::COMMUNITY_NAME_ALREADY_EXISTS,
+                    'El nombre de la comunidad ya existe'
+                );
+
+                throw $exception;
             }
+
+            $result->setDescription('Ese nombre de la comunidad está disponible');
 
             $resource = $this->resourceGenerator->createMessageResource($result);
 
