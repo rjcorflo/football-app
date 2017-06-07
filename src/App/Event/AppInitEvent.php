@@ -1,12 +1,12 @@
 <?php
 
-namespace RJ\PronosticApp\Event;
+namespace RJ\PronosticApp\App\Event;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- * Initialization event.
+ * Event launch on request received.
  *
  * @package RJ\PronosticApp\Event
  */

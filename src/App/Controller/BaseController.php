@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\PronosticApp\Controller;
+namespace RJ\PronosticApp\App\Controller;
 
 use RJ\PronosticApp\Persistence\EntityManager;
 use RJ\PronosticApp\Util\General\ResponseGenerator;

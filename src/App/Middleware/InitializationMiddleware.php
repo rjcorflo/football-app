@@ -4,7 +4,7 @@ namespace RJ\PronosticApp\App\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RJ\PronosticApp\Event\AppInitEvent;
+use RJ\PronosticApp\App\Event\AppInitEvent;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**

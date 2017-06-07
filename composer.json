@@ -16,7 +16,8 @@
         "symfony/event-dispatcher": "*",
         "monolog/monolog": "^1.0",
         "league/fractal": "*",
-        "respect/validation": "^1.0"
+        "respect/validation": "^1.0",
+        "tebru/gson-php": "*"
     },
     "require-dev": {
         "codeception/codeception": "^2.0",

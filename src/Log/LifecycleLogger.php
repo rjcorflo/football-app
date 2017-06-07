@@ -3,7 +3,7 @@
 namespace RJ\PronosticApp\Log;
 
 use Psr\Log\LoggerInterface;
-use RJ\PronosticApp\Event\AppInitEvent;
+use RJ\PronosticApp\App\Event\AppInitEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -42,7 +42,9 @@ class LifecycleLogger implements EventSubscriberInterface
     }
 
     /**
-     * Log entries.
+     * Log entry data.
+     *
+     * @param AppInitEvent $event
      */
     public function logEntry(AppInitEvent $event)
     {

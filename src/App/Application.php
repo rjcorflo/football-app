@@ -4,17 +4,19 @@ namespace RJ\PronosticApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
+use RJ\PronosticApp\App\Event\AppBootstrapEvent;
 use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
 use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
-use RJ\PronosticApp\Controller\CommunityController;
-use RJ\PronosticApp\Controller\DocumentationController;
-use RJ\PronosticApp\Controller\FixturesController;
-use RJ\PronosticApp\Controller\ImagesController;
-use RJ\PronosticApp\Controller\PlayerController;
-use RJ\PronosticApp\Controller\PlayerLoginController;
-use RJ\PronosticApp\Controller\PrivateCommunityController;
-use RJ\PronosticApp\Controller\PublicCommunityController;
+use RJ\PronosticApp\App\Controller\CommunityController;
+use RJ\PronosticApp\App\Controller\DocumentationController;
+use RJ\PronosticApp\App\Controller\FixturesController;
+use RJ\PronosticApp\App\Controller\ImagesController;
+use RJ\PronosticApp\App\Controller\PlayerController;
+use RJ\PronosticApp\App\Controller\PlayerLoginController;
+use RJ\PronosticApp\App\Controller\PrivateCommunityController;
+use RJ\PronosticApp\App\Controller\PublicCommunityController;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\string;
 
 /**
@@ -24,6 +26,18 @@ use function DI\string;
  */
 class Application extends App
 {
+    /**
+     * @var array
+     */
+    protected $modules = [
+        ['active' => true, 'class' => '\RJ\PronosticApp\Module\FootballData\FootballDataModule']
+    ];
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
     /**
      * Application constructor.
      */
@@ -39,7 +53,10 @@ class Application extends App
      */
     protected function bootstrap()
     {
+        $this->configureModulesEventDispatcher();
         $this->configureRoutes();
+
+        $this->dispatcher->dispatch(AppBootstrapEvent::NAME, new AppBootstrapEvent($this));
     }
 
     /**
@@ -65,6 +82,27 @@ class Application extends App
 
         /* App definitions */
         $builder->addDefinitions(__DIR__ . '/DependencyInjection/definitions/di.app.php');
+
+        foreach ($this->modules as $module) {
+            if ($module['active']) {
+                $interfaces = class_implements($module['class']);
+
+                if (isset($interfaces['RJ\PronosticApp\Module\ServiceProvider'])) {
+                    $builder->addDefinitions(call_user_func("{$module['class']}::getDependencyInjectionDefinitions"));
+                }
+            }
+        }
+    }
+
+    protected function configureModulesEventDispatcher()
+    {
+        $this->dispatcher = $this->getContainer()->get(EventDispatcherInterface::class);
+
+        foreach ($this->modules as $module) {
+            if ($module['active']) {
+                $this->dispatcher->addSubscriber($this->getContainer()->get($module['class']));
+            }
+        }
     }
 
     /**
