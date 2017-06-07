@@ -9,12 +9,12 @@ use RJ\PronosticApp\Model\Repository\Exception\NotFoundException;
  * Repository for {@link TokenInterface} entities.
  *
  * @method TokenInterface create()
- * @method int store(TokenInterface $image)
- * @method int[] storeMultiple(array $images)
- * @method void trash(TokenInterface $image)
- * @method void trashMultiple(array $images)
- * @method TokenInterface getById(int $idImage)
- * @method TokenInterface[] getMultipleById(array $idsImages)
+ * @method int store(TokenInterface $token)
+ * @method int[] storeMultiple(array $tokens)
+ * @method void trash(TokenInterface $token)
+ * @method void trashMultiple(array $tokens)
+ * @method TokenInterface getById(int $idToken)
+ * @method TokenInterface[] getMultipleById(array $idsTokens)
  * @method TokenInterface[] findAll()
  */
 interface TokenRepositoryInterface extends StandardRepositoryInterface

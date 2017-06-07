@@ -35,4 +35,24 @@ interface TeamInterface
      * @return string
      */
     public function getAlias() : string;
+
+    /**
+     * @param string $stadium
+     */
+    public function setStadium(string $stadium): void;
+
+    /**
+     * @return string
+     */
+    public function getStadium(): string;
+
+    /**
+     * @param ImageInterface $image
+     */
+    public function setImage(ImageInterface $image): void;
+
+    /**
+     * @return ImageInterface
+     */
+    public function getImage(): ImageInterface;
 }
