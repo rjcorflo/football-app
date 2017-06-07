@@ -2,9 +2,7 @@
 
 namespace RJ\PronosticApp\Module\FootballData;
 
-use function DI\factory;
 use GuzzleHttp\Client;
-use RJ\PronosticApp\App\Application;
 use RJ\PronosticApp\App\Event\AppBootstrapEvent;
 use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
 use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
@@ -13,14 +11,15 @@ use RJ\PronosticApp\Module\FootballData\Controller\TestController;
 use RJ\PronosticApp\Module\FootballData\Service\FootballDataRetriever;
 use RJ\PronosticApp\Module\FootballData\Service\HttpFootballDataRetriever;
 use RJ\PronosticApp\Module\ServiceProvider;
-use function DI\object;
+use function DI\get;
 
+/**
+ * Module to retrieve dat from FootballApi
+ *
+ * @package RJ\PronosticApp\Module\FootballData
+ */
 class FootballDataModule extends AbstractModule implements ServiceProvider
 {
-    public function __construct()
-    {
-    }
-
     /**
      * @inheritDoc
      */
@@ -43,7 +42,7 @@ class FootballDataModule extends AbstractModule implements ServiceProvider
                 $client = new Client([
                     'base_uri' => 'http://api.football-data.org/v1/',
                     'headers' => [
-                        //'X-Auth-Token' => getenv('FootballData_API_KEY'),
+                        'X-Auth-Token' => get('module.footballdata.apikey'),
                         'X-Response-Control' => 'full'
                     ]
                 ]);

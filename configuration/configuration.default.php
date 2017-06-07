@@ -10,5 +10,6 @@ use function DI\string;
 return [
     'database.dsn' => string('sqlite:{app.storageDir}/database/test.db'),
     'database.user' => '',
-    'database.pass' => ''
+    'database.pass' => '',
+    'module.footballdata.apikey' => ''
 ];

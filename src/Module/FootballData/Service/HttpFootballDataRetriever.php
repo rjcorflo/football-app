@@ -3,10 +3,7 @@
 namespace RJ\PronosticApp\Module\FootballData\Service;
 
 use GuzzleHttp\Client;
-use RJ\PronosticApp\Module\FootballData\Model\Competition;
-use RJ\PronosticApp\Module\FootballData\Model\CompetitionCollection;
 use Tebru\Gson\Gson;
-use Tebru\PhpType\TypeToken;
 
 /**
  * Get data from football-data.org via REST WS.
