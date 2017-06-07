@@ -62,7 +62,7 @@ class PlayerController extends BaseController
 
             $date = null;
 
-            if (isset($bodyData['fecha'])) {
+            if (isset($bodyData['fecha']) && $bodyData['fecha'] != '') {
                 $date = \DateTime::createFromFormat('d-m-Y', $bodyData['fecha']);
 
                 if (!$date) {
@@ -75,9 +75,9 @@ class PlayerController extends BaseController
                 }
             }
 
-            $commutiesList = $participantRepo->findCommunitiesFromPlayer($player, $date);
+            $communitiesList = $participantRepo->findCommunitiesFromPlayer($player, $date);
 
-            $resource = $this->resourceGenerator->createCommunityResource($commutiesList);
+            $resource = $this->resourceGenerator->createCommunityResource($communitiesList);
 
             $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
