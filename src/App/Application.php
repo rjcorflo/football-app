@@ -30,7 +30,7 @@ class Application extends App
      * @var array
      */
     protected $modules = [
-        ['active' => true, 'class' => '\RJ\PronosticApp\Module\FootballData\FootballDataModule']
+        ['active' => false, 'class' => '\RJ\PronosticApp\Module\FootballData\FootballDataModule']
     ];
 
     /**
