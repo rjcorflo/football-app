@@ -55,4 +55,14 @@ interface TeamInterface
      * @return ImageInterface
      */
     public function getImage(): ImageInterface;
+
+    /**
+     * @param string $color
+     */
+    public function setColor(string $color): void;
+
+    /**
+     * @return string
+     */
+    public function getColor(): string;
 }

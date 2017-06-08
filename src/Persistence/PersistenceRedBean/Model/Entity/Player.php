@@ -3,7 +3,6 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
 use RedBeanPHP\SimpleModel;
-use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;

@@ -35,4 +35,20 @@ class Image extends SimpleModel implements ImageInterface
     {
         return $this->bean->url;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setDescription(string $description): void
+    {
+        $this->bean->description = $description;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getDescription(): string
+    {
+        return $this->bean->description;
+    }
 }
