@@ -4,18 +4,17 @@ namespace RJ\PronosticApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
-use RJ\PronosticApp\App\Event\AppBootstrapEvent;
-use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
-use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
-use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use RJ\PronosticApp\App\Controller\CommunityController;
 use RJ\PronosticApp\App\Controller\DocumentationController;
-use RJ\PronosticApp\App\Controller\FixturesController;
 use RJ\PronosticApp\App\Controller\ImagesController;
 use RJ\PronosticApp\App\Controller\PlayerController;
 use RJ\PronosticApp\App\Controller\PlayerLoginController;
 use RJ\PronosticApp\App\Controller\PrivateCommunityController;
 use RJ\PronosticApp\App\Controller\PublicCommunityController;
+use RJ\PronosticApp\App\Event\AppBootstrapEvent;
+use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
+use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
+use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use function DI\string;
 
@@ -30,7 +29,8 @@ class Application extends App
      * @var array
      */
     protected $modules = [
-        ['active' => false, 'class' => '\RJ\PronosticApp\Module\FootballData\FootballDataModule']
+        ['active' => false, 'class' => '\RJ\PronosticApp\Module\FootballData\FootballDataModule'],
+        ['active' => true, 'class' => '\RJ\PronosticApp\Module\Updater\UpdaterModule']
     ];
 
     /**
@@ -113,9 +113,6 @@ class Application extends App
         $this->group('/api/v1', function () {
             /* Documentation */
             $this->get('/doc/swagger', [DocumentationController::class, 'documentationSwagger']);
-
-            /* Fixtures */
-            $this->get('/fixtures/images', [FixturesController::class, 'fixturesImages']);
 
             /* Player */
             $this->post('/player/register', [PlayerLoginController::class, 'register']);
