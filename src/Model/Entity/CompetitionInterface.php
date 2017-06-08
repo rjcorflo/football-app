@@ -35,4 +35,14 @@ interface CompetitionInterface
      * @return string
      */
     public function getAlias() : string;
+
+    /**
+     * @param ImageInterface $image
+     */
+    public function setImage(ImageInterface $image): void;
+
+    /**
+     * @return ImageInterface
+     */
+    public function getImage(): ImageInterface;
 }

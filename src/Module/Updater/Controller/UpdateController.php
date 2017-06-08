@@ -6,7 +6,10 @@ use Psr\Http\Message\ResponseInterface;
 use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\TeamInterface;
+use RJ\PronosticApp\Model\Repository\CompetitionRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\PhaseRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\TeamRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 
@@ -39,6 +42,8 @@ class UpdateController
      */
     public function updateAll(ResponseInterface $response): ResponseInterface
     {
+        R::wipe(CompetitionRepositoryInterface::ENTITY);
+        R::wipe(PhaseRepositoryInterface::ENTITY);
         R::wipe(TeamRepositoryInterface::ENTITY);
         R::wipe(ImageRepositoryInterface::ENTITY);
 
@@ -51,6 +56,12 @@ class UpdateController
         $this->updateTeamImages($imageRepository);
 
         $this->updateTeams();
+
+        $this->updateCompetitions();
+
+        $this->updatePhases();
+
+        $this->updateMatchdays();
 
         $response->getBody()->write('{result: "OK"}');
 
@@ -231,6 +242,141 @@ class UpdateController
 
         $this->entityManager->transaction(function () use ($teamRepository, $teams) {
             $teamRepository->storeMultiple($teams);
+        });
+    }
+
+    private function updateCompetitions()
+    {
+        $dataList = [
+            [
+                'name' => "Copa Confederaciones 2017",
+                'alias' => "CONFE2017",
+                'id_imagen' => 17
+            ]
+        ];
+
+        $competitions = [];
+
+        /** @var CompetitionRepositoryInterface $competitionRepository */
+        $competitionRepository = $this->entityManager->getRepository(CompetitionRepositoryInterface::class);
+        /** @var ImageRepositoryInterface $imageRepository */
+        $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
+
+        foreach ($dataList as $data) {
+            $competition = $competitionRepository->create();
+            $competition->setName($data['name']);
+            $competition->setAlias($data['alias']);
+
+            /** @var ImageInterface $image */
+            $image = $imageRepository->getById($data['id_imagen']);
+            $competition->setImage($image);
+            $competitions[] = $competition;
+        }
+
+        $this->entityManager->transaction(function () use ($competitionRepository, $competitions) {
+            $competitionRepository->storeMultiple($competitions);
+        });
+    }
+
+    private function updatePhases()
+    {
+        $dataList = [
+            [
+                'name' => "Jornada regular",
+                'multiplier' => 1
+            ],
+            [
+                'name' => "Octavos de final",
+                'multiplier' => 1
+            ],
+            [
+                'name' => "Cuartos de final",
+                'multiplier' => 1
+            ],
+            [
+                'name' => "Semifinal",
+                'multiplier' => 2
+            ],
+            [
+                'name' => "Final",
+                'multiplier' => 3
+            ]
+        ];
+
+        $beans = [];
+
+        /** @var PhaseRepositoryInterface $beansRepository */
+        $beansRepository = $this->entityManager->getRepository(PhaseRepositoryInterface::class);
+
+        foreach ($dataList as $data) {
+            $bean = $beansRepository->create();
+            $bean->setName($data['name']);
+            $bean->setMultiplierFactor($data['multiplier']);
+            $beans[] = $bean;
+        }
+
+        $this->entityManager->transaction(function () use ($beansRepository, $beans) {
+            $beansRepository->storeMultiple($beans);
+        });
+    }
+
+    private function updateMatchdays()
+    {
+        $dataList = [
+            [
+                'id_competicion' => 1,
+                'id_fase' => 1,
+                'nombre' => 'Jornada 1',
+                'alias' => 'J1'
+            ],
+            [
+                'id_competicion' => 1,
+                'id_fase' => 1,
+                'nombre' => 'Jornada 2',
+                'alias' => 'J2'
+            ],
+            [
+                'id_competicion' => 1,
+                'id_fase' => 1,
+                'nombre' => 'Jornada 3',
+                'alias' => 'J3'
+            ],
+            [
+                'id_competicion' => 1,
+                'id_fase' => 4,
+                'nombre' => 'Jornada 4 - Semifinales',
+                'alias' => 'SEMIS'
+            ],
+            [
+                'id_competicion' => 1,
+                'id_fase' => 5,
+                'nombre' => 'Jornada 5 - Final y Tercer y cuarto',
+                'alias' => 'FINAL'
+            ]
+        ];
+
+        $beans = [];
+
+        /** @var MatchdayRepositoryInterface $beansRepository */
+        $beansRepository = $this->entityManager->getRepository(MatchdayRepositoryInterface::class);
+
+        /** @var CompetitionRepositoryInterface $competitionRepository */
+        $competitionRepository = $this->entityManager->getRepository(CompetitionRepositoryInterface::class);
+
+        /** @var PhaseRepositoryInterface $phaseRepository */
+        $phaseRepository = $this->entityManager->getRepository(PhaseRepositoryInterface::class);
+
+        foreach ($dataList as $data) {
+            $bean = $beansRepository->create();
+            $bean->setCompetition($competitionRepository->getById($data['id_competicion']));
+            $bean->setPhase($phaseRepository->getById($data['id_fase']));
+            $bean->setName($data['nombre']);
+            $bean->setAlias($data['alias']);
+            $beans[] = $bean;
+        }
+
+        $this->entityManager->transaction(function () use ($beansRepository, $beans) {
+            $beansRepository->storeMultiple($beans);
         });
     }
 }

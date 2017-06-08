@@ -2,13 +2,13 @@
 
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
-use RJ\PronosticApp\Model\Repository\TeamRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\PhaseRepositoryInterface;
 
 /**
- * Class TeamRepository.
+ * Class PhaseRepository.
  *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
  */
-class TeamRepository extends AbstractRepository implements TeamRepositoryInterface
+class PhaseRepository extends AbstractRepository implements PhaseRepositoryInterface
 {
 }
