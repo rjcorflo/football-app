@@ -5,7 +5,6 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CompetitionInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
-use RJ\PronosticApp\Model\Entity\TeamInterface;
 
 /**
  * Class Competition.

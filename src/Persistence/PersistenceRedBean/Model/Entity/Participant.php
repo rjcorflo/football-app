@@ -17,7 +17,7 @@ class Participant extends SimpleModel implements ParticipantInterface
     /**
      * @inheritDoc
      */
-    public function getId() : int
+    public function getId(): int
     {
         return $this->bean->id;
     }

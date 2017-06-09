@@ -55,6 +55,13 @@ interface WebResourceGeneratorInterface
     public function createCommunityResource($communities, $resultType = self::JSON);
 
     /**
+     * @param CommunityInterface|CommunityInterface[] $communities
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createCommunityDataResource($communities, $resultType = self::JSON);
+
+    /**
      * @param TokenInterface|TokenInterface[] $tokens
      * @param string $resultType
      * @return array|string

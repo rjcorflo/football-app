@@ -4,10 +4,8 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CompetitionInterface;
-use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\PhaseInterface;
-use RJ\PronosticApp\Model\Entity\TeamInterface;
 
 /**
  * Class Matchday.
@@ -37,7 +35,7 @@ class Matchday extends SimpleModel implements MatchdayInterface
      */
     public function getCompetition(): CompetitionInterface
     {
-        return $this->bean->competition;
+        return $this->bean->competition->box();
     }
 
     /**
@@ -53,7 +51,7 @@ class Matchday extends SimpleModel implements MatchdayInterface
      */
     public function getPhase(): PhaseInterface
     {
-        return $this->bean->phase;
+        return $this->bean->phase->box();
     }
 
     /**

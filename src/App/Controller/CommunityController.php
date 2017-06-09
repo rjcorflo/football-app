@@ -202,4 +202,32 @@ class CommunityController extends BaseController
 
         return $response;
     }
+
+    /**
+     * Get data from community.
+     *
+     * @param ResponseInterface $response
+     * @param $idCommunity
+     * @return ResponseInterface
+     */
+    public function communityData(
+        ResponseInterface $response,
+        $idCommunity
+    ) {
+        /** @var CommunityRepositoryInterface $communityRepository */
+        $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
+        try {
+            /** @var CommunityInterface $community */
+            $community = $communityRepository->getById($idCommunity);
+
+            $resource = $this->resourceGenerator->createCommunityDataResource($community);
+
+            $response = $this->generateJsonCorrectResponse($response, $resource);
+        } catch (\Exception $e) {
+            $response = $this->generateJsonErrorResponse($response, $e);
+        }
+
+        return $response;
+    }
 }
