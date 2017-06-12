@@ -1,7 +1,6 @@
 <?php
 date_default_timezone_set('Europe/Madrid');
-//$local = setlocale(LC_ALL, 'es_ES');
-//error_log(print_r($local, true));
+$local = setlocale(LC_TIME, 'es_ES.utf8');
 
 require '../vendor/autoload.php';
 
