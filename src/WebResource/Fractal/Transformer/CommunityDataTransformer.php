@@ -23,7 +23,6 @@ class CommunityDataTransformer extends TransformerAbstract
     protected $defaultIncludes = [
         'participantes',
         'jornadas'
-
     ];
 
     /**

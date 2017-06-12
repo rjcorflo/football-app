@@ -54,10 +54,14 @@ class CommunityTransformer extends TransformerAbstract
         return [
             'id' => $community->getId(),
             'nombre' => $community->getCommunityName(),
+            'password' => $community->getPassword(),
             'privada' => $community->isPrivate(),
             'url' => $community->getImage()->getUrl(),
             'fecha_creacion' => $community->getCreationDate()->format('d-m-Y'),
-            'numero_jugadores' => $this->participantRepo->countPlayersFromCommunity($community)
+            'numero_jugadores' => $this->participantRepo->countPlayersFromCommunity($community),
+            'puntos_ultima_jornada' => rand(5, 15),
+            'puesto_ultima_jornada' => 1,
+            'puesto_general' => 3
         ];
     }
 

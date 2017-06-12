@@ -11,7 +11,9 @@ use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
+use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
 use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityDataTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
@@ -52,7 +54,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function include(string $includes)
     {
@@ -61,7 +63,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function exclude(string $excludes)
     {
@@ -70,7 +72,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function createMessageResource(
         MessageResult $message,
@@ -84,7 +86,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function createCommunityResource(
         $community,
@@ -97,6 +99,26 @@ class FractalGenerator implements WebResourceGeneratorInterface
         } else {
             throw new \Exception("El recurso pasado no es un instancia que implemente " .
                 "CommunityInterface o sea un array CommunityInterface[]");
+        }
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createCommunityListResource(
+        $communities,
+        $resultType = self::JSON
+    ) {
+        if (is_array($communities)) {
+            $data = new CommunityListResource($communities);
+            $resource = new Item($data, $this->container->get(CommunityListTransformer::class));
+        } else {
+            throw new \Exception("El recurso pasado no es un array CommunityInterface[]");
         }
 
         return $this->returnResourceType(

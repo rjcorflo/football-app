@@ -17,8 +17,16 @@ use RJ\PronosticApp\Util\General\MessageResult;
  */
 interface WebResourceGeneratorInterface
 {
+    /**
+     * Return type JSON.
+     * @var string
+     */
     const JSON = 'json';
 
+    /**
+     * Return type array
+     * @var string
+     */
     const ARRAY = 'array';
 
     /**
@@ -28,6 +36,8 @@ interface WebResourceGeneratorInterface
     public function include(string $includes);
 
     /**
+     * Exclude internal Resource
+     *
      * @param string $excludes
      * @return $this
      */
@@ -53,6 +63,13 @@ interface WebResourceGeneratorInterface
      * @return array|string
      */
     public function createCommunityResource($communities, $resultType = self::JSON);
+
+    /**
+     * @param  CommunityInterface[] $communities
+     * @param  string $resultType
+     * @return array|string
+     */
+    public function createCommunityListResource($communities, $resultType = self::JSON);
 
     /**
      * @param CommunityInterface|CommunityInterface[] $communities

@@ -91,9 +91,6 @@ class CommunityController extends BaseController
 
             // Prepare to store community
             $this->entityManager->transaction(function () use ($community, $player, $communityRepository) {
-                // Hash password before creation
-                $hash = password_hash($community->getPassword(), PASSWORD_BCRYPT);
-                $community->setPassword($hash);
                 $communityRepository->store($community);
 
                 // Add player that create community as first participant
@@ -122,7 +119,7 @@ class CommunityController extends BaseController
      * Get players from community.
      *
      * @param ResponseInterface $response
-     * @param $idCommunity
+     * @param int $idCommunity
      * @return ResponseInterface
      */
     public function communityPlayers(
@@ -207,7 +204,7 @@ class CommunityController extends BaseController
      * Get data from community.
      *
      * @param ResponseInterface $response
-     * @param $idCommunity
+     * @param int $idCommunity
      * @return ResponseInterface
      */
     public function communityData(

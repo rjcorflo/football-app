@@ -77,7 +77,7 @@ class PlayerController extends BaseController
 
             $communitiesList = $participantRepo->findCommunitiesFromPlayer($player, $date);
 
-            $resource = $this->resourceGenerator->createCommunityResource($communitiesList);
+            $resource = $this->resourceGenerator->createCommunityListResource($communitiesList);
 
             $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {
