@@ -10,13 +10,13 @@ namespace RJ\PronosticApp\Model\Entity;
 interface MatchInterface
 {
     /** @var string Match not played yet. */
-    const STATE_NOT_PLAYED = "NOT-PLAYED";
+    const STATE_NOT_PLAYED = 0;
 
     /** @var string Match currently in play. */
-    const STATE_PLAYING = "PLAYING";
+    const STATE_PLAYING = 1;
 
     /** @var string Match finished. */
-    const STATE_FINISHED = "FINISHED";
+    const STATE_FINISHED = 2;
 
     /**
      * @return int
@@ -26,7 +26,7 @@ interface MatchInterface
     /**
      * @param MatchdayInterface $matchday
      */
-    public function setMatchday(MatchdayInterface $matchday) : void;
+    public function setMatchday(MatchdayInterface $matchday): void;
 
     /**
      * @return MatchdayInterface
@@ -102,4 +102,34 @@ interface MatchInterface
      * @return \DateTime
      */
     public function getLastModifiedDate() : \DateTime;
+
+    /**
+     * @param string $tag
+     */
+    public function setTag(string $tag): void;
+
+    /**
+     * @return string
+     */
+    public function getTag(): string;
+
+    /**
+     * @param string $stadium
+     */
+    public function setStadium(string $stadium): void;
+
+    /**
+     * @return string
+     */
+    public function getStadium(): string;
+
+    /**
+     * @param ImageInterface $image
+     */
+    public function setImage(ImageInterface $image): void;
+
+    /**
+     * @return ImageInterface
+     */
+    public function getImage(): ImageInterface;
 }
