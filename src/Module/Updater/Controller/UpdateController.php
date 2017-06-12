@@ -5,10 +5,12 @@ namespace RJ\PronosticApp\Module\Updater\Controller;
 use Psr\Http\Message\ResponseInterface;
 use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
+use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Entity\TeamInterface;
 use RJ\PronosticApp\Model\Repository\CompetitionRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PhaseRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\TeamRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
@@ -42,6 +44,11 @@ class UpdateController
      */
     public function updateAll(ResponseInterface $response): ResponseInterface
     {
+        R::exec('DELETE FROM sqlite_sequence 
+                  WHERE name IN ("image", "team", "competition", "phase", "matchday", "match")');
+
+        R::wipe(MatchRepositoryInterface::ENTITY);
+        R::wipe(MatchdayRepositoryInterface::ENTITY);
         R::wipe(CompetitionRepositoryInterface::ENTITY);
         R::wipe(PhaseRepositoryInterface::ENTITY);
         R::wipe(TeamRepositoryInterface::ENTITY);
@@ -62,6 +69,8 @@ class UpdateController
         $this->updatePhases();
 
         $this->updateMatchdays();
+
+        $this->updateMatches();
 
         $response->getBody()->write('{result: "OK"}');
 
@@ -372,6 +381,127 @@ class UpdateController
             $bean->setPhase($phaseRepository->getById($data['id_fase']));
             $bean->setName($data['nombre']);
             $bean->setAlias($data['alias']);
+            $beans[] = $bean;
+        }
+
+        $this->entityManager->transaction(function () use ($beansRepository, $beans) {
+            $beansRepository->storeMultiple($beans);
+        });
+    }
+
+    private function updateMatches()
+    {
+        $dataList = [
+            [
+                'id_jornada' => 1,
+                'fecha' => '2017-06-17 17:00',
+                'tag' => 'Grupo A',
+                'estadio' => 'San Petersburgo',
+                'lugar' => 'San Petersburgo',
+                'imagen' => 18,
+                'local' => 5,
+                'visitante' => 7
+            ],
+            [
+                'id_jornada' => 1,
+                'fecha' => '2017-06-18 17:00',
+                'tag' => 'Grupo A',
+                'estadio' => 'Kazán Arena',
+                'lugar' => 'Kazán',
+                'imagen' => 18,
+                'local' => 4,
+                'visitante' => 2
+            ],
+            [
+                'id_jornada' => 1,
+                'fecha' => '2017-06-18 20:00',
+                'tag' => 'Grupo B',
+                'estadio' => 'Estadio del Spartak',
+                'lugar' => 'Moscú',
+                'imagen' => 18,
+                'local' => 1,
+                'visitante' => 8
+            ],
+            [
+                'id_jornada' => 1,
+                'fecha' => '2017-06-19 17:00',
+                'tag' => 'Grupo B',
+                'estadio' => 'Estadio Fisht',
+                'lugar' => 'Sochi',
+                'imagen' => 18,
+                'local' => 6,
+                'visitante' => 3
+            ],
+            [
+                'id_jornada' => 2,
+                'fecha' => '2017-06-21 17:00',
+                'tag' => 'Grupo A',
+                'estadio' => 'Estadio del Spartak',
+                'lugar' => 'Moscú',
+                'imagen' => 18,
+                'local' => 5,
+                'visitante' => 4
+            ],
+            [
+                'id_jornada' => 2,
+                'fecha' => '2017-06-21 20:00',
+                'tag' => 'Grupo A',
+                'estadio' => 'Estadio Fisht',
+                'lugar' => 'Sochi',
+                'imagen' => 18,
+                'local' => 2,
+                'visitante' => 7
+            ],
+            [
+                'id_jornada' => 2,
+                'fecha' => '2017-06-22 17:00',
+                'tag' => 'Grupo B',
+                'estadio' => 'Estadio de San Petersburgo',
+                'lugar' => 'San Petersburgo',
+                'imagen' => 18,
+                'local' => 1,
+                'visitante' => 6
+            ],
+            [
+                'id_jornada' => 2,
+                'fecha' => '2017-06-22 20:00',
+                'tag' => 'Grupo B',
+                'estadio' => 'Kazán Arena',
+                'lugar' => 'Kazán',
+                'imagen' => 18,
+                'local' => 3,
+                'visitante' => 8
+            ],
+        ];
+
+        $beans = [];
+
+        /** @var MatchRepositoryInterface $beansRepository */
+        $beansRepository = $this->entityManager->getRepository(MatchRepositoryInterface::class);
+
+        /** @var TeamRepositoryInterface $teamRepository */
+        $teamRepository = $this->entityManager->getRepository(TeamRepositoryInterface::class);
+
+        /** @var MatchdayRepositoryInterface $matchdayRepository */
+        $matchdayRepository = $this->entityManager->getRepository(MatchdayRepositoryInterface::class);
+
+        /** @var ImageRepositoryInterface $imageRepository */
+        $imageRepository = $this->entityManager->getRepository(ImageRepositoryInterface::class);
+
+        foreach ($dataList as $data) {
+            $bean = $beansRepository->create();
+            $bean->setMatchday($matchdayRepository->getById($data['id_jornada']));
+            $bean->setStartTime(\DateTime::createFromFormat('Y-m-d H:i', $data['fecha']));
+            $bean->setState(MatchInterface::STATE_NOT_PLAYED);
+            $bean->setTag($data['tag']);
+            $bean->setStadium($data['estadio']);
+            $bean->setCity($data['lugar']);
+            $bean->setLocalTeam($teamRepository->getById($data['local']));
+            $bean->setAwayTeam($teamRepository->getById($data['visitante']));
+            $bean->setLocalGoals(-1);
+            $bean->setAwayGoals(-1);
+            $bean->setLastModifiedDate(new \DateTime());
+            $bean->setImage($imageRepository->getById($data['imagen']));
             $beans[] = $bean;
         }
 

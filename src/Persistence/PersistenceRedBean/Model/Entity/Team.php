@@ -82,7 +82,7 @@ class Team extends SimpleModel implements TeamInterface
      */
     public function getImage(): ImageInterface
     {
-        return $this->bean->image;
+        return $this->bean->image->box();
     }
 
     /**

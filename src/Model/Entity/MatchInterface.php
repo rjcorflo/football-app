@@ -124,6 +124,16 @@ interface MatchInterface
     public function getStadium(): string;
 
     /**
+     * @param string $city
+     */
+    public function setCity(string $city): void;
+
+    /**
+     * @return string
+     */
+    public function getCity(): string;
+
+    /**
      * @param ImageInterface $image
      */
     public function setImage(ImageInterface $image): void;

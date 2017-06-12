@@ -113,7 +113,7 @@ class Community extends SimpleModel implements CommunityInterface
      */
     public function getAdmins() : array
     {
-        return $this->xownAdministratorList;
+        return RedBeanUtils::boxArray($this->xownAdministratorList);
     }
 
     /**

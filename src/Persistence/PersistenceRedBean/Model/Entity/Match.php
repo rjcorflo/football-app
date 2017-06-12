@@ -36,7 +36,7 @@ class Match extends SimpleModel implements MatchInterface
      */
     public function getMatchday(): MatchdayInterface
     {
-        return $this->bean->matchday;
+        return $this->bean->matchday->box();
     }
 
     /**
@@ -68,7 +68,7 @@ class Match extends SimpleModel implements MatchInterface
      */
     public function getLocalTeam(): TeamInterface
     {
-        return $this->bean->local_team;
+        return $this->bean->local_team->box();
     }
 
     /**
@@ -84,87 +84,7 @@ class Match extends SimpleModel implements MatchInterface
      */
     public function getAwayTeam(): TeamInterface
     {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getImage(): ImageInterface
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setImage(ImageInterface $image): void
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getStadium(): string
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setStadium(string $stadium): void
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getTag(): string
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setTag(string $tag): void
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLastModifiedDate(): \DateTime
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setLastModifiedDate(\DateTime $lastModified): void
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getState(): string
-    {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setState(string $state = self::STATE_NOT_PLAYED): void
-    {
-        throw new \LogicException('Not implemented'); // TODO
+        return $this->bean->away_team->box();
     }
 
     /**
@@ -172,24 +92,15 @@ class Match extends SimpleModel implements MatchInterface
      */
     public function setLocalGoals(int $goals = 0): void
     {
-        throw new \LogicException('Not implemented'); // TODO
+        $this->bean->local_goals = $goals;
     }
-
 
     /**
      * @inheritDoc
      */
     public function getLocalGoals(): int
     {
-        throw new \LogicException('Not implemented'); // TODO
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAwayGoals(): int
-    {
-        throw new \LogicException('Not implemented'); // TODO
+        return $this->bean->local_goals;
     }
 
     /**
@@ -197,6 +108,110 @@ class Match extends SimpleModel implements MatchInterface
      */
     public function setAwayGoals(int $goals = 0): void
     {
-        throw new \LogicException('Not implemented'); // TODO
+        $this->bean->away_goals = $goals;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAwayGoals(): int
+    {
+        return $this->bean->away_goals;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setState(string $state = self::STATE_NOT_PLAYED): void
+    {
+        $this->bean->state = $state;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getState(): string
+    {
+        return $this->bean->state;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastModifiedDate(\DateTime $lastModified): void
+    {
+        $this->bean->last_modified_date = $lastModified;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastModifiedDate(): \DateTime
+    {
+        return \DateTime::createFromFormat('Y-m-d H:i:s', $this->bean->last_modified_date);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setTag(string $tag): void
+    {
+        $this->bean->tag = $tag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTag(): string
+    {
+        return $this->bean->tag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setStadium(string $stadium): void
+    {
+        $this->bean->stadium = $stadium;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getStadium(): string
+    {
+        return $this->bean->stadium;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setCity(string $city): void
+    {
+        $this->bean->city = $city;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCity(): string
+    {
+        return $this->bean->city;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setImage(ImageInterface $image): void
+    {
+        $this->bean->image = $image;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getImage(): ImageInterface
+    {
+        return $this->bean->image->box();
     }
 }

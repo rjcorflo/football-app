@@ -7,10 +7,10 @@ use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 
 /**
- * Class MatchdayTransformer
+ * Class MatchTransformer
  * @package RJ\PronosticApp\WebResource\Fractal\Transformer
  */
-class MatchdayTransformer extends TransformerAbstract
+class MatchTransformer extends TransformerAbstract
 {
     /**
      * List of resources to automatically include.
@@ -55,8 +55,12 @@ class MatchdayTransformer extends TransformerAbstract
             'estado' => $match->getState()
         ];
 
-        $resource['goles_local'] = $match->getState() === MatchInterface::STATE_NOT_PLAYED ? -1 : $match->getLocalGoals();
-        $resource['goles_visitante'] = $match->getState() === MatchInterface::STATE_NOT_PLAYED ? -1 : $match->getAwayGoals();
+        $resource['goles_local'] = $match->getState() === MatchInterface::STATE_NOT_PLAYED ?
+            -1 : $match->getLocalGoals();
+        $resource['goles_visitante'] = $match->getState() === MatchInterface::STATE_NOT_PLAYED ?
+            -1 : $match->getAwayGoals();
+
+        return $resource;
     }
 
     /**
@@ -67,7 +71,7 @@ class MatchdayTransformer extends TransformerAbstract
      */
     public function includeEquipoLocal(MatchInterface $match)
     {
-        return $this->item($match->getAwayTeam(), $this->container->get(TeamTransformer::class));
+        return $this->item($match->getLocalTeam(), $this->container->get(TeamTransformer::class));
     }
 
     /**

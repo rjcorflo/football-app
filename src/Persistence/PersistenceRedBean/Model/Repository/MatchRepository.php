@@ -5,7 +5,7 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 
 /**
- * Class TeamRepository.
+ * Class MatchRepository.
  *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository
  */

@@ -4,8 +4,10 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
+use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 
 /**
@@ -22,7 +24,8 @@ class CommunityDataTransformer extends TransformerAbstract
      */
     protected $defaultIncludes = [
         'participantes',
-        'jornadas'
+        'jornadas',
+        'partidos'
     ];
 
     /**
@@ -38,6 +41,9 @@ class CommunityDataTransformer extends TransformerAbstract
     /** @var MatchdayRepositoryInterface  */
     private $matchdayRepository;
 
+    /** @var MatchRepositoryInterface  */
+    private $matchRepository;
+
     /**
      * CommunityTransformer constructor.
      *
@@ -49,6 +55,7 @@ class CommunityDataTransformer extends TransformerAbstract
 
         $this->participantRepo = $this->container->get(ParticipantRepositoryInterface::class);
         $this->matchdayRepository = $this->container->get(MatchdayRepositoryInterface::class);
+        $this->matchRepository = $this->container->get(MatchRepositoryInterface::class);
     }
 
     /**
@@ -57,10 +64,20 @@ class CommunityDataTransformer extends TransformerAbstract
      */
     public function transform(CommunityInterface $community)
     {
-        return [
-            'partidos' => [],
+        $resource = [
+            'fecha_actual' => (new \DateTime())->format('Y-m-d H:i:s'),
             'pronosticos' => []
         ];
+
+        $matchday = $this->matchdayRepository->getNextMatchday();
+
+        if ($matchday === null) {
+            $resource['id_jornada_actual'] = 0;
+        } else {
+            $resource['id_jornada_actual'] = $matchday->getId();
+        }
+
+        return $resource;
     }
 
     /**
@@ -85,5 +102,16 @@ class CommunityDataTransformer extends TransformerAbstract
         $matchdays = $this->matchdayRepository->findAll();
 
         return $this->collection($matchdays, $this->container->get(MatchdayTransformer::class));
+    }
+
+    /**
+     * @param CommunityInterface $community
+     * @return \League\Fractal\Resource\Collection
+     */
+    public function includePartidos(CommunityInterface $community)
+    {
+        $matches = $this->matchRepository->findAll();
+
+        return $this->collection($matches, $this->container->get(MatchTransformer::class));
     }
 }

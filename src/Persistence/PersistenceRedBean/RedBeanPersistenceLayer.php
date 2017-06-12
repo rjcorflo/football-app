@@ -21,6 +21,7 @@ class RedBeanPersistenceLayer extends AbstractPersistenceLayer
     {
         define('REDBEAN_MODEL_PREFIX', '\\RJ\\PronosticApp\\Persistence\\PersistenceRedBean\\Model\\Entity\\');
         R::setup($this->getContainer()->get('database.dsn'));
+        R::setAutoResolve(true);
     }
 
     /**
