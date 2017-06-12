@@ -18,7 +18,7 @@ use RJ\PronosticApp\Util\General\ErrorCodes;
 class PlayerRepository extends AbstractRepository implements PlayerRepositoryInterface
 {
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function checkNickameExists(string $nickname) : bool
     {
@@ -26,7 +26,7 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function checkEmailExists(string $email) : bool
     {
@@ -55,7 +55,7 @@ class PlayerRepository extends AbstractRepository implements PlayerRepositoryInt
     }
 
     /**
-     * @inheritdoc
+     * @inheritDoc
      */
     public function findPlayerByToken(string $token) : PlayerInterface
     {
