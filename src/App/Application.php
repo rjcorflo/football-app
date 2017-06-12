@@ -94,6 +94,9 @@ class Application extends App
         }
     }
 
+    /**
+     * Subscribe modules to event dispatcher if they are active.
+     */
     protected function configureModulesEventDispatcher()
     {
         $this->dispatcher = $this->getContainer()->get(EventDispatcherInterface::class);
@@ -132,7 +135,7 @@ class Application extends App
             $this->group('/community', function () {
                 $this->post('/create', [CommunityController::class, 'create']);
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
-                $this->get('/{idCommunity:[0-9]+}/data', [CommunityController::class, 'communityData']);
+                $this->post('/{idCommunity:[0-9]+}/data', [CommunityController::class, 'communityData']);
                 $this->get('/search', [CommunityController::class, 'search']);
                 $this->post('/exist', [CommunityController::class, 'exist']);
 

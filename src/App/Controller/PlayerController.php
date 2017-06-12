@@ -63,7 +63,7 @@ class PlayerController extends BaseController
             $date = null;
 
             if (isset($bodyData['fecha']) && $bodyData['fecha'] != '') {
-                $date = \DateTime::createFromFormat('d-m-Y', $bodyData['fecha']);
+                $date = \DateTime::createFromFormat('Y-m-d H:i:s', $bodyData['fecha']);
 
                 if (!$date) {
                     $exception = new ValidationException('Error validando la fecha');
