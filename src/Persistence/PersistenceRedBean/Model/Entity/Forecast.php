@@ -132,7 +132,7 @@ class Forecast extends SimpleModel implements ForecastInterface
      */
     public function getPoints(): int
     {
-        return $this->bean->points;
+        return $this->bean->points ?? 0;
     }
 
     /**
