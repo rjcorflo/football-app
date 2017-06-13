@@ -6,6 +6,7 @@ use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
 use RJ\PronosticApp\App\Controller\CommunityController;
 use RJ\PronosticApp\App\Controller\DocumentationController;
+use RJ\PronosticApp\App\Controller\ForecastController;
 use RJ\PronosticApp\App\Controller\ImagesController;
 use RJ\PronosticApp\App\Controller\PlayerController;
 use RJ\PronosticApp\App\Controller\PlayerLoginController;
@@ -136,6 +137,7 @@ class Application extends App
                 $this->post('/create', [CommunityController::class, 'create']);
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
                 $this->post('/{idCommunity:[0-9]+}/data', [CommunityController::class, 'communityData']);
+                $this->post('/{idCommunity:[0-9]+}/forecast', [ForecastController::class, 'saveForecasts']);
                 $this->get('/search', [CommunityController::class, 'search']);
                 $this->post('/exist', [CommunityController::class, 'exist']);
 

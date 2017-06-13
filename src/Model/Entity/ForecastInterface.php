@@ -77,9 +77,9 @@ interface ForecastInterface
     public function isRisk(): bool;
 
     /**
-     * @param int $point
+     * @param int $points
      */
-    public function setPoints(int $point): void;
+    public function setPoints(int $points): void;
 
     /**
      * @return int

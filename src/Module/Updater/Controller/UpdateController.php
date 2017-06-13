@@ -132,7 +132,9 @@ class UpdateController
             ['url' => "/images/stadium/san_petersburgo.jpg", 'description' => "San Petersburgo"],
             ['url' => "/images/stadium/sanpetersburgobn.jpg", 'description' => "San Petersburgo"],
             ['url' => "/images/stadium/sochi.jpg", 'description' => "Sochi"],
-            ['url' => "/images/stadium/sochibn.jpg", 'description' => "Sochi"]
+            ['url' => "/images/stadium/sochibn.jpg", 'description' => "Sochi"],
+            ['url' => "/images/stadium/sochi2.jpg", 'description' => "Sochi"],
+            ['url' => "/images/stadium/sanpetersburgo2.jpg", 'description' => "San Petersburgo"]
         ];
 
         $images = [];
@@ -186,49 +188,49 @@ class UpdateController
                 'name' => "Camerún",
                 'alias' => "CAM",
                 'color' => "#d41c25",
-                'id_imagen' => 26
+                'id_imagen' => 28
             ],
             [
                 'name' => "México",
                 'alias' => "MEX",
                 'color' => "#397362",
-                'id_imagen' => 27
+                'id_imagen' => 29
             ],
             [
                 'name' => "Alemania",
                 'alias' => "ALE",
                 'color' => "#88916d",
-                'id_imagen' => 28
+                'id_imagen' => 30
             ],
             [
                 'name' => "Portugal",
                 'alias' => "POR",
                 'color' => "#a0ded7",
-                'id_imagen' => 29
+                'id_imagen' => 31
             ],
             [
                 'name' => "Rusia",
                 'alias' => "RUS",
                 'color' => "#D8D8D8",
-                'id_imagen' => 30
+                'id_imagen' => 32
             ],
             [
                 'name' => "Australia",
                 'alias' => "AUS",
                 'color' => "#b86314",
-                'id_imagen' => 31
+                'id_imagen' => 33
             ],
             [
                 'name' => "Nueva Zelanda",
                 'alias' => "ZEL",
                 'color' => "#ffffff",
-                'id_imagen' => 32
+                'id_imagen' => 34
             ],
             [
                 'name' => "Chile",
                 'alias' => "CHI",
                 'color' => "#0f3180",
-                'id_imagen' => 33
+                'id_imagen' => 35
             ]
         ];
 
@@ -505,7 +507,7 @@ class UpdateController
                 'tag' => 'Grupo A',
                 'estadio' => 'Estadio de San Petersburgo',
                 'lugar' => 'San Petersburgo',
-                'imagen' => 23,
+                'imagen' => 27,
                 'local' => 7,
                 'visitante' => 4
             ],
@@ -515,7 +517,7 @@ class UpdateController
                 'tag' => 'Grupo B',
                 'estadio' => 'Estadio Fisht',
                 'lugar' => 'Sochi',
-                'imagen' => 25,
+                'imagen' => 26,
                 'local' => 3,
                 'visitante' => 1
             ],
