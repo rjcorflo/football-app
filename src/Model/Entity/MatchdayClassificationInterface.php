@@ -30,9 +30,9 @@ interface MatchdayClassificationInterface
     public function getCommunity(): CommunityInterface;
 
     /**
-     * @param CommunityInterface $
+     * @param CommunityInterface $community
      */
-    public function setCommunity(CommunityInterface $matchday): void;
+    public function setCommunity(CommunityInterface $community): void;
 
     /**
      * @return MatchdayInterface

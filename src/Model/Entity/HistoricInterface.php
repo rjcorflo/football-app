@@ -15,24 +15,24 @@ interface HistoricInterface
     public function getId() : int;
 
     /**
-     * @return PlayerInterface
-     */
-    public function getPlayer(): PlayerInterface;
-
-    /**
      * @param PlayerInterface $player
      */
     public function setPlayer(PlayerInterface $player): void;
 
     /**
+     * @return PlayerInterface
+     */
+    public function getPlayer(): PlayerInterface;
+
+    /**
+     * @param CommunityInterface $matchday
+     */
+    public function setCommunity(CommunityInterface $matchday): void;
+
+    /**
      * @return CommunityInterface
      */
     public function getCommunity(): CommunityInterface;
-
-    /**
-     * @param CommunityInterface $
-     */
-    public function setCommunity(CommunityInterface $matchday): void;
 
     /**
      * @return MatchdayInterface
@@ -45,12 +45,12 @@ interface HistoricInterface
     public function setMatchday(MatchdayInterface $matchday): void;
 
     /**
-     * @return int
-     */
-    public function getPosition(): int;
-
-    /**
      * @param int $position
      */
     public function setPosition(int $position): void;
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int;
 }
