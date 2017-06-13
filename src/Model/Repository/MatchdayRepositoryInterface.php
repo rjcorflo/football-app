@@ -27,4 +27,11 @@ interface MatchdayRepositoryInterface extends StandardRepositoryInterface
      * @return null|MatchdayInterface
      */
     public function getNextMatchday(): ?MatchdayInterface;
+
+    /**
+     * Return all matchdays orderder by order field.
+     *
+     * @return MatchdayInterface[]
+     */
+    public function findAllOrdered(): array;
 }

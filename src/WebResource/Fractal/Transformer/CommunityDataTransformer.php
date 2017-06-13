@@ -99,7 +99,7 @@ class CommunityDataTransformer extends TransformerAbstract
      */
     public function includeJornadas(CommunityInterface $community)
     {
-        $matchdays = $this->matchdayRepository->findAll();
+        $matchdays = $this->matchdayRepository->findAllOrdered();
 
         return $this->collection($matchdays, $this->container->get(MatchdayTransformer::class));
     }

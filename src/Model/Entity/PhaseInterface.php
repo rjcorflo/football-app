@@ -27,6 +27,16 @@ interface PhaseInterface
     public function getName(): string;
 
     /**
+     * @param string $alias
+     */
+    public function setAlias(string $alias): void;
+
+    /**
+     * @return string
+     */
+    public function getAlias(): string;
+
+    /**
      * @param float $factor
      */
     public function setMultiplierFactor(float $factor): void;

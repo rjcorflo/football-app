@@ -40,11 +40,11 @@ class MatchdayTransformer extends TransformerAbstract
             'competicion' => $matchday->getCompetition()->getName(),
             'competicion_abrev' => $matchday->getCompetition()->getAlias(),
             'fase' => $matchday->getPhase()->getName(),
-            'fase_abrev' => 'XX',
+            'fase_abrev' => $matchday->getPhase()->getAlias(),
             'nombre' => $matchday->getName(),
             'nombre_abrev' => $matchday->getAlias(),
             'factor' => $matchday->getPhase()->getMultiplierFactor(),
-            'orden' => 1
+            'orden' => $matchday->getOrder()
         ];
     }
 }

@@ -126,9 +126,13 @@ class UpdateController
     {
         $dataList = [
             ['url' => "/images/stadium/kazanarena.jpg", 'description' => "Kazán Arena"],
+            ['url' => "/images/stadium/kazanarenabn.jpg", 'description' => "Kazán Arena"],
             ['url' => "/images/stadium/moscu.jpg", 'description' => "Moscú"],
+            ['url' => "/images/stadium/moscubn.jpg", 'description' => "Moscú"],
             ['url' => "/images/stadium/san_petersburgo.jpg", 'description' => "San Petersburgo"],
-            ['url' => "/images/stadium/sochi.jpg", 'description' => "Sochi"]
+            ['url' => "/images/stadium/san_petersburgobn.jpg", 'description' => "San Petersburgo"],
+            ['url' => "/images/stadium/sochi.jpg", 'description' => "Sochi"],
+            ['url' => "/images/stadium/sochibn.jpg", 'description' => "Sochi"]
         ];
 
         $images = [];
@@ -182,49 +186,49 @@ class UpdateController
                 'name' => "Camerún",
                 'alias' => "CAM",
                 'color' => "#d41c25",
-                'id_imagen' => 22
+                'id_imagen' => 26
             ],
             [
                 'name' => "México",
                 'alias' => "MEX",
                 'color' => "#397362",
-                'id_imagen' => 23
+                'id_imagen' => 27
             ],
             [
                 'name' => "Alemania",
                 'alias' => "ALE",
                 'color' => "#88916d",
-                'id_imagen' => 24
+                'id_imagen' => 28
             ],
             [
                 'name' => "Portugal",
                 'alias' => "POR",
                 'color' => "#a0ded7",
-                'id_imagen' => 25
+                'id_imagen' => 29
             ],
             [
                 'name' => "Rusia",
                 'alias' => "RUS",
-                'color' => "#d41c25",
-                'id_imagen' => 26
+                'color' => "#D8D8D8",
+                'id_imagen' => 30
             ],
             [
                 'name' => "Australia",
                 'alias' => "AUS",
                 'color' => "#b86314",
-                'id_imagen' => 27
+                'id_imagen' => 31
             ],
             [
                 'name' => "Nueva Zelanda",
                 'alias' => "ZEL",
                 'color' => "#ffffff",
-                'id_imagen' => 28
+                'id_imagen' => 32
             ],
             [
                 'name' => "Chile",
                 'alias' => "CHI",
                 'color' => "#0f3180",
-                'id_imagen' => 29
+                'id_imagen' => 33
             ]
         ];
 
@@ -242,6 +246,7 @@ class UpdateController
             $team->setAlias($data['alias']);
             $team->setColor($data['color']);
             $team->setStadium('');
+            $team->setCity('');
 
             /** @var ImageInterface $image */
             $image = $imageRepository->getById($data['id_imagen']);
@@ -291,23 +296,28 @@ class UpdateController
     {
         $dataList = [
             [
-                'name' => "Jornada regular",
+                'name' => "Fase de grupos",
+                'alias' => 'GRUPOS',
                 'multiplier' => 1
             ],
             [
                 'name' => "Octavos de final",
+                'alias' => '1/8',
                 'multiplier' => 1
             ],
             [
                 'name' => "Cuartos de final",
+                'alias' => '1/4',
                 'multiplier' => 1
             ],
             [
                 'name' => "Semifinal",
+                'alias' => '1/2',
                 'multiplier' => 2
             ],
             [
                 'name' => "Final",
+                'alias' => 'FINAL',
                 'multiplier' => 3
             ]
         ];
@@ -320,6 +330,7 @@ class UpdateController
         foreach ($dataList as $data) {
             $bean = $beansRepository->create();
             $bean->setName($data['name']);
+            $bean->setAlias($data['alias']);
             $bean->setMultiplierFactor($data['multiplier']);
             $beans[] = $bean;
         }
@@ -336,31 +347,36 @@ class UpdateController
                 'id_competicion' => 1,
                 'id_fase' => 1,
                 'nombre' => 'Jornada 1',
-                'alias' => 'J1'
+                'alias' => 'J1',
+                'orden' => 1
             ],
             [
                 'id_competicion' => 1,
                 'id_fase' => 1,
                 'nombre' => 'Jornada 2',
-                'alias' => 'J2'
+                'alias' => 'J2',
+                'orden' => 2
             ],
             [
                 'id_competicion' => 1,
                 'id_fase' => 1,
                 'nombre' => 'Jornada 3',
-                'alias' => 'J3'
+                'alias' => 'J3',
+                'orden' => 3
             ],
             [
                 'id_competicion' => 1,
                 'id_fase' => 4,
                 'nombre' => 'Jornada 4 - Semifinales',
-                'alias' => 'SEMIS'
+                'alias' => 'SEMIS',
+                'orden' => 4
             ],
             [
                 'id_competicion' => 1,
                 'id_fase' => 5,
                 'nombre' => 'Jornada 5 - Final y Tercer y cuarto',
-                'alias' => 'FINAL'
+                'alias' => 'FINAL',
+                'orden' => 5
             ]
         ];
 
@@ -381,6 +397,7 @@ class UpdateController
             $bean->setPhase($phaseRepository->getById($data['id_fase']));
             $bean->setName($data['nombre']);
             $bean->setAlias($data['alias']);
+            $bean->setOrder($data['orden']);
             $beans[] = $bean;
         }
 
@@ -398,7 +415,7 @@ class UpdateController
                 'tag' => 'Grupo A',
                 'estadio' => 'San Petersburgo',
                 'lugar' => 'San Petersburgo',
-                'imagen' => 18,
+                'imagen' => 22,
                 'local' => 5,
                 'visitante' => 7
             ],
@@ -418,7 +435,7 @@ class UpdateController
                 'tag' => 'Grupo B',
                 'estadio' => 'Estadio del Spartak',
                 'lugar' => 'Moscú',
-                'imagen' => 18,
+                'imagen' => 20,
                 'local' => 1,
                 'visitante' => 8
             ],
@@ -428,7 +445,7 @@ class UpdateController
                 'tag' => 'Grupo B',
                 'estadio' => 'Estadio Fisht',
                 'lugar' => 'Sochi',
-                'imagen' => 18,
+                'imagen' => 24,
                 'local' => 6,
                 'visitante' => 3
             ],
@@ -438,7 +455,7 @@ class UpdateController
                 'tag' => 'Grupo A',
                 'estadio' => 'Estadio del Spartak',
                 'lugar' => 'Moscú',
-                'imagen' => 18,
+                'imagen' => 21,
                 'local' => 5,
                 'visitante' => 4
             ],
@@ -448,7 +465,7 @@ class UpdateController
                 'tag' => 'Grupo A',
                 'estadio' => 'Estadio Fisht',
                 'lugar' => 'Sochi',
-                'imagen' => 18,
+                'imagen' => 25,
                 'local' => 2,
                 'visitante' => 7
             ],
@@ -458,7 +475,7 @@ class UpdateController
                 'tag' => 'Grupo B',
                 'estadio' => 'Estadio de San Petersburgo',
                 'lugar' => 'San Petersburgo',
-                'imagen' => 18,
+                'imagen' => 23,
                 'local' => 1,
                 'visitante' => 6
             ],
@@ -468,10 +485,50 @@ class UpdateController
                 'tag' => 'Grupo B',
                 'estadio' => 'Kazán Arena',
                 'lugar' => 'Kazán',
-                'imagen' => 18,
+                'imagen' => 19,
                 'local' => 3,
                 'visitante' => 8
             ],
+            [
+                'id_jornada' => 3,
+                'fecha' => '2017-06-24 17:00',
+                'tag' => 'Grupo A',
+                'estadio' => 'Kazán Arena',
+                'lugar' => 'Kazán',
+                'imagen' => 19,
+                'local' => 2,
+                'visitante' => 5
+            ],
+            [
+                'id_jornada' => 3,
+                'fecha' => '2017-06-24 17:00',
+                'tag' => 'Grupo A',
+                'estadio' => 'Estadio de San Petersburgo',
+                'lugar' => 'San Petersburgo',
+                'imagen' => 23,
+                'local' => 7,
+                'visitante' => 4
+            ],
+            [
+                'id_jornada' => 3,
+                'fecha' => '2017-06-25 17:00',
+                'tag' => 'Grupo B',
+                'estadio' => 'Estadio Fisht',
+                'lugar' => 'Sochi',
+                'imagen' => 25,
+                'local' => 3,
+                'visitante' => 1
+            ],
+            [
+                'id_jornada' => 3,
+                'fecha' => '2017-06-25 17:00',
+                'tag' => 'Grupo B',
+                'estadio' => 'Estadio del Spartak',
+                'lugar' => 'Moscú',
+                'imagen' => 21,
+                'local' => 8,
+                'visitante' => 6
+            ]
         ];
 
         $beans = [];

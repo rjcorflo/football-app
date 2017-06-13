@@ -85,4 +85,20 @@ class Matchday extends SimpleModel implements MatchdayInterface
     {
         return $this->bean->alias;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOrder(int $order = 1): void
+    {
+        $this->bean->matchday_order = $order;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOrder(): int
+    {
+        return $this->bean->matchday_order;
+    }
 }

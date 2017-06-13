@@ -7,6 +7,7 @@ use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 /**
  * Class MatchdayRepository.
@@ -32,5 +33,15 @@ class MatchdayRepository extends AbstractRepository implements MatchdayRepositor
         $match = $bean->box();
 
         return $match->getMatchday();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAllOrdered(): array
+    {
+        $beans = R::findAll(static::ENTITY, 'ORDER BY matchday_order ASC');
+
+        return RedBeanUtils::boxArray($beans);
     }
 }

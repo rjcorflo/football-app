@@ -42,6 +42,23 @@ class Phase extends SimpleModel implements PhaseInterface
     /**
      * @inheritDoc
      */
+    public function setAlias(string $alias): void
+    {
+        $this->bean->alias = $alias;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAlias(): string
+    {
+        return $this->bean->alias;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function setMultiplierFactor(float $factor): void
     {
         $this->bean->factor = $factor;

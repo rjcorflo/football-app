@@ -72,6 +72,22 @@ class Team extends SimpleModel implements TeamInterface
     /**
      * @inheritDoc
      */
+    public function setCity(string $city): void
+    {
+        $this->bean->city = $city;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getCity(): string
+    {
+        return $this->bean->city ?? '';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function setImage(ImageInterface $image): void
     {
         $this->bean->image = $image;

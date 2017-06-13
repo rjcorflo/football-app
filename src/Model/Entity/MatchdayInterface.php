@@ -53,4 +53,14 @@ interface MatchdayInterface
      * @return string
      */
     public function getAlias(): ?string;
+
+    /**
+     * @param int $order
+     */
+    public function setOrder(int $order = 1): void;
+
+    /**
+     * @return int
+     */
+    public function getOrder(): int;
 }

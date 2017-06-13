@@ -23,7 +23,7 @@ class TeamTransformer extends TransformerAbstract
             'nombre_abrev' => $team->getAlias(),
             'color_equipo' => $team->getColor(),
             'estadio' => $team->getStadium(),
-            'ciudad' => 'PENDIENTE',
+            'ciudad' => $team->getCity(),
             'url' => $team->getImage()->getUrl()
         ];
     }
