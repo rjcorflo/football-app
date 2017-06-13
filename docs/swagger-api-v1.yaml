@@ -364,6 +364,52 @@ paths:
             $ref: '#/definitions/MessageResult'
       security:
         - token: []
+  /community/{idCommunity}/forecast:
+    post:
+      summary: Crea o actualiza los pronósticos por jugador
+      description: Permite crear o actualizar los pronóstico por jugador.
+      parameters:
+        - in: path
+          name: idCommunity
+          type: integer
+          required: true
+          description : ID de la comunidad
+        - in: body
+          name: body
+          required: true
+          description: Array con datos de los pronósticos a almacenar
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                id_partido:
+                  type: integer
+                  description: Identificador único del partido
+                goles_local:
+                  type: integer
+                  description: Goles equipo local
+                goles_visitante:
+                  type: integer
+                  description: Goles equipo visitante
+                riesgo:
+                  type: boolean
+                  description: Si hay que marcarlo de riesgo
+      tags:
+        - Comunidades
+      responses:
+        200:
+          description: Guardado de pronóstico correcto
+          schema:
+            $ref: '#/definitions/MessageResult'
+        401:
+          $ref: '#/responses/Unauthorized'
+        default:
+          description: Error inesperado
+          schema:
+            $ref: '#/definitions/MessageResult'
+      security:
+        - token: []
   /community/exist:
     post:
       summary: Comprueba si el nombre de una comunidad ya existe

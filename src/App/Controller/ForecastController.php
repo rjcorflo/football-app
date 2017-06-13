@@ -91,9 +91,8 @@ class ForecastController extends BaseController
      */
     private function checkForecastValidity($forecast): bool
     {
-        $isValid = isset($forecast['id_partido']) && isset($forecast['id_comunidad'])
-            && isset($forecast['goles_local']) && isset($forecast['goles_visitante'])
-            && isset($forecast['riesgo']);
+        $isValid = isset($forecast['id_partido']) && isset($forecast['goles_local'])
+            && isset($forecast['goles_visitante']) && isset($forecast['riesgo']);
 
         return $isValid;
     }
