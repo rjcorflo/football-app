@@ -126,11 +126,11 @@ class UpdateController
     {
         $dataList = [
             ['url' => "/images/stadium/kazanarena.jpg", 'description' => "Kazán Arena"],
-            ['url' => "/images/stadium/kazanarenabn.jpg", 'description' => "Kazán Arena"],
+            ['url' => "/images/stadium/kazanbn.jpg", 'description' => "Kazán Arena"],
             ['url' => "/images/stadium/moscu.jpg", 'description' => "Moscú"],
             ['url' => "/images/stadium/moscubn.jpg", 'description' => "Moscú"],
             ['url' => "/images/stadium/san_petersburgo.jpg", 'description' => "San Petersburgo"],
-            ['url' => "/images/stadium/san_petersburgobn.jpg", 'description' => "San Petersburgo"],
+            ['url' => "/images/stadium/sanpetersburgobn.jpg", 'description' => "San Petersburgo"],
             ['url' => "/images/stadium/sochi.jpg", 'description' => "Sochi"],
             ['url' => "/images/stadium/sochibn.jpg", 'description' => "Sochi"]
         ];
