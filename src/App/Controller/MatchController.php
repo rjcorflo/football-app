@@ -15,10 +15,17 @@ use RJ\PronosticApp\Util\General\ErrorCodes;
  */
 class MatchController extends BaseController
 {
+    /**
+     * Get active matches from matchday.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function activeMatches(
         ServerRequestInterface $request,
         ResponseInterface $response
-    ) : ResponseInterface {
+    ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
         try {
@@ -37,7 +44,7 @@ class MatchController extends BaseController
             /** @var MatchRepositoryInterface $matchRepository */
             $matchRepository = $this->entityManager->getRepository(MatchRepositoryInterface::class);
 
-            $matches = $matchRepository->findActivesByMatchday((int) $idMatchday);
+            $matches = $matchRepository->findActivesByMatchday((int)$idMatchday);
 
             $resource = $this->resourceGenerator->createActiveMatchesResource($matches);
 

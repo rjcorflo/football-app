@@ -13,6 +13,7 @@ use RJ\PronosticApp\App\Controller\PlayerController;
 use RJ\PronosticApp\App\Controller\PlayerLoginController;
 use RJ\PronosticApp\App\Controller\PrivateCommunityController;
 use RJ\PronosticApp\App\Controller\PublicCommunityController;
+use RJ\PronosticApp\App\Controller\UtilController;
 use RJ\PronosticApp\App\Event\AppBootstrapEvent;
 use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
 use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
@@ -156,6 +157,11 @@ class Application extends App
             $this->group('/match', function () {
                 $this->post('/actives', [MatchController::class, 'activeMatches']);
             })->add(AuthenticationMiddleware::class);
+
+            /* Utils */
+            $this->group('/util', function () {
+                $this->map(['GET', 'POST'], '/date', [UtilController::class, 'serverDate']);
+            });
         })->add(PersistenceMiddleware::class)
           ->add(InitializationMiddleware::class);
     }
