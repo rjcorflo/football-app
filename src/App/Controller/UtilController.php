@@ -3,7 +3,6 @@
 namespace RJ\PronosticApp\App\Controller;
 
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class UtilController.
@@ -12,8 +11,13 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class UtilController extends BaseController
 {
+    /**
+     * Get date from server.
+     *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     */
     public function serverDate(
-        ServerRequestInterface $request,
         ResponseInterface $response
     ): ResponseInterface {
         $date = new \DateTime();
