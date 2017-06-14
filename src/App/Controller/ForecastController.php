@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ForecastRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
-use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\Util\General\ForecastResult;
 
 /**
  * Class ForecastController.
@@ -32,7 +32,7 @@ class ForecastController extends BaseController
     ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
-        $result = new MessageResult();
+        $result = new ForecastResult();
 
         $player = $request->getAttribute('player');
 
@@ -49,31 +49,49 @@ class ForecastController extends BaseController
         $this->entityManager->beginTransaction();
         try {
             foreach ($bodyData as $forecastData) {
-                if ($this->checkForecastValidity($forecastData)) {
-                    $match = $matchRepository->getById($forecastData['id_partido']);
+                try {
+                    if ($this->checkForecastValidity($forecastData)) {
+                        $match = $matchRepository->getById($forecastData['id_partido']);
 
-                    $forecast = $forecastRepository->findOneOrCreate($player, $community, $match);
+                        $result->setMatchdayId($match->getMatchday()->getId());
 
-                    if ($forecast->getId() === 0) {
-                        $forecast->setPlayer($player);
-                        $forecast->setCommunity($community);
-                        $forecast->setMatch($match);
+                        $forecast = $forecastRepository->findOneOrCreate($player, $community, $match);
+
+                        if ($forecast->getId() === 0) {
+                            $forecast->setPlayer($player);
+                            $forecast->setCommunity($community);
+                            $forecast->setMatch($match);
+                        } else {
+                            // If model exists and there is no change, dont update
+                            if ($forecast->getLocalGoals() == $forecastData['goles_local']
+                                && $forecast->getAwayGoals() == $forecastData['goles_visitante']
+                                && $forecast->isRisk() == (bool) $forecastData['riesgo']) {
+                                continue;
+                            }
+                        }
+
+                        $forecast->setLocalGoals($forecastData['goles_local']);
+                        $forecast->setAwayGoals($forecastData['goles_visitante']);
+                        $forecast->setRisk((bool)$forecastData['riesgo']);
+                        $forecast->setLastModifiedDate(new \DateTime());
+
+                        $forecastRepository->store($forecast);
+
+                        $result->addCorrect(
+                            $match->getId(),
+                            $forecast->getLocalGoals(),
+                            $forecast->getAwayGoals(),
+                            $forecast->isRisk()
+                        );
+                    } else {
+                        throw new \Exception('Error validando pronóstico');
                     }
-
-                    $forecast->setLocalGoals($forecastData['goles_local']);
-                    $forecast->setAwayGoals($forecastData['goles_visitante']);
-                    $forecast->setRisk((bool)$forecastData['riesgo']);
-                    $forecast->setLastModifiedDate(new \DateTime());
-
-                    $forecastRepository->store($forecast);
-                } else {
-                    throw new \Exception('Error en validando alguno de los pronósticos');
+                } catch (\Exception $e) {
+                    $result->addError($forecastData['id_partido'], $e->getMessage());
                 }
             }
 
-            $result->setDescription('Guardado correcto');
-
-            $resource = $this->resourceGenerator->createMessageResource($result);
+            $resource = $this->resourceGenerator->createForecastMessageResource($result);
 
             $response = $this->generateJsonCorrectResponse($response, $resource);
             $this->entityManager->commit();

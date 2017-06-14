@@ -7,6 +7,7 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
+use RJ\PronosticApp\Util\General\ForecastResult;
 use RJ\PronosticApp\Util\General\MessageResult;
 
 /**
@@ -50,6 +51,13 @@ interface WebResourceGeneratorInterface
      * @return array|string
      */
     public function createMessageResource(MessageResult $messages, $resultType = self::JSON);
+
+    /**
+     * @param ForecastResult $messages
+     * @param string $resultType
+     * @return array|string
+     */
+    public function createForecastMessageResource(ForecastResult $messages, $resultType = self::JSON);
 
     /**
      * @param PlayerInterface|PlayerInterface[] $players

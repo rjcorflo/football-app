@@ -62,5 +62,13 @@ class ForecastRepository extends AbstractRepository implements ForecastRepositor
         return RedBeanUtils::boxArray($result);
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function findByCommunity(CommunityInterface $community): array
+    {
+        $beans = R::find(static::ENTITY, 'community_id = ?', [$community->getId()]);
 
+        return RedBeanUtils::boxArray($beans);
+    }
 }

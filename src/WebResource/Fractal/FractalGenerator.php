@@ -9,6 +9,7 @@ use League\Fractal\Scope;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
+use RJ\PronosticApp\Util\General\ForecastResult;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\MatchListResource;
@@ -86,6 +87,27 @@ class FractalGenerator implements WebResourceGeneratorInterface
             $resultType
         );
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function createForecastMessageResource(ForecastResult $message, $resultType = self::JSON)
+    {
+        $resource = new Item($message, function (ForecastResult $message) {
+            return [
+                'fecha_actual' => $message->getDate()->format('Y-m-d H:i:s'),
+                'id_jornada' => $message->getMatchdayId(),
+                'confirmados' => $message->getCorrects(),
+                'errores' => $message->getErrors()
+            ];
+        });
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
 
     /**
      * @inheritDoc

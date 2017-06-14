@@ -37,4 +37,12 @@ interface MatchdayClassificationRepositoryInterface extends StandardRepositoryIn
         CommunityInterface $community,
         MatchdayInterface $matchday
     ): MatchdayClassificationInterface;
+
+    /**
+     * Find classification for community.
+     *
+     * @param CommunityInterface $community
+     * @return MatchdayClassificationInterface[]
+     */
+    public function findByCommunity(CommunityInterface $community): array;
 }

@@ -52,4 +52,12 @@ interface ForecastRepositoryInterface extends StandardRepositoryInterface
         PlayerInterface $player,
         MatchdayInterface $matchday
     ): array;
+
+    /**
+     * Find forecasts for community.
+     *
+     * @param CommunityInterface $community
+     * @return ForecastInterface[]
+     */
+    public function findByCommunity(CommunityInterface $community): array;
 }

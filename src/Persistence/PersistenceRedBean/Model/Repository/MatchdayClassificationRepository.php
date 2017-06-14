@@ -9,6 +9,7 @@ use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayClassificationRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\MatchdayClassification;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 /**
  * Class MatchdayClassificationRepository.
@@ -33,5 +34,15 @@ class MatchdayClassificationRepository extends AbstractRepository implements Mat
         );
 
         return $bean->box();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByCommunity(CommunityInterface $community): array
+    {
+        $beans = R::find(static::ENTITY, 'community_id = ?', [$community->getId()]);
+
+        return RedBeanUtils::boxArray($beans);
     }
 }
