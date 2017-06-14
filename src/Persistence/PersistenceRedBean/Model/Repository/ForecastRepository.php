@@ -5,10 +5,12 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ForecastInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\ForecastRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Forecast;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 /**
  * Class ForecastRepository.
@@ -34,5 +36,31 @@ class ForecastRepository extends AbstractRepository implements ForecastRepositor
 
         return $bean->box();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAllFromCommunity(
+        CommunityInterface $community,
+        PlayerInterface $player,
+        MatchdayInterface $matchday
+    ): array {
+        /** @var Forecast $bean */
+        $beans = R::find(
+            static::ENTITY,
+            'player_id = ? AND community_id = ?',
+            [$player->getId(), $community->getId()]
+        );
+
+        $result = [];
+        foreach ($beans as $bean) {
+            if ($bean->getMatch()->getMatchday()->getId() == $matchday->getId()) {
+                $result[] = $bean;
+            }
+        }
+
+        return RedBeanUtils::boxArray($result);
+    }
+
 
 }

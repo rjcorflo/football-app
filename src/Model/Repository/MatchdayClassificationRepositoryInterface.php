@@ -2,7 +2,10 @@
 
 namespace RJ\PronosticApp\Model\Repository;
 
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayClassificationInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 /**
  * Repository for {@link MatchdayClassificationInterface} entities.
@@ -20,4 +23,18 @@ interface MatchdayClassificationRepositoryInterface extends StandardRepositoryIn
 {
     /** @var string */
     const ENTITY = 'matchdayclassification';
+
+    /**
+     * Find or create a new forecast.
+     *
+     * @param PlayerInterface $player
+     * @param CommunityInterface $community
+     * @param MatchdayInterface $matchday
+     * @return MatchdayClassificationInterface
+     */
+    public function findOneOrCreate(
+        PlayerInterface $player,
+        CommunityInterface $community,
+        MatchdayInterface $matchday
+    ): MatchdayClassificationInterface;
 }

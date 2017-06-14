@@ -113,34 +113,4 @@ interface MatchdayClassificationInterface
      * @param int $hits
      */
     public function setHitsNegativePoints(int $hits): void;
-
-    /**
-     * @return int
-     */
-    public function getTimesFirst(): int;
-
-    /**
-     * @param int $times
-     */
-    public function setTimesFirst(int $times): void;
-
-    /**
-     * @return int
-     */
-    public function getTimesSecond(): int;
-
-    /**
-     * @param int $times
-     */
-    public function setTimesSecond(int $times): void;
-
-    /**
-     * @return int
-     */
-    public function getTimesThird(): int;
-
-    /**
-     * @param int $times
-     */
-    public function setTimesThird(int $times): void;
 }

@@ -4,6 +4,7 @@ namespace RJ\PronosticApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
+use RJ\PronosticApp\App\Controller\ClassificationController;
 use RJ\PronosticApp\App\Controller\CommunityController;
 use RJ\PronosticApp\App\Controller\DocumentationController;
 use RJ\PronosticApp\App\Controller\ForecastController;
@@ -157,6 +158,12 @@ class Application extends App
             $this->group('/match', function () {
                 $this->post('/actives', [MatchController::class, 'activeMatches']);
             })->add(AuthenticationMiddleware::class);
+
+            /* Classifications */
+            $this->group('/classification', function () {
+                $this->get('/calculate', [ClassificationController::class, 'calculateClassifications']);
+            });
+
 
             /* Utils */
             $this->group('/util', function () {

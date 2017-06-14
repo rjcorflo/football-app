@@ -95,4 +95,9 @@ interface ForecastInterface
      * @return \DateTime
      */
     public function getLastModifiedDate(): \DateTime;
+
+    /**
+     * Calculate actual points for this forecast.
+     */
+    public function calculateActualPoints(): void;
 }

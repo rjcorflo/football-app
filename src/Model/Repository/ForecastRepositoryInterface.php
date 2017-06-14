@@ -4,6 +4,7 @@ namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ForecastInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
@@ -37,4 +38,18 @@ interface ForecastRepositoryInterface extends StandardRepositoryInterface
         CommunityInterface $community,
         MatchInterface $match
     ): ForecastInterface;
+
+    /**
+     * Find all forecasts from community.
+     *
+     * @param CommunityInterface $community
+     * @param PlayerInterface $player
+     * @param MatchdayInterface $matchday
+     * @return ForecastInterface[]
+     */
+    public function findAllFromCommunity(
+        CommunityInterface $community,
+        PlayerInterface $player,
+        MatchdayInterface $matchday
+    ): array;
 }
