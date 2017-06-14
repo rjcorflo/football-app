@@ -8,6 +8,7 @@ use RJ\PronosticApp\App\Controller\CommunityController;
 use RJ\PronosticApp\App\Controller\DocumentationController;
 use RJ\PronosticApp\App\Controller\ForecastController;
 use RJ\PronosticApp\App\Controller\ImagesController;
+use RJ\PronosticApp\App\Controller\MatchController;
 use RJ\PronosticApp\App\Controller\PlayerController;
 use RJ\PronosticApp\App\Controller\PlayerLoginController;
 use RJ\PronosticApp\App\Controller\PrivateCommunityController;
@@ -149,6 +150,11 @@ class Application extends App
                     $this->get('/list', [PublicCommunityController::class, 'list']);
                     $this->post('/join', [PublicCommunityController::class, 'join']);
                 });
+            })->add(AuthenticationMiddleware::class);
+
+            /* Match */
+            $this->group('/match', function () {
+                $this->post('/actives', [MatchController::class, 'activeMatches']);
             })->add(AuthenticationMiddleware::class);
         })->add(PersistenceMiddleware::class)
           ->add(InitializationMiddleware::class);

@@ -4,6 +4,7 @@ namespace RJ\PronosticApp\WebResource;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
+use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
@@ -33,7 +34,7 @@ interface WebResourceGeneratorInterface
      * @param string $includes
      * @return $this
      */
-    public function include(string $includes);
+    public function include (string $includes);
 
     /**
      * Exclude internal Resource
@@ -91,4 +92,11 @@ interface WebResourceGeneratorInterface
      * @return array|string
      */
     public function createImageResource($images, $resultType = self::JSON);
+
+    /**
+     * @param MatchInterface[] $matches
+     * @param string $resultType
+     * @return mixed
+     */
+    public function createActiveMatchesResource($matches, $resultType = self::JSON);
 }

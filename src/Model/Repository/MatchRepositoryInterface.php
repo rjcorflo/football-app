@@ -20,4 +20,12 @@ interface MatchRepositoryInterface extends StandardRepositoryInterface
 {
     /** @var string */
     const ENTITY = 'match';
+
+    /**
+     * Find matches by matchday with start date after actual date.
+     *
+     * @param int $idMatchday
+     * @return MatchInterface[]
+     */
+    public function findActivesByMatchday(int $idMatchday): array;
 }

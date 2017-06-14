@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
 
 /**
- * Class PlayerTransformer.
+ * Class CommunityListTransformer.
  *
  * @package RJ\PronosticApp\WebResource\Fractal\Transformer
  */

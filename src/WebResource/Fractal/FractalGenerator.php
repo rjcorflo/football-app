@@ -10,13 +10,15 @@ use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Util\General\MessageResult;
-use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
+use RJ\PronosticApp\WebResource\Fractal\Resource\MatchListResource;
+use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
 use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
-use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityDataTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\MatchListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
@@ -159,6 +161,24 @@ class FractalGenerator implements WebResourceGeneratorInterface
         } else {
             throw new \Exception("El recurso pasado no es un instancia que implemente " .
                 "ImageInterface o sea un array ImageInterface[]");
+        }
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createActiveMatchesResource($matches, $resultType = self::JSON)
+    {
+        if (is_array($matches)) {
+            $data = new MatchListResource($matches);
+            $resource = new Item($data, $this->container->get(MatchListTransformer::class));
+        } else {
+            throw new \Exception("El recurso pasado no un array MatchInterface[]");
         }
 
         return $this->returnResourceType(
