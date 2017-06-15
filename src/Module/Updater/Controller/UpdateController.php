@@ -27,6 +27,9 @@ class UpdateController
     /** @var EntityManager $entityManager */
     private $entityManager;
 
+    /** @var \DateTime */
+    private $actualDate;
+
     /**
      * FixturesController constructor.
      * @param EntityManager $entityManager
@@ -34,6 +37,7 @@ class UpdateController
     public function __construct(EntityManager $entityManager)
     {
         $this->entityManager = $entityManager;
+        $this->actualDate = new \DateTime();
     }
 
     /**
@@ -400,6 +404,7 @@ class UpdateController
             $bean->setName($data['nombre']);
             $bean->setAlias($data['alias']);
             $bean->setOrder($data['orden']);
+            $bean->setLastModifiedDate($this->actualDate);
             $beans[] = $bean;
         }
 
@@ -559,7 +564,7 @@ class UpdateController
             $bean->setAwayTeam($teamRepository->getById($data['visitante']));
             $bean->setLocalGoals(-1);
             $bean->setAwayGoals(-1);
-            $bean->setLastModifiedDate(new \DateTime());
+            $bean->setLastModifiedDate($this->actualDate);
             $bean->setImage($imageRepository->getById($data['imagen']));
             $beans[] = $bean;
         }

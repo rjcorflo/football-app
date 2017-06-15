@@ -3,6 +3,8 @@
 namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RedBeanPHP\R;
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\MatchInterface;
 use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
@@ -27,5 +29,19 @@ class MatchRepository extends AbstractRepository implements MatchRepositoryInter
         );
 
         return RedBeanUtils::boxArray($beans);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByCommunity(CommunityInterface $community, \DateTime $date = null): array
+    {
+        if ($date !== null) {
+            $matches = R::find(static::ENTITY, 'last_modified_date > ?', [$date->format('Y-m-d H:i:s')]);
+        } else {
+            $matches = R::findAll(static::ENTITY);
+        }
+
+        return RedBeanUtils::boxArray($matches);
     }
 }

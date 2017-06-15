@@ -2,6 +2,7 @@
 
 namespace RJ\PronosticApp\Model\Repository;
 
+use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 
 /**
@@ -28,4 +29,13 @@ interface MatchRepositoryInterface extends StandardRepositoryInterface
      * @return MatchInterface[]
      */
     public function findActivesByMatchday(int $idMatchday): array;
+
+    /**
+     * Find matches for community updated after date (or all if no date is passed).
+     *
+     * @param CommunityInterface $community
+     * @param \DateTime|null $date
+     * @return MatchInterface[]
+     */
+    public function findByCommunity(CommunityInterface $community, \DateTime $date = null): array;
 }

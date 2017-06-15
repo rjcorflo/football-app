@@ -4,12 +4,8 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
-use RJ\PronosticApp\Model\Entity\CommunityInterface;
-use RJ\PronosticApp\Model\Repository\ForecastRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\MatchdayClassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
-use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
+use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityDataResource;
 
 /**
  * Class CommunityDataTransformer.
@@ -36,22 +32,8 @@ class CommunityDataTransformer extends TransformerAbstract
      */
     protected $container;
 
-    /**
-     * @var ParticipantRepositoryInterface
-     */
-    private $participantRepo;
-
     /** @var MatchdayRepositoryInterface */
     private $matchdayRepository;
-
-    /** @var MatchRepositoryInterface */
-    private $matchRepository;
-
-    /** @var ForecastRepositoryInterface */
-    private $forecastRepository;
-
-    /** @var MatchdayClassificationRepositoryInterface */
-    private $matchdayClassRepo;
 
     /**
      * CommunityTransformer constructor.
@@ -61,22 +43,17 @@ class CommunityDataTransformer extends TransformerAbstract
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
-
-        $this->participantRepo = $this->container->get(ParticipantRepositoryInterface::class);
         $this->matchdayRepository = $this->container->get(MatchdayRepositoryInterface::class);
-        $this->matchRepository = $this->container->get(MatchRepositoryInterface::class);
-        $this->forecastRepository = $this->container->get(ForecastRepositoryInterface::class);
-        $this->matchdayClassRepo = $this->container->get(MatchdayClassificationRepositoryInterface::class);
     }
 
     /**
-     * @param CommunityInterface $community
+     * @param CommunityDataResource $dataResource
      * @return array
      */
-    public function transform(CommunityInterface $community)
+    public function transform(CommunityDataResource $dataResource)
     {
         $resource = [
-            'fecha_actual' => (new \DateTime())->format('Y-m-d H:i:s')
+            'fecha_actual' => $dataResource->getDate()->format('Y-m-d H:i:s')
         ];
 
         $matchday = $this->matchdayRepository->getNextMatchday();
@@ -93,57 +70,50 @@ class CommunityDataTransformer extends TransformerAbstract
     /**
      * Include Players.
      *
-     * @param CommunityInterface $community
+     * @param CommunityDataResource $dataResource
      * @return \League\Fractal\Resource\Collection
      */
-    public function includeParticipantes(CommunityInterface $community)
+    public function includeParticipantes(CommunityDataResource $dataResource)
     {
-        $players = $community->getPlayers();
-
-        return $this->collection($players, $this->container->get(PlayerTransformer::class));
+        return $this->collection($dataResource->getPlayers(), $this->container->get(PlayerTransformer::class));
     }
 
     /**
-     * @param CommunityInterface $community
+     * @param CommunityDataResource $dataResource
      * @return \League\Fractal\Resource\Collection
      */
-    public function includeJornadas(CommunityInterface $community)
+    public function includeJornadas(CommunityDataResource $dataResource)
     {
-        $matchdays = $this->matchdayRepository->findAllOrdered();
-
-        return $this->collection($matchdays, $this->container->get(MatchdayTransformer::class));
+        return $this->collection($dataResource->getMatchdays(), $this->container->get(MatchdayTransformer::class));
     }
 
     /**
-     * @param CommunityInterface $community
+     * @param CommunityDataResource $dataResource
      * @return \League\Fractal\Resource\Collection
      */
-    public function includePartidos(CommunityInterface $community)
+    public function includePartidos(CommunityDataResource $dataResource)
     {
-        $matches = $this->matchRepository->findAll();
-
-        return $this->collection($matches, $this->container->get(MatchTransformer::class));
+        return $this->collection($dataResource->getMatches(), $this->container->get(MatchTransformer::class));
     }
 
     /**
-     * @param CommunityInterface $community
+     * @param CommunityDataResource $dataResource
      * @return \League\Fractal\Resource\Collection
      */
-    public function includePronosticos(CommunityInterface $community)
+    public function includePronosticos(CommunityDataResource $dataResource)
     {
-        $forecasts = $this->forecastRepository->findByCommunity($community);
-
-        return $this->collection($forecasts, $this->container->get(ForecastTransformer::class));
+        return $this->collection($dataResource->getForecasts(), $this->container->get(ForecastTransformer::class));
     }
 
     /**
-     * @param CommunityInterface $community
+     * @param CommunityDataResource $dataResource
      * @return \League\Fractal\Resource\Collection
      */
-    public function includeClasificacion(CommunityInterface $community)
+    public function includeClasificacion(CommunityDataResource $dataResource)
     {
-        $classifications = $this->matchdayClassRepo->findByCommunity($community);
-
-        return $this->collection($classifications, $this->container->get(MatchdayClassificationTransformer::class));
+        return $this->collection(
+            $dataResource->getClassification(),
+            $this->container->get(MatchdayClassificationTransformer::class)
+        );
     }
 }

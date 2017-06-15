@@ -24,13 +24,24 @@ class ParticipantRepository extends AbstractRepository implements ParticipantRep
     /**
      * @inheritDoc
      */
-    public function findPlayersFromCommunity(CommunityInterface $community): array
+    public function findPlayersFromCommunity(CommunityInterface $community, \DateTime $date = null): array
     {
         if (!$community instanceof Community) {
             throw new \Exception("Object must be an instance of Community");
         }
 
-        $players = $community->unbox()->with('ORDER BY nickname')->via(static::ENTITY)->sharedPlayerList;
+        $bean = $community->unbox();
+
+        if ($date !== null) {
+            $bean = $bean->withCondition(
+                '`participant`.creation_date > ? ORDER BY nickname',
+                [$date->format('Y-m-d H:i:s')]
+            );
+        } else {
+            $bean = $bean->with('ORDER BY nickname');
+        }
+
+        $players = $bean->via(static::ENTITY)->sharedPlayerList;
 
         return RedBeanUtils::boxArray($players);
     }
@@ -49,7 +60,7 @@ class ParticipantRepository extends AbstractRepository implements ParticipantRep
         if ($date !== null) {
             $bean = $bean->withCondition(
                 '`participant`.creation_date > ? ORDER BY name',
-                [$date->format('Y-m-d')]
+                [$date->format('Y-m-d H:i:s')]
             );
         } else {
             $bean = $bean->with('ORDER BY name');

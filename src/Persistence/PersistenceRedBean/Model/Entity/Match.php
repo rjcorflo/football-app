@@ -138,22 +138,6 @@ class Match extends SimpleModel implements MatchInterface
     /**
      * @inheritDoc
      */
-    public function setLastModifiedDate(\DateTime $lastModified): void
-    {
-        $this->bean->last_modified_date = $lastModified;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getLastModifiedDate(): \DateTime
-    {
-        return \DateTime::createFromFormat('Y-m-d H:i:s', $this->bean->last_modified_date);
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function setTag(string $tag): void
     {
         $this->bean->tag = $tag;
@@ -213,5 +197,21 @@ class Match extends SimpleModel implements MatchInterface
     public function getImage(): ImageInterface
     {
         return $this->bean->image->box();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastModifiedDate(\DateTime $lastModified): void
+    {
+        $this->bean->last_modified_date = $lastModified;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastModifiedDate(): \DateTime
+    {
+        return \DateTime::createFromFormat('Y-m-d H:i:s', $this->bean->last_modified_date);
     }
 }

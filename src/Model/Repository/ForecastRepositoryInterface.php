@@ -54,10 +54,11 @@ interface ForecastRepositoryInterface extends StandardRepositoryInterface
     ): array;
 
     /**
-     * Find forecasts for community.
+     * Find forecasts for community updated after date (or all if no date is passed).
      *
      * @param CommunityInterface $community
-     * @return ForecastInterface[]
+     * @param \DateTime|null $date
+     * @return MatchInterface[]
      */
-    public function findByCommunity(CommunityInterface $community): array;
+    public function findByCommunity(CommunityInterface $community, \DateTime $date = null): array;
 }

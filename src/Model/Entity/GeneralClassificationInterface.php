@@ -143,4 +143,14 @@ interface GeneralClassificationInterface
      * @param int $times
      */
     public function setTimesThird(int $times): void;
+
+    /**
+     * @param \DateTime $lastModified
+     */
+    public function setLastModifiedDate(\DateTime $lastModified) : void;
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastModifiedDate() : \DateTime;
 }

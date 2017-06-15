@@ -5,7 +5,7 @@ namespace RJ\PronosticApp\WebResource\Fractal\Resource;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
 
 /**
- * Rsource only for display.
+ * Resource only for display.
  */
 class CommunityListResource
 {

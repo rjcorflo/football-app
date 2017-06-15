@@ -4,7 +4,7 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
-use RJ\PronosticApp\Model\Entity\MatchdayClassificationInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 
@@ -30,10 +30,10 @@ class MatchdayClassificationTransformer extends TransformerAbstract
     }
 
     /**
-     * @param MatchdayClassificationInterface $classification
+     * @param MatchdayclassificationInterface $classification
      * @return array
      */
-    public function transform(MatchdayClassificationInterface $classification)
+    public function transform(MatchdayclassificationInterface $classification)
     {
         return [
             'id_jornada' => $classification->getMatchday()->getId(),

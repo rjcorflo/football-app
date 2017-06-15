@@ -3,8 +3,12 @@
 namespace RJ\PronosticApp\WebResource;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\ForecastInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
+use RJ\PronosticApp\Model\Entity\ParticipantInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\ForecastResult;
@@ -35,7 +39,7 @@ interface WebResourceGeneratorInterface
      * @param string $includes
      * @return $this
      */
-    public function include (string $includes);
+    public function include(string $includes);
 
     /**
      * Exclude internal Resource
@@ -81,11 +85,24 @@ interface WebResourceGeneratorInterface
     public function createCommunityListResource($communities, $resultType = self::JSON);
 
     /**
-     * @param CommunityInterface|CommunityInterface[] $communities
+     * @param CommunityInterface $community
+     * @param PlayerInterface[] $players
+     * @param MatchdayInterface[] $matchdays
+     * @param MatchInterface[] $matches
+     * @param ForecastInterface[] $forecasts
+     * @param MatchdayclassificationInterface[] $classifications
      * @param string $resultType
-     * @return array|string
+     * @return mixed
      */
-    public function createCommunityDataResource($communities, $resultType = self::JSON);
+    public function createCommunityDataResource(
+        $community,
+        $players,
+        $matchdays,
+        $matches,
+        $forecasts,
+        $classifications,
+        $resultType = self::JSON
+    );
 
     /**
      * @param TokenInterface|TokenInterface[] $tokens

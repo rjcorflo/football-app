@@ -27,9 +27,10 @@ interface ParticipantRepositoryInterface extends StandardRepositoryInterface
     /**
      * List community's players.
      * @param CommunityInterface $community
+     * @param \DateTime|null $date
      * @return PlayerInterface[]
      */
-    public function findPlayersFromCommunity(CommunityInterface $community): array;
+    public function findPlayersFromCommunity(CommunityInterface $community, \DateTime $date = null): array;
 
     /**
      * List player's communities.

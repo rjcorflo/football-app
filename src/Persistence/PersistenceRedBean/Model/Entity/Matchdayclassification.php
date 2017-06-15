@@ -4,16 +4,16 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity;
 
 use RedBeanPHP\SimpleModel;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
-use RJ\PronosticApp\Model\Entity\MatchdayClassificationInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 /**
- * Class MatchdayClassification
+ * Class Matchdayclassification
  *
  * @package RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity
  */
-class MatchdayClassification extends SimpleModel implements MatchdayClassificationInterface
+class Matchdayclassification extends SimpleModel implements MatchdayclassificationInterface
 {
     /**
      * @inheritDoc
@@ -70,6 +70,39 @@ class MatchdayClassification extends SimpleModel implements MatchdayClassificati
     {
         $this->bean->matchday = $matchday->unbox();
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBasicPoints(): int
+    {
+        return $this->bean->basic_points;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setBasicPoints(int $points): void
+    {
+        $this->bean->basic_points = $points;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPointsForPosition(): int
+    {
+        return $this->bean->position_points;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPointsForPosition(int $points): void
+    {
+        $this->bean->position_points = $points;
+    }
+
 
     /**
      * @inheritDoc
@@ -181,5 +214,37 @@ class MatchdayClassification extends SimpleModel implements MatchdayClassificati
     public function setHitsNegativePoints(int $hits): void
     {
         $this->bean->hits_negative_points = $hits;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPosition(): int
+    {
+        return $this->bean->position;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setPosition(int $position): void
+    {
+        $this->bean->position = $position;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastModifiedDate(\DateTime $lastModified): void
+    {
+        $this->bean->last_modified_date = $lastModified;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastModifiedDate(): \DateTime
+    {
+        return \DateTime::createFromFormat('Y-m-d H:i:s', $this->bean->last_modified_date);
     }
 }

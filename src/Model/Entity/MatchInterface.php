@@ -94,16 +94,6 @@ interface MatchInterface
     public function getState() : string;
 
     /**
-     * @param \DateTime $lastModified
-     */
-    public function setLastModifiedDate(\DateTime $lastModified) : void;
-
-    /**
-     * @return \DateTime
-     */
-    public function getLastModifiedDate() : \DateTime;
-
-    /**
      * @param string $tag
      */
     public function setTag(string $tag): void;
@@ -142,4 +132,14 @@ interface MatchInterface
      * @return ImageInterface
      */
     public function getImage(): ImageInterface;
+
+    /**
+     * @param \DateTime $lastModified
+     */
+    public function setLastModifiedDate(\DateTime $lastModified) : void;
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastModifiedDate() : \DateTime;
 }

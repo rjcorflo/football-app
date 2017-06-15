@@ -8,12 +8,19 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\ForecastInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
+use RJ\PronosticApp\Model\Entity\MatchInterface;
+use RJ\PronosticApp\Model\Entity\ParticipantInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
+use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\ForecastResult;
 use RJ\PronosticApp\Util\General\MessageResult;
+use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityDataResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\MatchListResource;
-use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerResource;
 use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityDataTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityListTransformer;
@@ -21,6 +28,8 @@ use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MatchListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\PlayerTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\TokenTransformer;
 use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
 
 /**
@@ -32,8 +41,6 @@ use RJ\PronosticApp\WebResource\WebResourceGeneratorInterface;
  */
 class FractalGenerator implements WebResourceGeneratorInterface
 {
-    use PlayerResource;
-
     /**
      * @var \Psr\Container\ContainerInterface
      */
@@ -89,6 +96,62 @@ class FractalGenerator implements WebResourceGeneratorInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function createPlayerResource(
+        $player,
+        $resultType = FractalGenerator::JSON
+    ) {
+        if ($player instanceof PlayerInterface) {
+            $resource = new Item(
+                $player,
+                $this->container->get(PlayerTransformer::class)
+            );
+        } elseif (is_array($player)) {
+            $resource = new Collection(
+                $player,
+                $this->container->get(PlayerTransformer::class)
+            );
+        } else {
+            throw new \Exception("El recurso pasado no es un instancia que implemente " .
+                "PlayerInterface o sea un array PlayerInterface[]");
+        }
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function createTokenResource(
+        $token,
+        $resultType = FractalGenerator::JSON
+    ) {
+        if ($token instanceof TokenInterface) {
+            $resource = new Item(
+                $token,
+                $this->container->get(TokenTransformer::class)
+            );
+        } elseif (is_array($token)) {
+            $resource = new Collection(
+                $token,
+                $this->container->get(TokenTransformer::class)
+            );
+        } else {
+            throw new \Exception("El recurso pasado no es un instancia que implemente " .
+                "TokenInterface o sea un array TokenInterface[]");
+        }
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
      * @inheritDoc
      */
     public function createForecastMessageResource(ForecastResult $message, $resultType = self::JSON)
@@ -107,7 +170,6 @@ class FractalGenerator implements WebResourceGeneratorInterface
             $resultType
         );
     }
-
 
     /**
      * @inheritDoc
@@ -154,22 +216,30 @@ class FractalGenerator implements WebResourceGeneratorInterface
     /**
      * @inheritDoc
      */
-    public function createCommunityDataResource($communities, $resultType = self::JSON)
-    {
-        if ($communities instanceof CommunityInterface) {
-            $resource = new Item($communities, $this->container->get(CommunityDataTransformer::class));
-        } elseif (is_array($communities)) {
-            $resource = new Collection($communities, $this->container->get(CommunityDataTransformer::class));
-        } else {
-            throw new \Exception("El recurso pasado no es un instancia que implemente " .
-                "CommunityInterface o sea un array CommunityInterface[]");
-        }
+    public function createCommunityDataResource(
+        $community,
+        $players,
+        $matchdays,
+        $matches,
+        $forecasts,
+        $classifications,
+        $resultType = self::JSON
+    ) {
+        $data = new CommunityDataResource($community);
+        $data->setPlayers($players);
+        $data->setMatchdays($matchdays);
+        $data->setMatches($matches);
+        $data->setForecasts($forecasts);
+        $data->setClassification($classifications);
+
+        $resource = new Item($data, $this->container->get(CommunityDataTransformer::class));
 
         return $this->returnResourceType(
             $this->manager->createData($resource),
             $resultType
         );
     }
+
 
     /**
      * @inheritDoc

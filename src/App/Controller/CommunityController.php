@@ -9,7 +9,11 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Exception\Request\MissingParametersException;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\ForecastRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchdayclassificationRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
 use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\MessageResult;
@@ -203,22 +207,122 @@ class CommunityController extends BaseController
     /**
      * Get data from community.
      *
+     * @param ServerRequestInterface $request
      * @param ResponseInterface $response
      * @param int $idCommunity
      * @return ResponseInterface
      */
     public function communityData(
+        ServerRequestInterface $request,
         ResponseInterface $response,
         $idCommunity
     ) {
+        $bodyData = $request->getParsedBody();
+
         /** @var CommunityRepositoryInterface $communityRepository */
         $communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
+
+        /** @var ParticipantRepositoryInterface $participantRepository */
+        $participantRepository = $this->entityManager->getRepository(ParticipantRepositoryInterface::class);
+
+        /** @var MatchdayRepositoryInterface $matchdayRepository */
+        $matchdayRepository = $this->entityManager->getRepository(MatchdayRepositoryInterface::class);
+
+        /** @var MatchRepositoryInterface $matchRepository */
+        $matchRepository = $this->entityManager->getRepository(MatchRepositoryInterface::class);
+
+        /** @var MatchdayclassificationRepositoryInterface $matchdayClassRepo */
+        $matchdayClassRepo = $this->entityManager->getRepository(MatchdayclassificationRepositoryInterface::class);
+
+        /** @var ForecastRepositoryInterface $forecastRepository */
+        $forecastRepository = $this->entityManager->getRepository(ForecastRepositoryInterface::class);
 
         try {
             /** @var CommunityInterface $community */
             $community = $communityRepository->getById($idCommunity);
 
-            $resource = $this->resourceGenerator->createCommunityDataResource($community);
+            // Get players participants
+            $dateUpdateParticipants = null;
+            if (isset($bodyData['ultima_actualizacion_participantes'])
+                && $bodyData['ultima_actualizacion_participantes'] != ''
+            ) {
+                $dateUpdateParticipants = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $bodyData['ultima_actualizacion_participantes']
+                );
+            }
+
+            $players = $participantRepository->findPlayersFromCommunity($community, $dateUpdateParticipants);
+
+
+            // Get matchdays
+            $dateUpdateMatchdays = null;
+            if (isset($bodyData['ultima_actualizacion_jornadas'])
+                && $bodyData['ultima_actualizacion_jornadas'] != ''
+            ) {
+                $dateUpdateMatchdays = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $bodyData['ultima_actualizacion_jornadas']
+                );
+            }
+
+            $matchdays = $matchdayRepository->findByCommunity($community, $dateUpdateMatchdays);
+
+
+            // Get matches
+            $dateUpdateMatches = null;
+            if (isset($bodyData['ultima_actualizacion_partidos'])
+                && $bodyData['ultima_actualizacion_partidos'] != ''
+            ) {
+                $dateUpdateMatches = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $bodyData['ultima_actualizacion_partidos']
+                );
+            }
+
+            $matches = $matchRepository->findByCommunity($community, $dateUpdateMatches);
+
+
+            // Get forecasts
+            $dateUpdateForecast = null;
+            if (isset($bodyData['ultima_actualizacion_pronosticos'])
+                && $bodyData['ultima_actualizacion_pronosticos'] != ''
+            ) {
+                $dateUpdateForecast = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $bodyData['ultima_actualizacion_pronosticos']
+                );
+            }
+
+            $forecasts = $forecastRepository->findByCommunity($community, $dateUpdateForecast);
+
+
+            // Get matchdays classification
+            $dateUpdateMatchdayClassification = null;
+            if (isset($bodyData['ultima_actualizacion_clasificacion'])
+                && $bodyData['ultima_actualizacion_clasificacion'] != ''
+            ) {
+                $dateUpdateMatchdayClassification = \DateTime::createFromFormat(
+                    'Y-m-d H:i:s',
+                    $bodyData['ultima_actualizacion_clasificacion']
+                );
+            }
+
+            $classifications = $matchdayClassRepo->findByCommunityUntilNextMatchdayModifiedAfterDate(
+                $community,
+                $matchdayRepository->getNextMatchday(),
+                $dateUpdateMatchdayClassification
+            );
+
+            // Create resource
+            $resource = $this->resourceGenerator->createCommunityDataResource(
+                $community,
+                $players,
+                $matchdays,
+                $matches,
+                $forecasts,
+                $classifications
+            );
 
             $response = $this->generateJsonCorrectResponse($response, $resource);
         } catch (\Exception $e) {

@@ -101,4 +101,20 @@ class Matchday extends SimpleModel implements MatchdayInterface
     {
         return $this->bean->matchday_order;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLastModifiedDate(\DateTime $lastModified): void
+    {
+        $this->bean->last_modified_date = $lastModified;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLastModifiedDate(): \DateTime
+    {
+        return \DateTime::createFromFormat('Y-m-d H:i:s', $this->bean->last_modified_date);
+    }
 }

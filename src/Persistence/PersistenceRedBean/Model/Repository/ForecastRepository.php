@@ -65,10 +65,22 @@ class ForecastRepository extends AbstractRepository implements ForecastRepositor
     /**
      * @inheritDoc
      */
-    public function findByCommunity(CommunityInterface $community): array
+    public function findByCommunity(CommunityInterface $community, \DateTime $date = null): array
     {
-        $beans = R::find(static::ENTITY, 'community_id = ?', [$community->getId()]);
+        if ($date !== null) {
+            $matches = R::find(
+                static::ENTITY,
+                'community_id = ? AND last_modified_date > ?',
+                [$community->getId(), $date->format('Y-m-d H:i:s')]
+            );
+        } else {
+            $matches = R::find(
+                static::ENTITY,
+                'community_id = ?',
+                [$community->getId()]
+            );
+        }
 
-        return RedBeanUtils::boxArray($beans);
+        return RedBeanUtils::boxArray($matches);
     }
 }

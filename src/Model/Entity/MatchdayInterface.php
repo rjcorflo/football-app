@@ -63,4 +63,14 @@ interface MatchdayInterface
      * @return int
      */
     public function getOrder(): int;
+
+    /**
+     * @param \DateTime $lastModified
+     */
+    public function setLastModifiedDate(\DateTime $lastModified) : void;
+
+    /**
+     * @return \DateTime
+     */
+    public function getLastModifiedDate() : \DateTime;
 }
