@@ -3,11 +3,11 @@
 namespace RJ\PronosticApp\Model\Entity;
 
 /**
- * Interface GeneralClassificationInterface.
+ * Interface GeneralclassificationInterface.
  *
  * @package RJ\PronosticApp\Model\Entity
  */
-interface GeneralClassificationInterface
+interface GeneralclassificationInterface
 {
     /**
      * @return int
@@ -30,9 +30,9 @@ interface GeneralClassificationInterface
     public function getCommunity(): CommunityInterface;
 
     /**
-     * @param CommunityInterface $
+     * @param CommunityInterface $community
      */
-    public function setCommunity(CommunityInterface $matchday): void;
+    public function setCommunity(CommunityInterface $community): void;
 
     /**
      * @return MatchdayInterface
@@ -113,6 +113,16 @@ interface GeneralClassificationInterface
      * @param int $hits
      */
     public function setHitsNegativePoints(int $hits): void;
+
+    /**
+     * @return int
+     */
+    public function getPosition(): int;
+
+    /**
+     * @param int $position
+     */
+    public function setPosition(int $position): void;
 
     /**
      * @return int

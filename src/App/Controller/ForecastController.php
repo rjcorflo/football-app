@@ -4,9 +4,11 @@ namespace RJ\PronosticApp\App\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RJ\PronosticApp\Model\Exception\Request\MissingParametersException;
 use RJ\PronosticApp\Model\Repository\CommunityRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ForecastRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
+use RJ\PronosticApp\Util\General\ErrorCodes;
 use RJ\PronosticApp\Util\General\ForecastResult;
 
 /**
@@ -48,6 +50,18 @@ class ForecastController extends BaseController
 
         $this->entityManager->beginTransaction();
         try {
+            if (!isset($bodyData['pronosticos'])) {
+                $exception = new MissingParametersException();
+                $exception->addMessageWithCode(
+                    ErrorCodes::MISSING_PARAMETERS,
+                    'El parámetro ["pronosticos"] es obligatorio'
+                );
+
+                throw $exception;
+            }
+
+            $forecast = $bodyData['pronosticos'];
+
             foreach ($bodyData as $forecastData) {
                 try {
                     if ($this->checkForecastValidity($forecastData)) {
