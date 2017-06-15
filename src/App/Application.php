@@ -141,6 +141,7 @@ class Application extends App
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
                 $this->post('/{idCommunity:[0-9]+}/data', [CommunityController::class, 'communityData']);
                 $this->post('/{idCommunity:[0-9]+}/forecast', [ForecastController::class, 'saveForecasts']);
+                $this->post('/{idCommunity:[0-9]+}/matches/actives', [MatchController::class, 'activeMatches']);
                 $this->get('/search', [CommunityController::class, 'search']);
                 $this->post('/exist', [CommunityController::class, 'exist']);
 
@@ -152,11 +153,6 @@ class Application extends App
                     $this->get('/list', [PublicCommunityController::class, 'list']);
                     $this->post('/join', [PublicCommunityController::class, 'join']);
                 });
-            })->add(AuthenticationMiddleware::class);
-
-            /* Match */
-            $this->group('/match', function () {
-                $this->post('/actives', [MatchController::class, 'activeMatches']);
             })->add(AuthenticationMiddleware::class);
 
             /* Classifications */

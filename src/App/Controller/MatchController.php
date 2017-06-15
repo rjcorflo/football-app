@@ -24,7 +24,8 @@ class MatchController extends BaseController
      */
     public function activeMatches(
         ServerRequestInterface $request,
-        ResponseInterface $response
+        ResponseInterface $response,
+        $idCommunity
     ): ResponseInterface {
         $bodyData = $request->getParsedBody();
 
