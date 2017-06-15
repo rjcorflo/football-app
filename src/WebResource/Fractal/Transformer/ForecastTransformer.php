@@ -3,7 +3,6 @@
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
-use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\ForecastInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 

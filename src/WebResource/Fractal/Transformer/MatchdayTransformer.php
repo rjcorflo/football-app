@@ -5,7 +5,6 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
-use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 /**
  * Class MatchdayTransformer

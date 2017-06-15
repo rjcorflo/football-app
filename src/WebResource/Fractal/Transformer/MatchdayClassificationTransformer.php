@@ -5,8 +5,6 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
-use RJ\PronosticApp\Model\Entity\MatchdayInterface;
-use RJ\PronosticApp\Model\Entity\TokenInterface;
 
 /**
  * Class MatchdayClassificationTransformer
@@ -37,8 +35,9 @@ class MatchdayClassificationTransformer extends TransformerAbstract
     {
         return [
             'id_jornada' => $classification->getMatchday()->getId(),
+            'id_comunidad' => $classification->getCommunity()->getId(),
             'id_jugador' => $classification->getPlayer()->getId(),
-            'puesto' => rand(1, 3),
+            'puesto' => $classification->getPosition(),
             'total' => $classification->getTotalPoints(),
             'aciertos_diez' => $classification->getHitsTenPoints(),
             'aciertos_cinco' => $classification->getHitsFivePoints(),
@@ -46,7 +45,7 @@ class MatchdayClassificationTransformer extends TransformerAbstract
             'aciertos_dos' => $classification->getHitsTwoPoints(),
             'aciertos_uno' => $classification->getHitsOnePoints(),
             'aciertos_negativo' => $classification->getHitsNegativePoints(),
-            'puntos_posicion' => 0
+            'puntos_posicion' => $classification->getPointsForPosition()
         ];
     }
 }

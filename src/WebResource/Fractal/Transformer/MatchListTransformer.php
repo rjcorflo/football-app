@@ -3,8 +3,6 @@
 namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 
 use League\Fractal\TransformerAbstract;
-use Psr\Container\ContainerInterface;
-use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\MatchListResource;
 
 /**
