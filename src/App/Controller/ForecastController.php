@@ -60,48 +60,45 @@ class ForecastController extends BaseController
                 throw $exception;
             }
 
-            $forecast = $bodyData['pronosticos'];
+            $forecasts = $bodyData['pronosticos'];
 
-            foreach ($bodyData as $forecastData) {
+            foreach ($forecasts as $forecastData) {
                 try {
-                    if ($this->checkForecastValidity($forecastData)) {
-                        $match = $matchRepository->getById($forecastData['id_partido']);
+                    // Check valid data or throw exception
+                    $this->checkForecastValidity($forecastData);
 
-                        $result->setMatchdayId($match->getMatchday()->getId());
+                    $match = $matchRepository->getById($forecastData['id_partido']);
 
-                        $forecast = $forecastRepository->findOneOrCreate($player, $community, $match);
-
-                        if ($forecast->getId() === 0) {
-                            $forecast->setPlayer($player);
-                            $forecast->setCommunity($community);
-                            $forecast->setMatch($match);
-                        } else {
-                            // If model exists and there is no change, dont update
-                            if ($forecast->getLocalGoals() == $forecastData['goles_local']
-                                && $forecast->getAwayGoals() == $forecastData['goles_visitante']
-                                && $forecast->isRisk() == (bool) $forecastData['riesgo']) {
-                                continue;
-                            }
-                        }
-
-                        $forecast->setLocalGoals($forecastData['goles_local']);
-                        $forecast->setAwayGoals($forecastData['goles_visitante']);
-                        $forecast->setRisk((bool)$forecastData['riesgo']);
-                        $forecast->setLastModifiedDate(new \DateTime());
-
-                        $forecastRepository->store($forecast);
-
-                        $result->addCorrect(
-                            $match->getId(),
-                            $forecast->getLocalGoals(),
-                            $forecast->getAwayGoals(),
-                            $forecast->isRisk()
-                        );
-                    } else {
-                        throw new \Exception('Error validando pronóstico');
+                    $actualDate = new \DateTime();
+                    if ($actualDate > $match->getStartTime()) {
+                        throw new \Exception('El partido y ha empezado.');
                     }
+
+                    $result->setMatchdayId($match->getMatchday()->getId());
+
+                    $forecast = $forecastRepository->findOneOrCreate($player, $community, $match);
+
+                    if ($forecast->getId() === 0) {
+                        $forecast->setPlayer($player);
+                        $forecast->setCommunity($community);
+                        $forecast->setMatch($match);
+                    }
+
+                    $forecast->setLocalGoals($forecastData['goles_local']);
+                    $forecast->setAwayGoals($forecastData['goles_visitante']);
+                    $forecast->setRisk((bool)$forecastData['riesgo']);
+                    $forecast->setLastModifiedDate(new \DateTime());
+
+                    $forecastRepository->store($forecast);
+
+                    $result->addCorrect(
+                        $match->getId(),
+                        $forecast->getLocalGoals(),
+                        $forecast->getAwayGoals(),
+                        $forecast->isRisk()
+                    );
                 } catch (\Exception $e) {
-                    $result->addError($forecastData['id_partido'], $e->getMessage());
+                    $result->addError($forecastData['id_partido'] ?? 0, $e->getMessage());
                 }
             }
 
@@ -119,13 +116,15 @@ class ForecastController extends BaseController
 
     /**
      * @param $forecast
-     * @return bool
+     * @throws \Exception
      */
-    private function checkForecastValidity($forecast): bool
+    private function checkForecastValidity($forecast): void
     {
         $isValid = isset($forecast['id_partido']) && isset($forecast['goles_local'])
             && isset($forecast['goles_visitante']) && isset($forecast['riesgo']);
 
-        return $isValid;
+        if (!$isValid) {
+            throw new \Exception('Faltan parámetros en algún pronóstico');
+        }
     }
 }
