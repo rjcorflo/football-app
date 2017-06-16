@@ -8,7 +8,6 @@ use RJ\PronosticApp\Model\Entity\ImageInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
-use RJ\PronosticApp\Model\Entity\ParticipantInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\ForecastResult;
@@ -101,6 +100,17 @@ interface WebResourceGeneratorInterface
         $matches,
         $forecasts,
         $classifications,
+        $resultType = self::JSON
+    );
+
+    /**
+     * @param CommunityInterface$community
+     * @param MatchdayInterface[] $matchdays
+     * @return mixed
+     */
+    public function createGeneralClassificationCommunityResource(
+        $community,
+        $matchdays,
         $resultType = self::JSON
     );
 

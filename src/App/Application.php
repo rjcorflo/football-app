@@ -140,6 +140,10 @@ class Application extends App
                 $this->post('/create', [CommunityController::class, 'create']);
                 $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
                 $this->post('/{idCommunity:[0-9]+}/data', [CommunityController::class, 'communityData']);
+                $this->post(
+                    '/{idCommunity:[0-9]+}/general',
+                    [CommunityController::class, 'communityGeneralClassification']
+                );
                 $this->post('/{idCommunity:[0-9]+}/forecast', [ForecastController::class, 'saveForecasts']);
                 $this->post('/{idCommunity:[0-9]+}/matches/actives', [MatchController::class, 'activeMatches']);
                 $this->get('/search', [CommunityController::class, 'search']);
@@ -166,6 +170,6 @@ class Application extends App
                 $this->map(['GET', 'POST'], '/date', [UtilController::class, 'serverDate']);
             });
         })->add(PersistenceMiddleware::class)
-          ->add(InitializationMiddleware::class);
+            ->add(InitializationMiddleware::class);
     }
 }

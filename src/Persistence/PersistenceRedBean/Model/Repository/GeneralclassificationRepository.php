@@ -57,13 +57,13 @@ class GeneralclassificationRepository extends AbstractRepository implements Gene
         if ($date !== null) {
             $matches = R::find(
                 static::ENTITY,
-                'community_id = ? AND matchday_id <= ? AND last_modified_date > ?',
+                'community_id = ? AND matchday_id <= ? AND last_modified_date > ? ORDER BY position',
                 [$community->getId(), $nextMatchday->getId(), $date->format('Y-m-d H:i:s')]
             );
         } else {
             $matches = R::find(
                 static::ENTITY,
-                'community_id = ? AND matchday_id <= ?',
+                'community_id = ? AND matchday_id <= ? ORDER BY position',
                 [$community->getId(), $nextMatchday->getId()]
             );
         }
@@ -86,10 +86,44 @@ class GeneralclassificationRepository extends AbstractRepository implements Gene
                          hits_five_points DESC,
                          hits_three_points DESC,
                          hits_two_points DESC,
-                         hits_one_points DESC',
+                         hits_one_points DESC,
+                         hits_negative_points ASC',
             [$matchday->getId(), $community->getId()]
         );
 
         return RedBeanUtils::boxArray($classifications);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findMatchdaysIdsWithGeneralClassificationUpdatedAfterDate(
+        CommunityInterface $community,
+        \DateTime $date = null
+    ): array {
+        if ($date !== null) {
+            $results = R::getAll(
+                'SELECT DISTINCT matchday_id
+                   FROM generalclassification
+                  WHERE community_id = ?
+                    AND last_modified_date > ?',
+                [$community->getId(), $date->format('Y-m-d H:i:s')]
+            );
+        } else {
+            $results = R::getAll(
+                'SELECT DISTINCT matchday_id
+                   FROM generalclassification
+                  WHERE community_id = ?',
+                [$community->getId()]
+            );
+        }
+
+        $ids = [];
+
+        foreach ($results as $result) {
+            $ids[] = $result['matchday_id'];
+        }
+
+        return $ids;
     }
 }

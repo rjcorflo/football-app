@@ -20,11 +20,13 @@ use RJ\PronosticApp\Util\General\ForecastResult;
 use RJ\PronosticApp\Util\General\MessageResult;
 use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityDataResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\CommunityListResource;
+use RJ\PronosticApp\WebResource\Fractal\Resource\GeneralClassificationResource;
 use RJ\PronosticApp\WebResource\Fractal\Resource\MatchListResource;
 use RJ\PronosticApp\WebResource\Fractal\Serializer\NoDataArraySerializer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityDataTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\CommunityTransformer;
+use RJ\PronosticApp\WebResource\Fractal\Transformer\GeneralClassificationListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\ImageTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MatchListTransformer;
 use RJ\PronosticApp\WebResource\Fractal\Transformer\MessageResultTransformer;
@@ -66,7 +68,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     /**
      * @inheritDoc
      */
-    public function include(string $includes)
+    public function include (string $includes)
     {
         $this->manager->parseIncludes($includes);
         return $this;
@@ -233,6 +235,24 @@ class FractalGenerator implements WebResourceGeneratorInterface
         $data->setClassification($classifications);
 
         $resource = new Item($data, $this->container->get(CommunityDataTransformer::class));
+
+        return $this->returnResourceType(
+            $this->manager->createData($resource),
+            $resultType
+        );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function createGeneralClassificationCommunityResource(
+        $community,
+        $matchdays,
+        $resultType = self::JSON
+    ) {
+        $data = new GeneralClassificationResource($community, $matchdays);
+
+        $resource = new Item($data, $this->container->get(GeneralClassificationListTransformer::class));
 
         return $this->returnResourceType(
             $this->manager->createData($resource),

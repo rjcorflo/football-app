@@ -47,7 +47,7 @@ interface GeneralclassificationRepositoryInterface extends StandardRepositoryInt
     public function findByCommunity(CommunityInterface $community): array;
 
     /**
-     * Find classifications for community only after next matchday (or actual).
+     * Find classifications for community only until next matchday (or actual).
      * If a date is passed, only modified records after that date are returned.
      *
      * @param CommunityInterface $community
@@ -71,5 +71,17 @@ interface GeneralclassificationRepositoryInterface extends StandardRepositoryInt
     public function findOrderedByMatchdayAndCommunity(
         MatchdayInterface $matchday,
         CommunityInterface $community
+    ): array;
+
+    /**
+     * Return ids of matchdays with general classifications registers updated after date.
+     *
+     * @param CommunityInterface $community
+     * @param \DateTime $date
+     * @return array
+     */
+    public function findMatchdaysIdsWithGeneralClassificationUpdatedAfterDate(
+        CommunityInterface $community,
+        \DateTime $date = null
     ): array;
 }
