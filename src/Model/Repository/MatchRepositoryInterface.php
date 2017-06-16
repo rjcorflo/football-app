@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\Model\Repository;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 
 /**
@@ -38,4 +39,13 @@ interface MatchRepositoryInterface extends StandardRepositoryInterface
      * @return MatchInterface[]
      */
     public function findByCommunity(CommunityInterface $community, \DateTime $date = null): array;
+
+    /**
+     * Count number of matches from matchday with modified date after date passed.
+     *
+     * @param MatchdayInterface $matchday
+     * @param \DateTime $date
+     * @return int
+     */
+    public function countModifiedMatchesAfterDate(MatchdayInterface $matchday, \DateTime $date): int;
 }

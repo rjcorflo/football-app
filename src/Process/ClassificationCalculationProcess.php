@@ -12,6 +12,7 @@ use RJ\PronosticApp\Model\Repository\ForecastRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\GeneralclassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayclassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\PlayerRepositoryInterface;
 use RJ\PronosticApp\Persistence\EntityManager;
 
@@ -49,6 +50,9 @@ class ClassificationCalculationProcess
      */
     private $matchdayRepository;
 
+    /** @var MatchRepositoryInterface */
+    private $matchRepository;
+
     /**
      * @var ForecastRepositoryInterface
      */
@@ -84,6 +88,7 @@ class ClassificationCalculationProcess
         $this->playerRepository = $this->entityManager->getRepository(PlayerRepositoryInterface::class);
         $this->communityRepository = $this->entityManager->getRepository(CommunityRepositoryInterface::class);
         $this->matchdayRepository = $this->entityManager->getRepository(MatchdayRepositoryInterface::class);
+        $this->matchRepository = $this->entityManager->getRepository(MatchRepositoryInterface::class);
         $this->forecastRepository = $this->entityManager->getRepository(ForecastRepositoryInterface::class);
         $this->matchdayClassRepo = $this->entityManager
             ->getRepository(MatchdayclassificationRepositoryInterface::class);
@@ -123,6 +128,17 @@ class ClassificationCalculationProcess
         $players = $community->getPlayers();
 
         foreach ($players as $player) {
+            $classification = $this->matchdayClassRepo->findOneOrCreate($player, $community, $matchday);
+
+            // If there is already a record and there are no matches updated after record modified date
+            // then dont update classification record
+            $existMatchesModified = $this->matchRepository
+                ->countModifiedMatchesAfterDate($matchday, $classification->getLastModifiedDate()) > 0;
+
+            if ($classification->getId() > 0 && !$existMatchesModified) {
+                continue;
+            }
+
             $forecasts = $this->forecastRepository->findAllFromCommunity($community, $player, $matchday);
 
             $points = 0;
@@ -150,7 +166,6 @@ class ClassificationCalculationProcess
 
             $this->forecastRepository->storeMultiple($beans);
 
-            $classification = $this->matchdayClassRepo->findOneOrCreate($player, $community, $matchday);
             $classification->setCommunity($community);
             $classification->setPlayer($player);
             $classification->setMatchday($matchday);
@@ -211,6 +226,16 @@ class ClassificationCalculationProcess
             }
 
             if ($classification->getHitsThreePoints() != $previousClassification->getHitsThreePoints()) {
+                $this->updateClassificationPosition($index, $classification, $factor);
+                continue;
+            }
+
+            if ($classification->getHitsTwoPoints() != $previousClassification->getHitsTwoPoints()) {
+                $this->updateClassificationPosition($index, $classification, $factor);
+                continue;
+            }
+
+            if ($classification->getHitsOnePoints() != $previousClassification->getHitsOnePoints()) {
                 $this->updateClassificationPosition($index, $classification, $factor);
                 continue;
             }

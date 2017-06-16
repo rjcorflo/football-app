@@ -4,7 +4,7 @@ namespace RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository;
 
 use RedBeanPHP\R;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
-use RJ\PronosticApp\Model\Entity\MatchInterface;
+use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Repository\MatchRepositoryInterface;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
@@ -44,4 +44,20 @@ class MatchRepository extends AbstractRepository implements MatchRepositoryInter
 
         return RedBeanUtils::boxArray($matches);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function countModifiedMatchesAfterDate(MatchdayInterface $matchday, \DateTime $date): int
+    {
+        $count = R::count(
+            static::ENTITY,
+            'matchday_id = ? AND last_modified_date > ?',
+            [$matchday->getId(), $date->format('Y-m-d H:i:s')]
+        );
+
+        return $count;
+    }
+
+
 }
