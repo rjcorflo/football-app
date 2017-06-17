@@ -66,7 +66,7 @@ class PrivateCommunityController extends BaseController
                 throw $exception;
             }
 
-            if (!password_verify($communityPass, $community->getPassword())) {
+            if ($communityPass !== $community->getPassword()) {
                 $exception = new PasswordNotMatchException('No pudo unirse a la comunidad');
                 $exception->addMessageWithCode(
                     ErrorCodes::INCORRECT_PASSWORD,

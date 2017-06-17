@@ -29,9 +29,9 @@ class ForecastTransformer extends TransformerAbstract
         ];
 
         $resource['goles_local'] = $forecast->getMatch()->getState() === MatchInterface::STATE_NOT_PLAYED ?
-            -1 : $forecast->getMatch()->getLocalGoals();
+            -1 : $forecast->getLocalGoals();
         $resource['goles_visitante'] = $forecast->getMatch()->getState() === MatchInterface::STATE_NOT_PLAYED ?
-            -1 : $forecast->getMatch()->getAwayGoals();
+            -1 : $forecast->getAwayGoals();
 
         return $resource;
     }
