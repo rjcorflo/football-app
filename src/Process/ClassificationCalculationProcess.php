@@ -318,8 +318,6 @@ class ClassificationCalculationProcess
             [':community_id' => $community->getId(), ':matchday_id' => $matchday->getId()]
         );
 
-        error_log(print_r($results, true));
-
         foreach ($results as $result) {
             $player = $this->playerRepository->getById($result['player_id']);
 
