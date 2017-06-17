@@ -5,7 +5,10 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Repository\GeneralclassificationRepositoryInterface;
+use RJ\PronosticApp\Model\Repository\MatchdayclassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Repository\MatchdayclassificationRepository;
 
 /**
  * Class CommunityTransformer.
@@ -34,6 +37,16 @@ class CommunityTransformer extends TransformerAbstract
     private $participantRepo;
 
     /**
+     * @var MatchdayclassificationRepositoryInterface
+     */
+    private $matchdayClassRepo;
+
+    /**
+     * @var GeneralclassificationRepositoryInterface
+     */
+    private $generalClassRepo;
+
+    /**
      * CommunityTransformer constructor.
      *
      * @param ContainerInterface $container
@@ -43,6 +56,8 @@ class CommunityTransformer extends TransformerAbstract
         $this->container = $container;
 
         $this->participantRepo = $this->container->get(ParticipantRepositoryInterface::class);
+        $this->matchdayClassRepo = $this->container->get(MatchdayclassificationRepositoryInterface::class);
+        $this->generalClassRepo = $this->container->get(GeneralclassificationRepositoryInterface::class);
     }
 
     /**
@@ -59,9 +74,9 @@ class CommunityTransformer extends TransformerAbstract
             'url' => $community->getImage()->getUrl(),
             'fecha_creacion' => $community->getCreationDate()->format('d-m-Y'),
             'numero_jugadores' => $this->participantRepo->countPlayersFromCommunity($community),
-            'puntos_ultima_jornada' => rand(5, 15),
-            'puesto_ultima_jornada' => 1,
-            'puesto_general' => 3
+            'puntos_ultima_jornada' => 0,
+            'puesto_ultima_jornada' => 0,
+            'puesto_general' => 0
         ];
     }
 

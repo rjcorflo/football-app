@@ -53,4 +53,15 @@ interface MatchdayRepositoryInterface extends StandardRepositoryInterface
      * @return MatchdayInterface[]
      */
     public function findByCommunity(CommunityInterface $community, \DateTime $date = null): array;
+
+    /**
+     * Retrieve all matchdays between two of them.
+     *
+     * Example: Return Jornada 2, Jornada 3 y Jornada 4 when passed Jornada 2 and Jornada 4 as parameters
+     *
+     * @param MatchdayInterface $initial
+     * @param MatchdayInterface $finish
+     * @return mixed
+     */
+    public function findAllBetweenMatchdays(MatchdayInterface $initial, MatchdayInterface $finish);
 }

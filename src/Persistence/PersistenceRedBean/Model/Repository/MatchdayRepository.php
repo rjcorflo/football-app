@@ -76,4 +76,18 @@ class MatchdayRepository extends AbstractRepository implements MatchdayRepositor
 
         return RedBeanUtils::boxArray($matchdays);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAllBetweenMatchdays(MatchdayInterface $initial, MatchdayInterface $finish)
+    {
+        $matchdays = R::find(
+            static::ENTITY,
+            'matchday_order >= ? AND matchday_order <= ?',
+            [$initial->getOrder(), $finish->getOrder()]
+        );
+
+        return RedBeanUtils::boxArray($matchdays);
+    }
 }
