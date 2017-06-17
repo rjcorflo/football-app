@@ -109,10 +109,13 @@ class ClassificationCalculationProcess
 
         foreach ($communities as $community) {
             foreach ($matchdays as $matchday) {
-                $this->calculateMatchdayClassificationForCommunity($matchday, $community);
-                $this->updateClassification($matchday, $community);
-                $this->calculateGeneralClassificationForCommunity($matchday, $community);
-                $this->updateGeneralClassification($matchday, $community);
+                $classificationUpdated = $this->calculateMatchdayClassificationForCommunity($matchday, $community);
+
+                if ($classificationUpdated) {
+                    $this->updateClassification($matchday, $community);
+                    $this->calculateGeneralClassificationForCommunity($matchday, $community);
+                    $this->updateGeneralClassification($matchday, $community);
+                }
             }
         }
     }
@@ -120,11 +123,14 @@ class ClassificationCalculationProcess
     /**
      * @param MatchdayInterface $matchday
      * @param CommunityInterface $community
+     * @return bool
      */
     private function calculateMatchdayClassificationForCommunity(
         MatchdayInterface $matchday,
         CommunityInterface $community
-    ) {
+    ): bool {
+        $classificationUpdated = false;
+
         $players = $community->getPlayers();
 
         foreach ($players as $player) {
@@ -132,11 +138,13 @@ class ClassificationCalculationProcess
 
             // If there is already a record and there are no matches updated after record modified date
             // then dont update classification record
-            $existMatchesModified = $this->matchRepository
-                ->countModifiedMatchesAfterDate($matchday, $classification->getLastModifiedDate()) > 0;
+            if ($classification->getId() > 0) {
+                $existMatchesModified = $this->matchRepository
+                        ->countModifiedMatchesAfterDate($matchday, $classification->getLastModifiedDate()) > 0;
 
-            if ($classification->getId() > 0 && !$existMatchesModified) {
-                continue;
+                if (!$existMatchesModified) {
+                    continue;
+                }
             }
 
             $forecasts = $this->forecastRepository->findAllFromCommunity($community, $player, $matchday);
@@ -181,7 +189,12 @@ class ClassificationCalculationProcess
             $classification->setLastModifiedDate($this->actualDate);
 
             $this->matchdayClassRepo->store($classification);
+
+            // Classification has been updated
+            $classificationUpdated = true;
         }
+
+        return $classificationUpdated;
     }
 
     /**
@@ -283,6 +296,8 @@ class ClassificationCalculationProcess
         MatchdayInterface $matchday,
         CommunityInterface $community
     ) {
+        // Must update classification for actual matchday and all after that...
+
         $results = R::getAll(
             'SELECT player_id,
                     SUM(total_points) as points,
