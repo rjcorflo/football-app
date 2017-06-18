@@ -24,6 +24,7 @@ class ForecastTransformer extends TransformerAbstract
             'id_partido' => $forecast->getMatch()->getId(),
             'id_jornada' => $forecast->getMatch()->getMatchday()->getId(),
             'id_comunidad' => $forecast->getCommunity()->getId(),
+            'id_jugador' => $forecast->getPlayer()->getId(),
             'riesgo' => $forecast->isRisk(),
             'puntos' => $forecast->getPoints()
         ];
