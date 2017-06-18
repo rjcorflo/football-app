@@ -157,6 +157,7 @@ class ClassificationCalculationProcess
             $beans = [];
             foreach ($forecasts as $forecast) {
                 $forecast->calculateActualPoints();
+                $forecast->setLastModifiedDate($this->actualDate);
 
                 $points += $forecast->getPoints();
                 $hitsTen += $forecast->getPoints() == 10 ? 1 : 0;
