@@ -71,6 +71,7 @@ class CommunityTransformer extends TransformerAbstract
             'nombre' => $community->getCommunityName(),
             'password' => $community->getPassword(),
             'privada' => $community->isPrivate(),
+            'id_imagen' => $community->getImage()->getId(),
             'url' => $community->getImage()->getUrl(),
             'fecha_creacion' => $community->getCreationDate()->format('d-m-Y'),
             'numero_jugadores' => $this->participantRepo->countPlayersFromCommunity($community),
