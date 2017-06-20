@@ -8,12 +8,7 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Scope;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
-use RJ\PronosticApp\Model\Entity\ForecastInterface;
 use RJ\PronosticApp\Model\Entity\ImageInterface;
-use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
-use RJ\PronosticApp\Model\Entity\MatchdayInterface;
-use RJ\PronosticApp\Model\Entity\MatchInterface;
-use RJ\PronosticApp\Model\Entity\ParticipantInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Entity\TokenInterface;
 use RJ\PronosticApp\Util\General\ForecastResult;
@@ -68,7 +63,7 @@ class FractalGenerator implements WebResourceGeneratorInterface
     /**
      * @inheritDoc
      */
-    public function include (string $includes)
+    public function include(string $includes)
     {
         $this->manager->parseIncludes($includes);
         return $this;

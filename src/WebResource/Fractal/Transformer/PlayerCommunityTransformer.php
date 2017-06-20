@@ -5,7 +5,6 @@ namespace RJ\PronosticApp\WebResource\Fractal\Transformer;
 use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\GeneralclassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayclassificationRepositoryInterface;

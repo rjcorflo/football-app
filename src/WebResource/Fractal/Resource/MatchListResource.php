@@ -2,7 +2,6 @@
 
 namespace RJ\PronosticApp\WebResource\Fractal\Resource;
 
-use RJ\PronosticApp\Model\Entity\CommunityInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\MatchInterface;
 

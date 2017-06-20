@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: RJ Corchero
- * Date: 07/06/2017
- * Time: 20:41
- */
 
 namespace RJ\PronosticApp\Module;
 
