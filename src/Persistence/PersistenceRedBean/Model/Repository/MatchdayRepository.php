@@ -27,7 +27,9 @@ class MatchdayRepository extends AbstractRepository implements MatchdayRepositor
         $bean = R::findOne(MatchRepositoryInterface::ENTITY, 'start_time > ? ORDER BY start_time', [$actualDate]);
 
         if ($bean === null) {
-            return $bean;
+            $id = R::getCell('SELECT MAX(id) FROM matchday');
+            $bean = R::load(MatchdayRepositoryInterface::ENTITY, $id);
+            return $bean->box();
         }
 
         /** @var MatchInterface $match */

@@ -58,6 +58,9 @@ class CommunityListTransformer extends TransformerAbstract
      */
     public function includeComunidades(CommunityListResource $communityList)
     {
-        return $this->collection($communityList->getCommunities(), $this->container->get(CommunityTransformer::class));
+        return $this->collection(
+            $communityList->getPlayerCommunities(),
+            $this->container->get(PlayerCommunityTransformer::class)
+        );
     }
 }

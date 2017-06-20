@@ -199,11 +199,12 @@ class FractalGenerator implements WebResourceGeneratorInterface
      * @inheritDoc
      */
     public function createCommunityListResource(
+        $player,
         $communities,
         $resultType = self::JSON
     ) {
         if (is_array($communities)) {
-            $data = new CommunityListResource($communities);
+            $data = new CommunityListResource($player, $communities);
             $resource = new Item($data, $this->container->get(CommunityListTransformer::class));
         } else {
             throw new \Exception("El recurso pasado no es un array CommunityInterface[]");

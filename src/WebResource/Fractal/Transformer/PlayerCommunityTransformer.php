@@ -6,27 +6,19 @@ use League\Fractal\TransformerAbstract;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\GeneralclassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayclassificationRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayRepositoryInterface;
 use RJ\PronosticApp\Model\Repository\ParticipantRepositoryInterface;
+use RJ\PronosticApp\WebResource\Fractal\Resource\PlayerCommunityResource;
 
 /**
- * Class CommunityTransformer.
- *
+ * Class PlayerCommunityTransformer
  * @package RJ\PronosticApp\WebResource\Fractal\Transformer
  */
-class CommunityTransformer extends TransformerAbstract
+class PlayerCommunityTransformer extends TransformerAbstract
 {
-    /**
-     * List of available resources for including.
-     *
-     * @var array
-     */
-    protected $availableIncludes = [
-        'jugadores'
-    ];
-
     /**
      * @var ContainerInterface
      */
@@ -74,11 +66,13 @@ class CommunityTransformer extends TransformerAbstract
     }
 
     /**
-     * @param CommunityInterface $community
+     * @param PlayerCommunityResource $playerCommunityResource
      * @return array
      */
-    public function transform(CommunityInterface $community)
+    public function transform(PlayerCommunityResource $playerCommunityResource)
     {
+        $community = $playerCommunityResource->getCommunity();
+
         $resource = [
             'id' => $community->getId(),
             'nombre' => $community->getCommunityName(),
@@ -93,19 +87,16 @@ class CommunityTransformer extends TransformerAbstract
             'puesto_general' => 0
         ];
 
+        /** @var PlayerInterface $player */
+        $player = $playerCommunityResource->getPlayer();
+        $matchday = $this->matchdayRepository->getNextMatchday();
+        $matchdayClassification = $this->matchdayClassRepo->findOneOrCreate($player, $community, $matchday);
+        $general = $this->generalClassRepo->findOneOrCreate($player, $community, $matchday);
+
+        $resource['puntos_ultima_jornada'] = $matchdayClassification->getTotalPoints();
+        $resource['puesto_ultima_jornada'] = $matchdayClassification->getPosition();
+        $resource['puesto_general'] = $general->getPosition();
+
         return $resource;
-    }
-
-    /**
-     * Include Players.
-     *
-     * @param CommunityInterface $community
-     * @return \League\Fractal\Resource\Collection
-     */
-    public function includeJugadores(CommunityInterface $community)
-    {
-        $players = $community->getPlayers();
-
-        return $this->collection($players, $this->container->get(PlayerTransformer::class));
     }
 }

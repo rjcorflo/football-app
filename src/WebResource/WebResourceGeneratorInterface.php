@@ -77,11 +77,12 @@ interface WebResourceGeneratorInterface
     public function createCommunityResource($communities, $resultType = self::JSON);
 
     /**
+     * @param  PlayerInterface $player
      * @param  CommunityInterface[] $communities
      * @param  string $resultType
      * @return array|string
      */
-    public function createCommunityListResource($communities, $resultType = self::JSON);
+    public function createCommunityListResource($player, $communities, $resultType = self::JSON);
 
     /**
      * @param CommunityInterface $community

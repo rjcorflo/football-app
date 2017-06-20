@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\WebResource\Fractal\Resource;
 
 use RJ\PronosticApp\Model\Entity\CommunityInterface;
+use RJ\PronosticApp\Model\Entity\PlayerInterface;
 
 /**
  * Resource only for display.
@@ -16,18 +17,29 @@ class CommunityListResource
     private $date;
 
     /**
-     * List of communities
-     * @var CommunityInterface[]
+     * Player
+     * @var PlayerInterface
      */
-    private $communities;
+    private $player;
 
     /**
+     * List of communities
+     * @var PlayerCommunityResource[]
+     */
+    private $communities = [];
+
+    /**
+     * @param PlayerInterface $player
      * @param CommunityInterface[] $communities
      */
-    public function __construct(array $communities)
+    public function __construct(PlayerInterface $player, array $communities)
     {
         $this->date = new \DateTime();
-        $this->communities = $communities;
+        $this->player = $player;
+
+        foreach ($communities as $community) {
+            $this->communities[] = new PlayerCommunityResource($player, $community);
+        }
     }
 
     /**
@@ -47,17 +59,25 @@ class CommunityListResource
     }
 
     /**
-     * @param CommunityInterface[] $communities
+     * @return PlayerInterface
      */
-    public function setCommunities(array $communities)
+    public function getPlayer(): PlayerInterface
     {
-        $this->communities = $communities;
+        return $this->player;
     }
 
     /**
-     * @return CommunityInterface[]
+     * @param PlayerInterface $player
      */
-    public function getCommunities()
+    public function setPlayer(PlayerInterface $player)
+    {
+        $this->player = $player;
+    }
+
+    /**
+     * @return PlayerCommunityResource[]
+     */
+    public function getPlayerCommunities()
     {
         return $this->communities;
     }
