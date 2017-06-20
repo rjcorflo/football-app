@@ -88,13 +88,18 @@ class PlayerCommunityTransformer extends TransformerAbstract
 
         /** @var PlayerInterface $player */
         $player = $playerCommunityResource->getPlayer();
-        $matchday = $this->matchdayRepository->getNextMatchday();
+        $matchday = $this->matchdayRepository->getLastMatchday();
         $matchdayClassification = $this->matchdayClassRepo->findOneOrCreate($player, $community, $matchday);
         $general = $this->generalClassRepo->findOneOrCreate($player, $community, $matchday);
 
-        $resource['puntos_ultima_jornada'] = $matchdayClassification->getTotalPoints();
-        $resource['puesto_ultima_jornada'] = $matchdayClassification->getPosition();
-        $resource['puesto_general'] = $general->getPosition();
+        if ($matchday->getId() != 0) {
+            $resource['puntos_ultima_jornada'] = $matchdayClassification->getTotalPoints();
+            $resource['puesto_ultima_jornada'] = $matchdayClassification->getPosition();
+        }
+
+        if ($general->getId() != 0) {
+            $resource['puesto_general'] = $general->getPosition();
+        }
 
         return $resource;
     }

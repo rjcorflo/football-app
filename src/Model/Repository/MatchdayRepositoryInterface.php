@@ -23,11 +23,18 @@ interface MatchdayRepositoryInterface extends StandardRepositoryInterface
     const ENTITY = 'matchday';
 
     /**
-     * Get next matchday.
+     * Get next or actual matchday.
      *
      * @return null|MatchdayInterface
      */
     public function getNextMatchday(): ?MatchdayInterface;
+
+    /**
+     * Get last completed matchday.
+     *
+     * @return MatchdayInterface
+     */
+    public function getLastMatchday(): MatchdayInterface;
 
     /**
      * Find all matchdays until next matchday (included).

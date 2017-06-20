@@ -41,6 +41,29 @@ class MatchdayRepository extends AbstractRepository implements MatchdayRepositor
     /**
      * @inheritDoc
      */
+    public function getLastMatchday(): MatchdayInterface
+    {
+        $actualDate = (new \DateTime())->format('Y-m-d H:i:s');
+
+        $row = R::getRow(
+            'SELECT matchday_id, MAX(start_time) as time 
+               FROM match
+              WHERE start_time < ?
+              GROUP BY  matchday_id
+              ORDER BY time DESC
+              LIMIT 1',
+            [$actualDate]
+        );
+
+        $bean = R::load(MatchdayRepositoryInterface::ENTITY, (int)$row['matchday_id']);
+
+        return $bean->box();
+    }
+
+
+    /**
+     * @inheritDoc
+     */
     public function findAllUntilNextMatchday(): array
     {
         $nextMatchday = $this->getNextMatchday();
