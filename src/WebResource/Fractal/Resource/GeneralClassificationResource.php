@@ -17,7 +17,7 @@ class GeneralClassificationResource
     private $date;
 
     /**
-     * List of matches
+     * Community.
      * @var CommunityInterface
      */
     private $community;
@@ -25,7 +25,7 @@ class GeneralClassificationResource
     /**
      * @var GeneralMatchdayClassificationResource[]
      */
-    private $generaMatchdayClassifications;
+    private $generaMatchdayClassifications = [];
 
     /**
      * GeneralClassificationResource constructor.
