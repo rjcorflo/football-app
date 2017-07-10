@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\PronosticApp\App\Middleware;
+namespace RJ\PronosticApp\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;

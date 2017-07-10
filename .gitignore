@@ -34,3 +34,19 @@ vendor/
 
 # Tests
 tests/_output/*
+
+
+# Env files
+.env
+
+# Cache
+cache/container/*
+!cache/container/.gitkeep
+cache/doctrine/metadata/*
+!cache/doctrine/metadata/.gitkeep
+cache/doctrine/proxies/*
+!cache/doctrine/proxies/.gitkeep
+
+# Others
+.php_cs.cache
+php_errors.log

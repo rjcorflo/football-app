@@ -13,23 +13,21 @@
         "slim/slim": "^3.0",
         "gabordemooij/redbean": "^4.0",
         "php-di/slim-bridge": "^1.0",
+		"doctrine/orm": "^2.5",
+        "vlucas/phpdotenv": "^2.4",
         "symfony/event-dispatcher": "*",
         "monolog/monolog": "^1.0",
         "league/fractal": "*",
         "respect/validation": "^1.0",
-        "tebru/gson-php": "*"
+		"consolidation/robo": "^1.0",
+        "gofabian/negotiation-middleware": "^0.1.2",
+        "tuupola/cors-middleware": "^0.5.0"
     },
     "require-dev": {
         "codeception/codeception": "^2.0",
-        "anahkiasen/rocketeer": "^2.2",
-        "rjcorflo/robo-rocketeer": "*",
-        "consolidation/robo": "^1.0",
-        "leafo/scssphp": "*",
-        "henrikbjorn/lurker": "^1.0",
-        "patchwork/jsqueeze": "~1.0",
-        "natxet/CssMin": "~3.0",
-        "squizlabs/php_codesniffer": "2.*",
-        "phpmd/phpmd" : "@stable"
+        "deployer/deployer": "^5.0",
+        "herloct/codeception-slim-module": "^1.1",
+        "henrikbjorn/lurker": "^1.0"
     },
     "autoload": {
         "psr-4": {

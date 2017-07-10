@@ -4,6 +4,7 @@ namespace RJ\PronosticApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
+use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\App\Controller\ClassificationController;
 use RJ\PronosticApp\App\Controller\CommunityController;
 use RJ\PronosticApp\App\Controller\DocumentationController;
@@ -30,12 +31,14 @@ use function DI\string;
 class Application extends App
 {
     /**
-     * @var array
+     * @var string[]
      */
-    protected $modules = [
-        ['active' => false, 'class' => '\RJ\PronosticApp\Module\FootballData\FootballDataModule'],
-        ['active' => true, 'class' => '\RJ\PronosticApp\Module\Updater\UpdaterModule']
-    ];
+    protected static $serviceProviders;
+
+    /**
+     * @var string[]
+     */
+    protected $modules;
 
     /**
      * @var EventDispatcherInterface
@@ -64,28 +67,58 @@ class Application extends App
     }
 
     /**
+     * Subscribe modules to event dispatcher if they are active.
+     */
+    protected function configureModulesEventDispatcher()
+    {
+        $this->dispatcher = $this->getContainer()->get(EventDispatcherInterface::class);
+
+        foreach ($this->modules as $module) {
+            $this->dispatcher->addSubscriber($this->getContainer()->get($module));
+        }
+    }
+
+    /**
+     * Register applications ServiceProviders for dependency container.
+     *
+     * @param string[] $serviceProviders
+     */
+    public static function registerServiceProviders(array $serviceProviders)
+    {
+        static::$serviceProviders = $serviceProviders;
+    }
+
+    /**
      * Configure dependency container.
      *
      * @param ContainerBuilder $builder
      */
     protected function configureContainer(ContainerBuilder $builder)
     {
-        /* App paths configuration */
-        $builder->addDefinitions([
-            'app.baseDir' => __DIR__ . '/../..',
-            'app.cacheDir' => string('{app.baseDir}/cache'),
-            'app.configDir' => string('{app.baseDir}/configuration'),
-            'app.docsDir' => string('{app.baseDir}/docs'),
-            'app.logsDir' => string('{app.baseDir}/logs'),
-            'app.srcDir' => string('{app.baseDir}/src'),
-            'app.storageDir' => string('{app.baseDir}/storage'),
-        ]);
+        $environment = getenv('APP_ENV');
 
-        /* Security definitions */
-        $builder->addDefinitions(__DIR__ . '/../../configuration/configuration.php');
+        // Add caching for definitions
+        if ($environment !== 'production') {
+            $builder->setDefinitionCache(new ArrayCache());
+        } else {
+            $builder->setDefinitionCache(new FilesystemCache(__DIR__ . '/../../cache/container'));
+        }
 
-        /* App definitions */
-        $builder->addDefinitions(__DIR__ . '/DependencyInjection/definitions/di.app.php');
+        foreach (static::$serviceProviders as $serviceProviderClassName) {
+            $serviceProvider = new $serviceProviderClassName();
+
+            if (!$serviceProvider instanceof ServiceProviderInterface) {
+                throw new \RuntimeException('Not implements ServiceProvider interface');
+            }
+
+            $builder->addDefinitions($serviceProvider->registerServices());
+
+            if ($environment == 'development') {
+                $builder->addDefinitions($serviceProvider->registerServicesDevelopment());
+            } elseif ($environment == 'test') {
+                $builder->addDefinitions($serviceProvider->registerServicesTest());
+            }
+        }
 
         foreach ($this->modules as $module) {
             if ($module['active']) {
@@ -96,20 +129,60 @@ class Application extends App
                 }
             }
         }
+
+        $builder->addDefinitions([
+            'app' => function (ContainerInterface $c) {
+                return $this;
+            },
+            \Slim\App::class => \DI\get('app')
+        ]);
     }
 
     /**
-     * Subscribe modules to event dispatcher if they are active.
+     * Register application global middlewares.
+     *
+     * Middlewares acts as LIFO queue.
+     *
+     * @param mixed[] $middlewares
      */
-    protected function configureModulesEventDispatcher()
+    public function registerMiddlewares(array $middlewares)
     {
-        $this->dispatcher = $this->getContainer()->get(EventDispatcherInterface::class);
-
-        foreach ($this->modules as $module) {
-            if ($module['active']) {
-                $this->dispatcher->addSubscriber($this->getContainer()->get($module['class']));
+        foreach ($middlewares as $middleware) {
+            if (!is_callable($middleware) && !is_string($middleware)) {
+                throw new \RuntimeException('Not a callable or string for container');
             }
+
+            $this->add($middleware);
         }
+    }
+
+    /**
+     * Register routes.
+     *
+     * @param string[] $routesProviders
+     */
+    public function registerRoutes(array $routesProviders)
+    {
+        foreach ($routesProviders as $routeProviderClassName) {
+            $routeProvider = new $routeProviderClassName();
+            if (!$routeProvider instanceof RoutesProviderInterface) {
+                throw new \RuntimeException('Not implements RoutesProviderInterface');
+            }
+
+            $routeProvider->registerRoutes($this);
+        }
+    }
+
+    /**
+     * Register api routes.
+     *
+     * @param string[] $routesProviders
+     */
+    public function registerApiRoutes(array $routesProviders)
+    {
+        $this->group('/api/v1', function () use ($routesProviders) {
+            $this->registerRoutes($routesProviders);
+        });
     }
 
     /**
@@ -121,16 +194,7 @@ class Application extends App
             /* Documentation */
             $this->get('/doc/swagger', [DocumentationController::class, 'documentationSwagger']);
 
-            /* Player */
-            $this->post('/player/register', [PlayerLoginController::class, 'register']);
-            $this->post('/player/login', [PlayerLoginController::class, 'login']);
-            $this->post('/player/exist', [PlayerLoginController::class, 'exist']);
 
-            $this->group('/player', function () {
-                $this->post('/logout', [PlayerLoginController::class, 'logout']);
-                $this->get('/info', [PlayerController::class, 'info']);
-                $this->post('/communities', [PlayerController::class, 'listPlayerCommunities']);
-            })->add(AuthenticationMiddleware::class);
 
             /* Images */
             $this->get('/images/list', [ImagesController::class, 'list']);
