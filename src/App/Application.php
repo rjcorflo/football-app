@@ -7,9 +7,6 @@ use DI\ContainerBuilder;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\FilesystemCache;
 use Psr\Container\ContainerInterface;
-use RJ\PronosticApp\App\Controller\ClassificationController;
-use RJ\PronosticApp\App\Controller\ImagesController;
-use RJ\PronosticApp\App\Controller\UtilController;
 use RJ\PronosticApp\App\Event\AppBootstrapEvent;
 use RJ\PronosticApp\Middleware\InitializationMiddleware;
 use RJ\PronosticApp\Provider\ServiceProviderInterface;
@@ -26,12 +23,12 @@ class Application extends App
     /**
      * @var string[]
      */
-    protected static $serviceProviders;
+    protected static $serviceProviders = [];
 
     /**
      * @var string[]
      */
-    protected $modules;
+    protected $modules = [];
 
     /**
      * @var EventDispatcherInterface
@@ -54,7 +51,6 @@ class Application extends App
     protected function bootstrap()
     {
         $this->configureModulesEventDispatcher();
-        $this->configureRoutes();
 
         $this->dispatcher->dispatch(AppBootstrapEvent::NAME, new AppBootstrapEvent($this));
     }
@@ -114,12 +110,10 @@ class Application extends App
         }
 
         foreach ($this->modules as $module) {
-            if ($module['active']) {
-                $interfaces = class_implements($module['class']);
+            $interfaces = class_implements($module);
 
-                if (isset($interfaces['RJ\PronosticApp\Module\ServiceProvider'])) {
-                    $builder->addDefinitions(call_user_func("{$module['class']}::getDependencyInjectionDefinitions"));
-                }
+            if (isset($interfaces['RJ\PronosticApp\Module\ServiceProvider'])) {
+                $builder->addDefinitions(call_user_func("{$module}::getDependencyInjectionDefinitions"));
             }
         }
 
@@ -175,29 +169,6 @@ class Application extends App
     {
         $this->group('/api/v1', function () use ($routesProviders) {
             $this->registerRoutes($routesProviders);
-        });
-    }
-
-    /**
-     * Configure app routes.
-     */
-    protected function configureRoutes()
-    {
-        $this->group('/api/v1', function () {
-
-            /* Images */
-            $this->get('/images/list', [ImagesController::class, 'list']);
-
-            /* Classifications */
-            $this->group('/classification', function () {
-                $this->get('/calculate', [ClassificationController::class, 'calculateClassifications']);
-            });
-
-
-            /* Utils */
-            $this->group('/util', function () {
-                $this->map(['GET', 'POST'], '/date', [UtilController::class, 'serverDate']);
-            });
         })->add(InitializationMiddleware::class);
     }
 }

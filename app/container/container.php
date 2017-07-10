@@ -42,7 +42,10 @@ $app->registerMiddlewares([
 
 // Register routes on /api urls
 $app->registerApiRoutes([
-    \RJ\PronosticApp\Routes\Api\PlayerRoutes::class
+    \RJ\PronosticApp\Routes\Api\PlayerRoutes::class,
+    \RJ\PronosticApp\Routes\Api\CommunityRoutes::class,
+    \RJ\PronosticApp\Routes\Api\DocumentationRoutes::class,
+    \RJ\PronosticApp\Routes\Api\OtherRoutes::class
 ]);
 
 // Prepare Static Proxies

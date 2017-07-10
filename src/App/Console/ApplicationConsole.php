@@ -71,7 +71,7 @@ class ApplicationConsole
     {
         $discovery = new CommandFileDiscovery();
         $discovery->setSearchPattern('/.*Commands(s){0,1}.php/');
-        $commandList = $discovery->discover('src/App/Console/Commands', '\USaq\App\Console\Commands');
+        $commandList = $discovery->discover('src/App/Console/Commands', '\RJ\PronosticApp\App\Console\Commands');
 
         foreach ($commandList as $command) {
             $this->commands[] = $this->runner->getContainer()->get($command);

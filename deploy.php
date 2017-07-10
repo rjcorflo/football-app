@@ -27,7 +27,7 @@ host('solus-dev')
     ->stage('development')
     ->roles('app')
     ->set('deploy_path', '~/applications/pronosticapp/development')
-    ->set('branch', 'development')
+    ->set('branch', 'dev-doctrine')
     ->configFile('~/.ssh/config');
 
 

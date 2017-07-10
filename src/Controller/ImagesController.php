@@ -1,6 +1,6 @@
 <?php
 
-namespace RJ\PronosticApp\App\Controller;
+namespace RJ\PronosticApp\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use RJ\PronosticApp\Model\Repository\ImageRepositoryInterface;

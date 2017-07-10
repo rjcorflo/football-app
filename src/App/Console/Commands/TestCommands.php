@@ -7,29 +7,12 @@ use Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand;
 use Doctrine\ORM\Tools\Console\ConsoleRunner;
 use Robo\Robo;
 use Robo\Tasks;
-use USaq\Service\Validation\Exception\FieldValidationException;
-use USaq\Service\Validation\ValidationService;
 
 /**
  * Test commands.
  */
 class TestCommands extends Tasks
 {
-    /**
-     * @var ValidationService
-     */
-    private $validationService;
-
-    /**
-     * TestCommands constructor.
-     *
-     * @param ValidationService $service
-     */
-    public function __construct(ValidationService $service)
-    {
-        $this->validationService = $service;
-    }
-
     /**
      * Testing console.
      *
@@ -40,13 +23,6 @@ class TestCommands extends Tasks
     public function testSay($name, $options = ['yell|y' => false])
     {
         $this->io()->title('Testing application');
-
-        try {
-            $this->validationService->validateLoginRequest(['asdad' => 'asddas']);
-            $this->io()->text('Ok');
-        } catch (FieldValidationException $e) {
-            $this->io()->text($e->getMessage());
-        }
 
         $message = 'Hello, ' . $name;
 

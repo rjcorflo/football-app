@@ -3,6 +3,7 @@
 namespace RJ\PronosticApp\App\Console\Commands;
 
 use Robo\Tasks;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Provide development commands.
