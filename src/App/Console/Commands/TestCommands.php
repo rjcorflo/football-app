@@ -1,6 +1,6 @@
 <?php
 
-namespace USaq\App\Console\Commands;
+namespace RJ\PronosticApp\App\Console\Commands;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Console\Command\MappingDescribeCommand;

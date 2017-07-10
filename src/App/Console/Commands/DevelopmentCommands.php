@@ -1,6 +1,6 @@
 <?php
 
-namespace USaq\App\Console\Commands;
+namespace RJ\PronosticApp\App\Console\Commands;
 
 use Robo\Tasks;
 
@@ -25,6 +25,71 @@ class DevelopmentCommands extends Tasks
     public function developmentTest()
     {
         $this->taskCodecept()->run();
+    }
+
+    /**
+     * Prepare project for development.
+     */
+    public function developInit()
+    {
+        /**
+         * @var \Robo\Collection\CollectionBuilder $collection
+         */
+        $collection = $this->collectionBuilder();
+
+        $collection->addTask($this->taskGitStack()->checkout('development'))
+            ->addTask($this->taskComposerUpdate())
+            ->addTask($this->taskBowerUpdate())
+            ->run();
+    }
+
+    /**
+     * Launch development environment, php server and watchers.
+     */
+    public function developStart()
+    {
+        $this->taskServer()->dir('public')
+            ->background()
+            ->run();
+
+        $this->taskWatch()
+            ->monitor('composer.json', function () {
+                $this->taskComposerUpdate()->run();
+            })
+            ->run();
+    }
+
+    /**
+     * Run test and push code to develop branch.
+     *
+     * @param string $commitMesage Commit message.
+     * @option $add Options for add command.
+     */
+    public function developPublish(
+        $commitMesage = 'Auto commit',
+        $options = ['add|a' => InputOption::VALUE_REQUIRED]
+    ) {
+        $this->stopOnFail();
+
+        $this->taskCodecept()->run();
+
+        $task = $this->taskGitStack();
+
+        if ($options['add']) {
+            $task->add($options['add'])
+                ->commit($commitMesage);
+        }
+
+        $task->push()
+            ->run();
+    }
+
+    /**
+     * Test application.
+     */
+    public function test()
+    {
+        $this->taskCodecept()->coverageHtml()->run();
     }
 
     /**

@@ -4,24 +4,17 @@ namespace RJ\PronosticApp\App;
 
 use DI\Bridge\Slim\App;
 use DI\ContainerBuilder;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\FilesystemCache;
 use Psr\Container\ContainerInterface;
 use RJ\PronosticApp\App\Controller\ClassificationController;
-use RJ\PronosticApp\App\Controller\CommunityController;
-use RJ\PronosticApp\App\Controller\DocumentationController;
-use RJ\PronosticApp\App\Controller\ForecastController;
 use RJ\PronosticApp\App\Controller\ImagesController;
-use RJ\PronosticApp\App\Controller\MatchController;
-use RJ\PronosticApp\App\Controller\PlayerController;
-use RJ\PronosticApp\App\Controller\PlayerLoginController;
-use RJ\PronosticApp\App\Controller\PrivateCommunityController;
-use RJ\PronosticApp\App\Controller\PublicCommunityController;
 use RJ\PronosticApp\App\Controller\UtilController;
 use RJ\PronosticApp\App\Event\AppBootstrapEvent;
-use RJ\PronosticApp\App\Middleware\AuthenticationMiddleware;
-use RJ\PronosticApp\App\Middleware\InitializationMiddleware;
-use RJ\PronosticApp\App\Middleware\PersistenceMiddleware;
+use RJ\PronosticApp\Middleware\InitializationMiddleware;
+use RJ\PronosticApp\Provider\ServiceProviderInterface;
+use RJ\PronosticApp\Routes\RoutesProviderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use function DI\string;
 
 /**
  * Main class Application.
@@ -191,37 +184,9 @@ class Application extends App
     protected function configureRoutes()
     {
         $this->group('/api/v1', function () {
-            /* Documentation */
-            $this->get('/doc/swagger', [DocumentationController::class, 'documentationSwagger']);
-
-
 
             /* Images */
             $this->get('/images/list', [ImagesController::class, 'list']);
-
-            /* Community */
-            $this->group('/community', function () {
-                $this->post('/create', [CommunityController::class, 'create']);
-                $this->get('/{idCommunity:[0-9]+}/players', [CommunityController::class, 'communityPlayers']);
-                $this->post('/{idCommunity:[0-9]+}/data', [CommunityController::class, 'communityData']);
-                $this->post(
-                    '/{idCommunity:[0-9]+}/general',
-                    [CommunityController::class, 'communityGeneralClassification']
-                );
-                $this->post('/{idCommunity:[0-9]+}/forecast', [ForecastController::class, 'saveForecasts']);
-                $this->post('/{idCommunity:[0-9]+}/matches/actives', [MatchController::class, 'activeMatches']);
-                $this->get('/search', [CommunityController::class, 'search']);
-                $this->post('/exist', [CommunityController::class, 'exist']);
-
-                $this->group('/private', function () {
-                    $this->post('/join', [PrivateCommunityController::class, 'join']);
-                });
-
-                $this->group('/public', function () {
-                    $this->get('/list', [PublicCommunityController::class, 'list']);
-                    $this->post('/join', [PublicCommunityController::class, 'join']);
-                });
-            })->add(AuthenticationMiddleware::class);
 
             /* Classifications */
             $this->group('/classification', function () {
@@ -233,7 +198,6 @@ class Application extends App
             $this->group('/util', function () {
                 $this->map(['GET', 'POST'], '/date', [UtilController::class, 'serverDate']);
             });
-        })->add(PersistenceMiddleware::class)
-            ->add(InitializationMiddleware::class);
+        })->add(InitializationMiddleware::class);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace USaq\App\Console;
+namespace RJ\PronosticApp\App\Console;
 
 use Consolidation\AnnotatedCommand\CommandFileDiscovery;
 use Psr\Container\ContainerInterface;

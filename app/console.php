@@ -8,7 +8,7 @@ set_time_limit(0);
 require __DIR__ . '/../vendor/autoload.php';
 
 use Robo\Robo;
-use USaq\App\Console\ApplicationConsole;
+use RJ\PronosticApp\App\Console\ApplicationConsole;
 
 // Load environment variables
 try {
