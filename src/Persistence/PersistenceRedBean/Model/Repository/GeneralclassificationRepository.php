@@ -8,7 +8,7 @@ use RJ\PronosticApp\Model\Entity\GeneralclassificationInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\GeneralclassificationRepositoryInterface;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Generalclassification;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\GeneralClassification;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 /**
@@ -26,7 +26,7 @@ class GeneralclassificationRepository extends AbstractRepository implements Gene
         CommunityInterface $community,
         MatchdayInterface $matchday
     ): GeneralclassificationInterface {
-        /** @var Generalclassification $bean */
+        /** @var GeneralClassification $bean */
         $bean = R::findOneOrDispense(
             static::ENTITY,
             'player_id = ? AND community_id = ? AND matchday_id = ?',

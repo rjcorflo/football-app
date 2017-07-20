@@ -19,34 +19,18 @@ abstract class BaseController
     use ResponseGenerator;
 
     /**
-     * @var EntityManager $entityManager
-     */
-    protected $entityManager;
-
-    /**
      * @var WebResourceGeneratorInterface
      */
     protected $resourceGenerator;
 
     /**
-     * @var ValidatorInterface
-     */
-    protected $validator;
-
-    /**
      * Base Controller constructor.
      *
-     * @param EntityManager $entityManager
      * @param WebResourceGeneratorInterface $resourceGenerator
-     * @param ValidatorInterface $validator
      */
     public function __construct(
-        EntityManager $entityManager,
-        WebResourceGeneratorInterface $resourceGenerator,
-        ValidatorInterface $validator
+        WebResourceGeneratorInterface $resourceGenerator
     ) {
-        $this->entityManager = $entityManager;
         $this->resourceGenerator = $resourceGenerator;
-        $this->validator = $validator;
     }
 }

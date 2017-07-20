@@ -1,13 +1,8 @@
 <?php
 
-namespace USaq\Service;
+namespace RJ\PronosticApp\Service;
 
 use Doctrine\ORM\EntityManager;
-use USaq\Model\Entity\Token;
-use USaq\Model\Entity\User;
-use USaq\Model\Exception\AlreadyExistsException;
-use USaq\Model\Exception\EntityNotFoundException;
-use USaq\Service\Exception\AuthenticationException;
 
 /**
  * Provide operations to authenticate an user.

@@ -42,22 +42,20 @@ class DoctrineProvider implements ServiceProviderInterface
             EntityManager::class => function (ContainerInterface $container) {
                 $isDevMode = getenv('APP_ENV') !== 'production';
 
+                $paths = [
+                    $container->get('dir.src.entities')
+                ];
+
                 if ($isDevMode) {
-                    $config = Setup::createConfiguration($isDevMode);
+                    $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
                 } else {
-                    $config = Setup::createConfiguration(
+                    $config = Setup::createAnnotationMetadataConfiguration(
+                        $paths,
                         $isDevMode,
                         $container->get('dir.cache.proxies'),
                         $container->get('cache')
                     );
                 }
-
-                $namespaces = [
-                    $container->get('dir.src.entities') . '/config' => 'USaq\Model\Entity'
-                ];
-
-                $driver = new SimplifiedYamlDriver($namespaces);
-                $config->setMetadataDriverImpl($driver);
 
                 return EntityManager::create($container->get('database.parameters'), $config);
             },

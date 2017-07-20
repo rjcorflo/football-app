@@ -8,7 +8,7 @@ use RJ\PronosticApp\Model\Entity\MatchdayclassificationInterface;
 use RJ\PronosticApp\Model\Entity\MatchdayInterface;
 use RJ\PronosticApp\Model\Entity\PlayerInterface;
 use RJ\PronosticApp\Model\Repository\MatchdayclassificationRepositoryInterface;
-use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\Matchdayclassification;
+use RJ\PronosticApp\Persistence\PersistenceRedBean\Model\Entity\MatchdayClassification;
 use RJ\PronosticApp\Persistence\PersistenceRedBean\Util\RedBeanUtils;
 
 /**
@@ -26,7 +26,7 @@ class MatchdayclassificationRepository extends AbstractRepository implements Mat
         CommunityInterface $community,
         MatchdayInterface $matchday
     ): MatchdayclassificationInterface {
-        /** @var Matchdayclassification $bean */
+        /** @var MatchdayClassification $bean */
         $bean = R::findOneOrDispense(
             static::ENTITY,
             'player_id = ? AND community_id = ? AND matchday_id = ?',
