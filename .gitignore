@@ -1,52 +1,6 @@
-.idea/
-
-# Rocketeer deployment
-.rocketeer/
-
-# Bower
-bower_components/
-
-# Cache
-cache/*
-!cache/.gitkeep
-
-# Connfig
-configuration/*
-!configuration/.gitkeep
-!configuration/configuration.default.php
-
-# Logs
-logs/*
-!logs/.gitkeep
-
-# Storage folders
-storage/*
-!storage/.gitkeep
-!storage/database
-storage/database/*
-!storage/database/.gitkeep
-!storage/database/backups
-storage/database/backups/*
-!storage/database/backups/.gitkeep
-
-# Composer Vendor
-vendor/
-
-# Tests
-tests/_output/*
-
-
-# Env files
+###> symfony/framework-bundle ###
 .env
-
-# Cache
-cache/container/*
-!cache/container/.gitkeep
-cache/doctrine/metadata/*
-!cache/doctrine/metadata/.gitkeep
-cache/doctrine/proxies/*
-!cache/doctrine/proxies/.gitkeep
-
-# Others
-.php_cs.cache
-php_errors.log
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
