@@ -10,7 +10,7 @@ set('git_tty', false); // [Optional] Allocate tty for git on first deployment
 
 // Environment vars
 set('env_vars', 'APP_ENV={{env}}');
-set('shared_files', null);
+set('shared_files', []);
 
 // Hosts
 host('solus-dev')
