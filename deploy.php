@@ -1,25 +1,16 @@
 <?php
 namespace Deployer;
 
-require 'recipe/common.php';
+require 'recipe/symfony3.php';
 
 // Configuration
 // Repository
 set('repository', 'https://github.com/rjcorflo/pronosticapp.git');
 set('git_tty', false); // [Optional] Allocate tty for git on first deployment
 
-// Dirs
-set('shared_dirs', [
-    'logs',
-    'storage'
-]);
-
-set('shared_files', [
-    '.env',
-]);
-
-set('writable_dirs', []);
-
+// Environment vars
+set('env_vars', 'APP_ENV={{env}}');
+set('shared_files', null);
 
 // Hosts
 host('solus-dev')
@@ -39,22 +30,6 @@ task('php-fpm:restart', function () {
     run('sudo systemctl restart php-fpm.service');
 });
 //after('deploy:symlink', 'php-fpm:restart');
-
-desc('Deploy your project');
-task('deploy', [
-    'deploy:prepare',
-    'deploy:lock',
-    'deploy:release',
-    'deploy:update_code',
-    'deploy:shared',
-    'deploy:writable',
-    'deploy:vendors',
-    'deploy:clear_paths',
-    'deploy:symlink',
-    'deploy:unlock',
-    'cleanup',
-    'success'
-]);
 
 // [Optional] if deploy fails automatically unlock.
 after('deploy:failed', 'deploy:unlock');
