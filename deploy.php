@@ -12,6 +12,12 @@ set('git_tty', false); // [Optional] Allocate tty for git on first deployment
 set('env_vars', 'APP_ENV={{env}}');
 set('shared_files', ['.env']);
 
+// Clear paths
+set('clear_paths', []);
+
+// Assets
+set('assets', ['public/css', 'public/images', 'public/js']);
+
 // Hosts
 host('solus-dev')
     ->hostname('solus')
@@ -23,6 +29,13 @@ host('solus-dev')
 
 
 // Tasks
+/**
+ * Install assets from public dir of bundles
+ */
+task('deploy:assets:install', function () {
+    run('{{env_vars}} {{bin/php}} {{bin/console}} assets:install {{console_options}} {{release_path}}/public');
+})->desc('Install bundle assets');
+
 desc('Restart PHP-FPM service');
 task('php-fpm:restart', function () {
     // The user must have rights for restart service
